@@ -245,6 +245,10 @@ limitations under the License.
 									...</a></li>
 							<li class="login"><a href="#" id="menuLogout"
 								class="typcn typcn-user-outline" lkey="Blockly.Msg.MENU_LOG_OUT">abmelden</a></li>
+								
+							<li class="login"><a href="#" id="menuGroups"
+								class="typcn typcn-group-outline" lkey="Blockly.Msg.GO_TO_GROUPS">go to groups</a></li>
+								
 							<!-- <li><a href="#" id="menuNewUser" class="typcn typcn-user-add" lkey="Blockly.Msg.MENU_NEW">neu ...</a></li> -->
 							<li class="login"><a href="#" id="menuChangeUser"
 								class="typcn typcn-lock-closed" lkey="Blockly.Msg.MENU_CHANGE">ändern
@@ -405,6 +409,10 @@ limitations under the License.
 				</a></li>
 				<li class="hidden"><a data-toggle="tab" id="tabProgList"
 					href="#progList">Listing of programs</a></li>
+				<li class="hidden"><a data-toggle="tab" id="tabGroupList"
+					href="#groupList">Listing of groups</a></li>
+				<li class="hidden"><a data-toggle="tab" id="tabUserGroupList"
+					href="#userGroupList">Listing of user groups</a></li>
 				<li class="hidden"><a data-toggle="tab" id="tabConfList"
 					href="#confList">Listing of configurations</a></li>
 				<li class="hidden"><a data-toggle="tab" id="tabLogList"
@@ -591,6 +599,31 @@ limitations under the License.
 				</button>
 			</div>
 			<table id="programNameTable">
+			</table>
+		</div>
+		<div id="groupList" class="tab-pane fade">
+			<div id="groupListToolbar">
+				<button id="backGroupList" class="btn">
+					<i class="typcn typcn-arrow-left"></i>
+				</button>
+				<button id="createGroup" class="btn">
+					<i class="typcn typcn-plus"></i>
+				</button>
+			</div>
+			<table id="groupNameTable">
+			</table>
+			
+		</div>
+		<div id="userGroupList" class="tab-pane fade">
+			<div id="userGroupListToolbar">
+				<button id="backUserGroupList" class="btn">
+					<i class="typcn typcn-arrow-left"></i>
+				</button>
+				<button id="addUser" class="btn">
+					<i class="typcn typcn-plus"></i>
+				</button>
+			</div>
+			<table id="userGroupNameTable">
 			</table>
 		</div>
 		<div id="confList" class="tab-pane fade">
@@ -1104,6 +1137,48 @@ limitations under the License.
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn" id="doDeleteProgram">OK</button>
+					<input type="button" class="btn backButton" data-dismiss="modal"
+						lkey="Blockly.Msg.POPUP_CANCEL"></input>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Popup confirm deletion of group -->
+	<div id="confirmDeleteGroup" class="modal fade">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body left-inner-addon">
+					<span lkey="Blockly.Msg.POPUP_CONFIRM_DELETE_GROUP">Do you
+						really want to delete the group?</span>
+					<p id="confirmDeleteGroupName"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" id="doDeleteGroup">OK</button>
+					<input type="button" class="btn backButton" data-dismiss="modal"
+						lkey="Blockly.Msg.POPUP_CANCEL"></input>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Popup confirm deletion user from a group -->
+	<div id="confirmDeleteUserGroup" class="modal fade">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body left-inner-addon">
+					<span lkey="Blockly.Msg.POPUP_CONFIRM_DELETE_USER_GROUP">Do you
+						really want to delete the user from this group?</span>
+					<p id="confirmDeleteUserGroupName"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" id="doDeleteUserGroup">OK</button>
 					<input type="button" class="btn backButton" data-dismiss="modal"
 						lkey="Blockly.Msg.POPUP_CANCEL"></input>
 				</div>

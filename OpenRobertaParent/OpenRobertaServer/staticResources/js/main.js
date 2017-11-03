@@ -52,7 +52,16 @@ require.config({
         'rest.robot' : '../app/roberta/rest/robot',
         'socket.controller' : '../app/roberta/controller/socket.controller',
         'cookieDisclaimer.controller' : '../app/roberta/controller/cookieDisclaimer.controller',
-
+        'group.model' : '../app/roberta/models/group.model',
+        'groupList.model' : '../app/roberta/models/groupList.model',
+        'groupList.controller' : '../app/roberta/controller/groupList.controller',
+        'groupDelete.controller' : '../app/roberta/controller/groupDelete.controller',
+        'group.controller' : '../app/roberta/controller/group.controller',
+        'userGroup.model' : '../app/roberta/models/userGroup.model',
+        'userGroupList.model' : '../app/roberta/models/userGroupList.model',
+        'userGroupList.controller' : '../app/roberta/controller/userGroupList.controller',
+        'userGroupDelete.controller' : '../app/roberta/controller/userGroupDelete.controller',
+        'userGroup.controller' : '../app/roberta/controller/userGroup.controller', 
         'simulation.constants' : '../app/simulation/simulationLogic/constants',
         'simulation.math' : '../app/simulation/simulationLogic/math',
         'simulation.program.builder' : '../app/simulation/robertaLogic/program.builder',
@@ -143,6 +152,12 @@ require([ 'require', 'wrap', 'jquery', 'jquery-cookie', 'guiState.controller', '
     progCodeController = require('progCode.controller');
     progSimController = require('progSim.controller');
     progRunController = require('progRun.controller');
+    groupListController = require('groupList.controller');
+    groupDeleteController = require('groupDelete.controller');
+    groupController = require('group.controller');
+    userGroupListController = require('userGroupList.controller');
+    userGroupDeleteController = require('userGroupDelete.controller');
+    userGroupController = require('userGroup.controller');
     progShareController = require('progShare.controller');
     robotController = require('robot.controller');
     userController = require('user.controller');
@@ -168,6 +183,10 @@ function init() {
         galleryListController.init();
         progListController.init();
         progDeleteController.init();
+        groupListController.init();
+        groupDeleteController.init();
+        userGroupListController.init();
+        userGroupDeleteController.init();
         confListController.init();
         confDeleteController.init();
         progShareController.init();
