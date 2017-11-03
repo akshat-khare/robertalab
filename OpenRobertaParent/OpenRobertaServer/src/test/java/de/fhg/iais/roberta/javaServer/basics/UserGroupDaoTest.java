@@ -6,6 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.fhg.iais.roberta.persistence.bo.UserGroup;
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
+=======
+import de.fhg.iais.roberta.persistence.dao.GroupDao;
+import de.fhg.iais.roberta.persistence.dao.UserDao;
+>>>>>>> #384 copied old dashboard to current develop
 import de.fhg.iais.roberta.persistence.dao.UserGroupDao;
 import de.fhg.iais.roberta.persistence.util.DbSession;
 import de.fhg.iais.roberta.persistence.util.DbSetup;
@@ -17,6 +22,11 @@ public class UserGroupDaoTest {
     private String connectionUrl;
     private Session nativeSession;
     private DbSession hSession;
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
+=======
+    private UserDao userDao;
+    private GroupDao groupDao;
+>>>>>>> #384 copied old dashboard to current develop
     UserGroupDao userGroupDao;
 
     @Before
@@ -27,6 +37,11 @@ public class UserGroupDaoTest {
         this.memoryDbSetup = new DbSetup(this.nativeSession);
         this.memoryDbSetup.runDefaultRobertaSetup();
         this.hSession = this.sessionFactoryWrapper.getSession();
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
+=======
+        this.userDao = new UserDao(this.hSession);
+        this.groupDao = new GroupDao(this.hSession);
+>>>>>>> #384 copied old dashboard to current develop
         this.userGroupDao = new UserGroupDao(this.hSession);
     }
 

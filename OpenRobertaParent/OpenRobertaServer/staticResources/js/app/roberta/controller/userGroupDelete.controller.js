@@ -14,7 +14,11 @@ define([ 'require', 'exports', 'log', 'util', 'message', 'comm', 'userGroup.mode
         $('#doDeleteUserGroup').onWrap('click', function() {
             var userGroup = $("#confirmDeleteUserGroup").data('userGroup');
             for (var i = 0; i < userGroup.length; i++) {
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
                 var userName = userGroup[i][0];
+=======
+                var userName = userGroup[0][0];
+>>>>>>> #384 copied old dashboard to current develop
                 var groupName = GUISTATE_C.getGroupName();
                 var resulting1;
                 var resulting2;

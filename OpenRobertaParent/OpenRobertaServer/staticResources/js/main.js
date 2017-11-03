@@ -62,6 +62,10 @@ require.config({
         'userGroupList.controller' : '../app/roberta/controller/userGroupList.controller',
         'userGroupDelete.controller' : '../app/roberta/controller/userGroupDelete.controller',
         'userGroup.controller' : '../app/roberta/controller/userGroup.controller', 
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
+=======
+
+>>>>>>> #384 copied old dashboard to current develop
         'simulation.constants' : '../app/simulation/simulationLogic/constants',
         'simulation.math' : '../app/simulation/simulationLogic/math',
         'simulation.program.builder' : '../app/simulation/robertaLogic/program.builder',
@@ -127,10 +131,16 @@ require.config({
 });
 
 require([ 'require', 'wrap', 'jquery', 'jquery-cookie', 'guiState.controller', 'progList.controller', 'logList.controller', 'confList.controller',
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
         'progDelete.controller', 'confDelete.controller', 'progShare.controller', 'cookieDisclaimer.controller', 'menu.controller', 'user.controller',
         'robot.controller', 'program.controller', 'progSim.controller', 'progCode.controller', 'progDelete.controller', 'progHelp.controller',
         'progInfo.controller', 'progRun.controller', 'configuration.controller', 'language.controller', 'socket.controller', 'progTutorial.controller', 'volume-meter', 'user.model' ], function(
         require) {
+=======
+        'progDelete.controller', 'confDelete.controller', 'progShare.controller', 'cookieDisclaimer.controller', 'menu.controller', 'user.controller', 'robot.controller',
+        'program.controller', 'configuration.controller', 'language.controller', 'socket.controller', 'volume-meter', 'user.model', 'group.controller', 'groupList.controller', 'groupDelete.controller',
+        , 'userGroup.controller', 'userGroupList.controller', 'userGroupDelete.controller' ], function(require) {
+>>>>>>> #384 copied old dashboard to current develop
 
     $ = require('jquery', 'jquery-cookie');
     WRAP = require('wrap');
@@ -182,6 +192,10 @@ function init() {
     }).then(function() {
         galleryListController.init();
         progListController.init();
+        groupListController.init();
+        groupDeleteController.init();
+        userGroupListController.init();
+        userGroupDeleteController.init();
         progDeleteController.init();
         groupListController.init();
         groupDeleteController.init();

@@ -31,16 +31,32 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
             columns : [ {
                 title : "<span lkey='Blockly.Msg.DATATABLE_GROUP_NAME'>Name of the group</span>",
                 sortable : true,
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
             }, {
                 title : "<span lkey='Blockly.Msg.DATATABLE_CREATED_BY'>Created by</span>",
                 sortable : true,
             }, {
+=======
+                field : '0',
+            }, {
+                title : "<span lkey='Blockly.Msg.DATATABLE_CREATED_BY'>Created by</span>",
+                sortable : true,
+                field : '1',
+            }, {
+                field : '2',
+>>>>>>> #384 copied old dashboard to current develop
                 checkbox : true,
                 valign : 'middle',
             },
             {
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
                 events : eventsDeleteLoad,
                 title : titleActions,
+=======
+                field : '3',
+                events : eventsDeleteLoad,
+                title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected programs">' + '<span class="typcn typcn-delete"></span></a>',
+>>>>>>> #384 copied old dashboard to current develop
                 align : 'left',
                 valign : 'top',
                 formatter : formatDeleteLoad,
@@ -79,7 +95,10 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
 	        $('.delete').addClass('disabled');
 	        $('.load').addClass('disabled');
         }, 'check all groups');
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
         
+=======
+>>>>>>> #384 copied old dashboard to current develop
 
         $('#groupNameTable').onWrap('check.bs.table', function($element, row) {
             $('.deleteSomeGroup').removeClass('disabled');
@@ -181,7 +200,11 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
         result += '<a href="#" class="load "  title="Load group"><span class="typcn typcn-document"></span></a>';
         return result;
     }
+<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
     
     var titleActions = '<a href="#" id="deleteSomeGroup" class="deleteSomeGroup disabled" rel="tooltip" lkey="Blockly.Msg.GROUPLIST_DELETE_ALL_TOOLTIP" data-original-title="" data-container="body" title="">'
     + '<span class="typcn typcn-delete"></span></a>';
+=======
+
+>>>>>>> #384 copied old dashboard to current develop
 });
