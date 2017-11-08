@@ -30,10 +30,6 @@
 		<mapping class="de.fhg.iais.roberta.persistence.bo.LostPassword" />
 		<mapping class="de.fhg.iais.roberta.persistence.bo.PendingEmailConfirmations" />
 		<mapping class="de.fhg.iais.roberta.persistence.bo.Like" />
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
        	<mapping class="de.fhg.iais.roberta.persistence.bo.Group"/> 
-=======
-       	 	<mapping class="de.fhg.iais.roberta.persistence.bo.Group"/> 
->>>>>>> #384 copied old dashboard to current develop
 		<mapping class="de.fhg.iais.roberta.persistence.bo.UserGroup"/>	</session-factory>
 </hibernate-configuration>

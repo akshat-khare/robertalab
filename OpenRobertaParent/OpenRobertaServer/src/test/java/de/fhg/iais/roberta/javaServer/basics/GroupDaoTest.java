@@ -52,16 +52,9 @@ public class GroupDaoTest {
         }
     }
 
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
     @Test
     public void persistGroupReturnsNull() throws Exception {
         Group group = this.groupDao.loadGroup("TestGrbnbnbnoup");
-=======
-    //TODO: try to reimplement the test so it would make more sense
-    @Test
-    public void persistGroupReturnsNull() throws Exception {
-        Group group = null;
->>>>>>> #384 copied old dashboard to current develop
         Assert.assertNull(group);
     }
 
@@ -87,10 +80,6 @@ public class GroupDaoTest {
     @Test
     public void loadMembersByGroup() throws Exception {
         String groupName = "TestGroup";
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
-=======
-        Group group = this.groupDao.loadGroup(groupName);
->>>>>>> #384 copied old dashboard to current develop
         List<User> userList = this.groupDao.loadMembersByGroup(groupName);
         Assert.assertTrue(userList.size() == 2);
     }
