@@ -44,7 +44,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
             {
                 field : '3',
                 events : eventsDeleteLoad,
-                title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected programs">' + '<span class="typcn typcn-delete"></span></a>',
+                title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected groups">' + '<span class="typcn typcn-delete"></span></a>',
                 align : 'left',
                 valign : 'top',
                 formatter : formatDeleteLoad,
