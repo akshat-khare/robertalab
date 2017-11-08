@@ -14,7 +14,7 @@ define([ 'require', 'exports', 'log', 'util', 'message', 'comm', 'userGroup.mode
         $('#doDeleteUserGroup').onWrap('click', function() {
             var userGroup = $("#confirmDeleteUserGroup").data('userGroup');
             for (var i = 0; i < userGroup.length; i++) {
-                var userName = userGroup[0][0];
+                var userName = userGroup[i][0];
                 var groupName = GUISTATE_C.getGroupName();
                 var resulting1;
                 var resulting2;

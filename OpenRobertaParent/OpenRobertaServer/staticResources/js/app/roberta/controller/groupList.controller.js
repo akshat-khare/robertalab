@@ -31,20 +31,16 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
             columns : [ {
                 title : "<span lkey='Blockly.Msg.DATATABLE_GROUP_NAME'>Name of the group</span>",
                 sortable : true,
-                field : '0',
             }, {
                 title : "<span lkey='Blockly.Msg.DATATABLE_CREATED_BY'>Created by</span>",
                 sortable : true,
-                field : '1',
             }, {
-                field : '2',
                 checkbox : true,
                 valign : 'middle',
             },
             {
-                field : '3',
                 events : eventsDeleteLoad,
-                title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected groups">' + '<span class="typcn typcn-delete"></span></a>',
+                title : titleActions,
                 align : 'left',
                 valign : 'top',
                 formatter : formatDeleteLoad,
@@ -83,6 +79,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
 	        $('.delete').addClass('disabled');
 	        $('.load').addClass('disabled');
         }, 'check all groups');
+        
 
         $('#groupNameTable').onWrap('check.bs.table', function($element, row) {
             $('.deleteSomeGroup').removeClass('disabled');
@@ -184,5 +181,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
         result += '<a href="#" class="load "  title="Load group"><span class="typcn typcn-document"></span></a>';
         return result;
     }
-
+    
+    var titleActions = '<a href="#" id="deleteSomeGroup" class="deleteSomeGroup disabled" rel="tooltip" lkey="Blockly.Msg.GROUPLIST_DELETE_ALL_TOOLTIP" data-original-title="" data-container="body" title="">'
+    + '<span class="typcn typcn-delete"></span></a>';
 });
