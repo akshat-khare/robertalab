@@ -55,8 +55,12 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'groupList.model', 'group.
 =======
                 field : '3',
                 events : eventsDeleteLoad,
+<<<<<<< 199b9bb9bc0f6bbd911fd4c389677b5f61228142
                 title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected programs">' + '<span class="typcn typcn-delete"></span></a>',
 >>>>>>> #384 copied old dashboard to current develop
+=======
+                title : '<a href="#" class="deleteSomeGroups disabled" title="Delete selected groups">' + '<span class="typcn typcn-delete"></span></a>',
+>>>>>>> #384 fixed triggering group reloading by 'delete program' button
                 align : 'left',
                 valign : 'top',
                 formatter : formatDeleteLoad,
