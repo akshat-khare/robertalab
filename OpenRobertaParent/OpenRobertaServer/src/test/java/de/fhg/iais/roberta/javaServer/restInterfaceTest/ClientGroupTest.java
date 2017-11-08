@@ -180,7 +180,11 @@ public class ClientGroupTest {
     public void getUserGroupNotNull() throws Exception {
         restUser(this.sPid, "{'cmd':'login';'accountName':'bertran123';'password':'bertran123'}", "ok", Key.USER_GET_ONE_SUCCESS);
         restGroup(this.sPid, "{'cmd':'getUserGroup';'account':'bertran123';'groupName':'restTestGroup1716'}", "ok", Key.USER_GROUP_GET_ONE_SUCCESS);
+<<<<<<< 7de13d244f217f31ff17e1a3d73728c0ef80a88f
         Assert.assertTrue(this.response.getEntity().toString().contains("[id=7, userId=" + this.sPid.getUserId() + ", group=9]"));
+=======
+        Assert.assertTrue(this.response.getEntity().toString().contains("[id=7, userId="+ this.sPid.getUserId() +", group=9]"));
+>>>>>>> #384 fixed tests
     }
 
     @Test
@@ -192,7 +196,11 @@ public class ClientGroupTest {
     public void addUserNotNull() throws Exception {
         createTwoUsers();
         restUser(this.sPid, "{'cmd':'login';'accountName':'bertran123';'password':'bertran123'}", "ok", Key.USER_GET_ONE_SUCCESS);
+<<<<<<< 7de13d244f217f31ff17e1a3d73728c0ef80a88f
         restGroup(this.sPid, "{'cmd':'createGroup';'userId':'" + this.sPid.getUserId() + "','groupName':'restTestGroup15';}", "ok", Key.GROUP_CREATE_SUCCESS);
+=======
+        restGroup(this.sPid, "{'cmd':'createGroup';'userId':'"+ this.sPid.getUserId() + "','groupName':'restTestGroup15';}", "ok", Key.GROUP_CREATE_SUCCESS);
+>>>>>>> #384 fixed tests
         Assert.assertEquals(5, this.memoryDbSetup.getOneBigIntegerAsLong("select count(*) from USER_GROUP"));
         long initNumberOfUsersInGroup = this.memoryDbSetup.getOneBigIntegerAsLong("select count(*) from USER_GROUP");
         restGroup(this.sPid, "{'cmd':'addUser';'account':'minscha';'groupName':'restTestGroup15'}", "ok", Key.USER_GROUP_SAVE_SUCCESS);
