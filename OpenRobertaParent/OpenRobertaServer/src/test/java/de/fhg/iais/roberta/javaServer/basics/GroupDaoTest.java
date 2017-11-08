@@ -35,7 +35,7 @@ public class GroupDaoTest {
         this.sessionFactoryWrapper = new SessionFactoryWrapper("hibernate-test-cfg.xml", this.connectionUrl);
         this.nativeSession = this.sessionFactoryWrapper.getNativeSession();
         this.memoryDbSetup = new DbSetup(this.nativeSession);
-        this.memoryDbSetup.runDefaultRobertaSetup();
+        this.memoryDbSetup.createEmptyDatabase();
         this.hSession = this.sessionFactoryWrapper.getSession();
         this.userDao = new UserDao(this.hSession);
         this.groupDao = new GroupDao(this.hSession);

@@ -40,11 +40,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
             {
                 field : '2',
                 events : eventsDelete,
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
                 title : titleActions,
-=======
-                title : '<a href="#" class="deleteSomeUserGroups disabled" title="Delete selected user groups">' + '<span class="typcn typcn-delete"></span></a>',
->>>>>>> #384 copied old dashboard to current develop
                 align : 'left',
                 valign : 'top',
                 formatter : formatDelete,
@@ -56,7 +52,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
 
     function initUserGroupListEvents() {
 
-    	$(window).resize(function() {
+        $(window).resize(function() {
             $('#userGroupNameTable').bootstrapTable('resetView', {
                 height : UTIL.calcDataTableHeight()
             });
@@ -65,13 +61,13 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
         $('#tabUserGroupList').on('show.bs.tab', function(e) {
             guiStateController.setView('tabUserGroupList');
             groupName = GUISTATE_C.getGroupName();
-        	USERGROUPLIST.loadUserGroupList(groupName, update);
+            USERGROUPLIST.loadUserGroupList(groupName, update);
         });
                 
                
         $('#userGroupList').find('button[name="refresh"]').onWrap('click', function() {
-        	groupName = GUISTATE_C.getGroupName();
-          	USERGROUPLIST.loadUserGroupList(groupName, update);
+            groupName = GUISTATE_C.getGroupName();
+            USERGROUPLIST.loadUserGroupList(groupName, update);
             return false;
         }, "refresh user group list clicked");
         
@@ -81,8 +77,8 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
         }, "add a user")
 
         $('#userGroupNameTable').onWrap('check-all.bs.table', function($element, rows) {
-	        $('.deleteSomeUserGroup').removeClass('disabled');
-	        $('.delete').addClass('disabled');
+            $('.deleteSomeUserGroup').removeClass('disabled');
+            $('.delete').addClass('disabled');
         }, 'check all users');
 
         $('#userGroupNameTable').onWrap('check.bs.table', function($element, row) {
@@ -97,10 +93,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
 
         $('#userGroupNameTable').onWrap('uncheck.bs.table', function($element, row) {
             var selectedRows = $('#userGroupNameTable').bootstrapTable('getSelections');
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
             console.log(selectedRows);
-=======
->>>>>>> #384 copied old dashboard to current develop
             if (selectedRows.length <= 0 || selectedRows == null) {
                 $('.deleteSomeUserGroup').addClass('disabled');
                 $('.delete').removeClass('disabled');
@@ -113,21 +106,14 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
         }, "back to group list view")
         
         $(document).onWrap('click', '.deleteSomeUserGroup', function() {
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
             var userGroup = $('#userGroupNameTable').bootstrapTable('getSelections', {});
             var names = '';
             for (var i = 0; i < userGroup.length; i++) {
-=======
-            var group = $('#userGroupNameTable').bootstrapTable('getSelections', {});
-            var names = '';
-            for (var i = 0; i < group.length; i++) {
->>>>>>> #384 copied old dashboard to current develop
                 names += userGroup[i][0];
                 names += '<br>';
             }
             $('#confirmDeleteUserGroupName').html(names);
             $('#confirmDeleteUserGroup').one('hide.bs.modal', function(event) {
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
                 USERGROUPLIST.loadUserGroupList(update);
             });
             $("#confirmDeleteUserGroup").data('userGroup', userGroup);
@@ -135,15 +121,6 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
             return false;
         }, "delete users from the group");
                        
-=======
-                USERGROUPLIST.loadGroupList(update);
-            });
-            $("#confirmDeleteUserGroup").data('usergroup', usergroup);
-            $("#confirmDeleteUserGroup").modal("show");
-            return false;
-        }, "delete users from the group");
-                
->>>>>>> #384 copied old dashboard to current develop
         
         $('#userGroupNameTable').on('shown.bs.collapse hidden.bs.collapse', function(e) {
             $('#userGroupNameTable').bootstrapTable('resetWidth');
@@ -166,7 +143,6 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
     var eventsDelete = {
         'click .delete' : function(e, value, row, index) {
             var selectedRows = [ row ];
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
             var names = '';
             for (var i = 0; i < selectedRows.length; i++) {
                 names += selectedRows[i][0];
@@ -174,10 +150,6 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
             }
             $('#confirmDeleteUserGroupName').html(names);
             $("#confirmDeleteUserGroup").data('usergroup', selectedRows);
-=======
-            $('#confirmDeleteUserGroupName').html(GUISTATE_C.getGroupName());
-            $("#confirmDeleteUserGroup").data('userGroup', selectedRows);
->>>>>>> #384 copied old dashboard to current develop
             $('#confirmDeleteUserGroup').one('hidden.bs.modal', function(event) {
             });
             $("#confirmDeleteUserGroup").modal("show");
@@ -193,11 +165,7 @@ define([ 'require', 'exports', 'log', 'util', 'comm', 'userGroupList.model', 'us
         }
         return result;
     }
-<<<<<<< ad122ec816f8024ef6384122bf46e051c4480432
     
     var titleActions = '<a href="#" id="deleteSomeUserGroup" class="deleteSomeUserGroup disabled" rel="tooltip" lkey="Blockly.Msg.USERGROUP_DELETE_ALL_TOOLTIP" data-original-title="" data-container="body" title="">'
     + '<span class="typcn typcn-delete"></span></a>';
-=======
-
->>>>>>> #384 copied old dashboard to current develop
 });
