@@ -52,7 +52,6 @@ import de.fhg.iais.roberta.syntax.sensor.generic.GyroSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.InfraredSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.LightSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.SoundSensor;
-import de.fhg.iais.roberta.syntax.sensor.generic.TemperatureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.TouchSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.UltrasonicSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.VoltageSensor;
@@ -611,12 +610,6 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
                     throw new DbcException("Sensor is not supported: " + usedSensor.getType());
             }
         }
-    }
-
-    @Override
-    public Void visitTemperatureSensor(TemperatureSensor<Void> temperatureSensor) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
