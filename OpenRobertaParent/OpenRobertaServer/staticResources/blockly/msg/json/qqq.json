@@ -881,8 +881,9 @@
 	"PLAY_QUARTER": "",
 	"PLAY_EIGHTH": "",
 	"PLAY_SIXTEENTH": "",
-	"LED": "",
 	"LED_ON": "",
+	"LED": "",
+	"LCD": "",
 	"LED_OFF": "",
 	"SENSOR_GESTURE": "",
 	"SENSOR_GESTURE_TOOLTIP": "",
@@ -1268,5 +1269,16 @@
 	"SENSOR_GESTURE_SHAKE_GETSAMPLE_TOOLTIP": "",
 	"SENSOR_GESTURE_FREEFALL_GETSAMPLE_TOOLTIP": "",
 	"RIGHT": "",
-	"LEFT": ""
+	"LEFT": "",
+	"OUTPUT": "",
+	"INPUT": "",
+	"MOTION_SENSOR": "",
+	"POTENTIOMETER": "",
+	"SERVO_MOTOR": "",
+	"PULSE": "",
+	"RELAY": "",
+	"HUMIDITY": "",
+	"AND": "",
+	"STEP_MOTOR": "",
+	"SENSOR_MOISTURE": ""
 }

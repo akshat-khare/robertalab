@@ -1,10 +1,10 @@
-package de.fhg.iais.roberta.syntax.codegen.arduino.uno;
+package de.fhg.iais.roberta.syntax.codegen.arduino.arduino;
 
 import java.util.ArrayList;
 
 import de.fhg.iais.roberta.components.SensorType;
 import de.fhg.iais.roberta.components.UsedSensor;
-import de.fhg.iais.roberta.components.arduino.UnoConfiguration;
+import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.action.display.ClearDisplayAction;
 import de.fhg.iais.roberta.syntax.action.display.ShowPictureAction;
@@ -29,7 +29,7 @@ import de.fhg.iais.roberta.syntax.actors.arduino.mbot.ExternalLedOffAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.mbot.ExternalLedOnAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.mbot.LedOffAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.mbot.LedOnAction;
-import de.fhg.iais.roberta.syntax.check.hardware.arduino.uno.UsedHardwareCollectorVisitor;
+import de.fhg.iais.roberta.syntax.check.hardware.arduino.arduino.UsedHardwareCollectorVisitor;
 import de.fhg.iais.roberta.syntax.codegen.arduino.ArduinoVisitor;
 import de.fhg.iais.roberta.syntax.expressions.arduino.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask;
@@ -71,7 +71,7 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
      * @param programPhrases to generate the code from
      * @param withWrapping if false the generated code will be without the surrounding configuration code
      */
-    public static String generate(UnoConfiguration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> programPhrases, boolean withWrapping) {
+    public static String generate(ArduinoConfiguration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> programPhrases, boolean withWrapping) {
 
         CppVisitor astVisitor = new CppVisitor(programPhrases, withWrapping ? 1 : 0);
         astVisitor.generateCode(withWrapping);

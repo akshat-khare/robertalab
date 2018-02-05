@@ -1,7 +1,11 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
+<<<<<<< HEAD
 		"lastupdated": "2018-03-14 17:18:07.865391",
+=======
+		"lastupdated": "2018-02-07 16:55:31.254062",
+>>>>>>> #756 added base Uno files, main configuration block, most of the sensor/actor configuration blocks
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -887,8 +891,9 @@
 	"PLAY_QUARTER": "quarter note",
 	"PLAY_EIGHTH": "eighth note",
 	"PLAY_SIXTEENTH": "sixteenth note",
-	"LED": "LED",
 	"LED_ON": "turn LED on",
+	"LED": "LED",
+	"LCD": "LCD",
 	"LED_OFF": "turn LED off",
 	"SENSOR_GESTURE": "gesture",
 	"SENSOR_GESTURE_TOOLTIP": "Is the system in the selected state?",
@@ -1274,5 +1279,16 @@
 	"SENSOR_GESTURE_SHAKE_GETSAMPLE_TOOLTIP": "Returns »true« if it is shaken.",
 	"SENSOR_GESTURE_FREEFALL_GETSAMPLE_TOOLTIP": "Returns »true« if it is free falling.",
 	"RIGHT": "right",
-	"LEFT": "left"
+	"LEFT": "left",
+	"OUTPUT": "output",
+	"INPUT": "input",
+	"MOTION_SENSOR": "motion sensor",
+	"POTENTIOMETER": "potentiometer",
+	"SERVO_MOTOR": "servo motor",
+	"PULSE": "pulse",
+	"RELAY": "relay",
+	"HUMIDITY": "humidity",
+	"AND": "and",
+	"STEP_MOTOR": "step motor",
+	"SENSOR_MOISTURE": "moisture sensor"
 }

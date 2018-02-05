@@ -1,4 +1,4 @@
-package de.fhg.iais.roberta.syntax.check.hardware.arduino.uno;
+package de.fhg.iais.roberta.syntax.check.hardware.arduino.arduino;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

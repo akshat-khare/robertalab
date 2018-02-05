@@ -14,7 +14,7 @@ import de.fhg.iais.roberta.components.ActorType;
 import de.fhg.iais.roberta.components.Configuration;
 import de.fhg.iais.roberta.components.Sensor;
 import de.fhg.iais.roberta.components.SensorType;
-import de.fhg.iais.roberta.components.arduino.UnoConfiguration;
+import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.factory.IRobotFactory;
 import de.fhg.iais.roberta.inter.mode.action.IActorPort;
 import de.fhg.iais.roberta.inter.mode.action.IMotorSide;
@@ -28,10 +28,10 @@ import de.fhg.iais.roberta.util.dbc.DbcException;
 /**
  * JAXB to brick configuration. Client should provide a tree of jaxb objects. Generates a BrickConfiguration object.
  */
-public class Jaxb2UnoConfigurationTransformer {
+public class Jaxb2ArduinoConfigurationTransformer {
     IRobotFactory factory;
 
-    public Jaxb2UnoConfigurationTransformer(IRobotFactory factory) {
+    public Jaxb2ArduinoConfigurationTransformer(IRobotFactory factory) {
         this.factory = factory;
     }
 
@@ -111,7 +111,7 @@ public class Jaxb2UnoConfigurationTransformer {
                 List<Value> values = extractValues(block, (short) 14);
                 extractHardwareComponent(values, sensors, actors);
 
-                return new UnoConfiguration.Builder().addActors(actors).addSensors(sensors).build();
+                return new ArduinoConfiguration.Builder().addActors(actors).addSensors(sensors).build();
             default:
                 throw new DbcException("There was no correct configuration block found! " + block.getType());
         }

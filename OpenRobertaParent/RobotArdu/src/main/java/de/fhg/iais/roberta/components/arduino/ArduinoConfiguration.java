@@ -12,9 +12,9 @@ import de.fhg.iais.roberta.inter.mode.sensor.ISensorPort;
 import de.fhg.iais.roberta.mode.actors.arduino.botnroll.ActorPort;
 import de.fhg.iais.roberta.util.Pair;
 
-public class UnoConfiguration extends Configuration {
+public class ArduinoConfiguration extends Configuration {
 
-    public UnoConfiguration(Map<IActorPort, Actor> actors, Map<ISensorPort, Sensor> sensors) {
+    public ArduinoConfiguration(Map<IActorPort, Actor> actors, Map<ISensorPort, Sensor> sensors) {
         super(actors, sensors, 0, 0);
 
     }
@@ -120,7 +120,7 @@ public class UnoConfiguration extends Configuration {
 
         @Override
         public Configuration build() {
-            return new UnoConfiguration(this.actorMapping, this.sensorMapping);
+            return new ArduinoConfiguration(this.actorMapping, this.sensorMapping);
         }
 
         @Override

@@ -1,4 +1,4 @@
-package de.fhg.iais.roberta.factory.arduino.uno;
+package de.fhg.iais.roberta.factory.arduino.arduino;
 
 import java.util.ArrayList;
 import java.util.Properties;
@@ -6,7 +6,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.SystemUtils;
 
 import de.fhg.iais.roberta.components.Configuration;
-import de.fhg.iais.roberta.components.arduino.UnoConfiguration;
+import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.factory.AbstractRobotFactory;
 import de.fhg.iais.roberta.factory.ICompilerWorkflow;
 import de.fhg.iais.roberta.factory.IRobotFactory;
@@ -17,13 +17,13 @@ import de.fhg.iais.roberta.mode.actors.arduino.botnroll.ActorPort;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.check.program.RobotBrickCheckVisitor;
 import de.fhg.iais.roberta.syntax.check.program.RobotSimulationCheckVisitor;
-import de.fhg.iais.roberta.syntax.codegen.arduino.uno.CppVisitor;
+import de.fhg.iais.roberta.syntax.codegen.arduino.arduino.CppVisitor;
 import de.fhg.iais.roberta.util.RobertaProperties;
 import de.fhg.iais.roberta.util.Util1;
 
 public class Factory extends AbstractRobotFactory {
     private final CompilerWorkflow compilerWorkflow;
-    private final Properties unoProperties;
+    private final Properties arduinoProperties;
     private final String name;
     private final int robotPropertyNumber;
 
@@ -33,15 +33,15 @@ public class Factory extends AbstractRobotFactory {
         if ( SystemUtils.IS_OS_WINDOWS ) {
             os = "windows";
         }
-        this.unoProperties = Util1.loadProperties("classpath:uno.properties");
-        this.name = this.unoProperties.getProperty("robot.name");
+        this.arduinoProperties = Util1.loadProperties("classpath:arduino.properties");
+        this.name = this.arduinoProperties.getProperty("robot.name");
         this.robotPropertyNumber = robertaProperties.getRobotNumberFromProperty(this.name);
         this.compilerWorkflow =
             new CompilerWorkflow(
                 robertaProperties.getTempDirForUserProjects(),
                 robertaProperties.getStringProperty("robot.plugin." + this.robotPropertyNumber + ".compiler.resources.dir"),
                 robertaProperties.getStringProperty("robot.plugin." + this.robotPropertyNumber + ".compiler." + os + ".dir"));
-        addBlockTypesFromProperties("uno.properties", this.unoProperties);
+        addBlockTypesFromProperties("arduino.properties", this.arduinoProperties);
     }
 
     @Override
@@ -71,57 +71,57 @@ public class Factory extends AbstractRobotFactory {
 
     @Override
     public String getProgramToolboxBeginner() {
-        return this.unoProperties.getProperty("robot.program.toolbox.beginner");
+        return this.arduinoProperties.getProperty("robot.program.toolbox.beginner");
     }
 
     @Override
     public String getProgramToolboxExpert() {
-        return this.unoProperties.getProperty("robot.program.toolbox.expert");
+        return this.arduinoProperties.getProperty("robot.program.toolbox.expert");
     }
 
     @Override
     public String getProgramDefault() {
-        return this.unoProperties.getProperty("robot.program.default");
+        return this.arduinoProperties.getProperty("robot.program.default");
     }
 
     @Override
     public String getConfigurationToolbox() {
-        return this.unoProperties.getProperty("robot.configuration.toolbox");
+        return this.arduinoProperties.getProperty("robot.configuration.toolbox");
     }
 
     @Override
     public String getConfigurationDefault() {
-        return this.unoProperties.getProperty("robot.configuration.default");
+        return this.arduinoProperties.getProperty("robot.configuration.default");
     }
 
     @Override
     public String getRealName() {
-        return this.unoProperties.getProperty("robot.real.name");
+        return this.arduinoProperties.getProperty("robot.real.name");
     }
 
     @Override
     public Boolean hasSim() {
-        return this.unoProperties.getProperty("robot.sim").equals("true") ? true : false;
+        return this.arduinoProperties.getProperty("robot.sim").equals("true") ? true : false;
     }
 
     @Override
     public String getInfo() {
-        return this.unoProperties.getProperty("robot.info") != null ? this.unoProperties.getProperty("robot.info") : "#";
+        return this.arduinoProperties.getProperty("robot.info") != null ? this.arduinoProperties.getProperty("robot.info") : "#";
     }
 
     @Override
     public Boolean isBeta() {
-        return this.unoProperties.getProperty("robot.beta") != null ? true : false;
+        return this.arduinoProperties.getProperty("robot.beta") != null ? true : false;
     }
 
     @Override
     public String getConnectionType() {
-        return this.unoProperties.getProperty("robot.connection");
+        return this.arduinoProperties.getProperty("robot.connection");
     }
 
     @Override
     public String getVendorId() {
-        return this.unoProperties.getProperty("robot.vendor");
+        return this.arduinoProperties.getProperty("robot.vendor");
     }
 
     @Override
@@ -136,7 +136,7 @@ public class Factory extends AbstractRobotFactory {
 
     @Override
     public Boolean hasConfiguration() {
-        return this.unoProperties.getProperty("robot.configuration") != null ? false : true;
+        return this.arduinoProperties.getProperty("robot.configuration") != null ? false : true;
     }
 
     @Override
@@ -148,17 +148,17 @@ public class Factory extends AbstractRobotFactory {
 
     @Override
     public String generateCode(Configuration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> phrasesSet, boolean withWrapping) {
-        return CppVisitor.generate((UnoConfiguration) brickConfiguration, phrasesSet, withWrapping);
+        return CppVisitor.generate((ArduinoConfiguration) brickConfiguration, phrasesSet, withWrapping);
     }
 
     @Override
     public String getCommandline() {
-        return this.unoProperties.getProperty("robot.connection.commandLine");
+        return this.arduinoProperties.getProperty("robot.connection.commandLine");
     }
 
     @Override
     public String getSignature() {
-        return this.unoProperties.getProperty("robot.connection.signature");
+        return this.arduinoProperties.getProperty("robot.connection.signature");
     }
 
     @Override

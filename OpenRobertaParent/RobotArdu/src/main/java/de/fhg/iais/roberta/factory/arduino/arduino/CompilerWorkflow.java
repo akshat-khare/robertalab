@@ -1,4 +1,4 @@
-package de.fhg.iais.roberta.factory.arduino.uno;
+package de.fhg.iais.roberta.factory.arduino.arduino;
 
 import java.io.File;
 import java.lang.ProcessBuilder.Redirect;
@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import de.fhg.iais.roberta.blockly.generated.BlockSet;
 import de.fhg.iais.roberta.components.Configuration;
-import de.fhg.iais.roberta.components.arduino.UnoConfiguration;
+import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.factory.AbstractCompilerWorkflow;
 import de.fhg.iais.roberta.factory.IRobotFactory;
 import de.fhg.iais.roberta.inter.mode.action.ILanguage;
-import de.fhg.iais.roberta.syntax.codegen.arduino.uno.CppVisitor;
+import de.fhg.iais.roberta.syntax.codegen.arduino.arduino.CppVisitor;
 import de.fhg.iais.roberta.transformer.BlocklyProgramAndConfigTransformer;
-import de.fhg.iais.roberta.transformers.arduino.Jaxb2UnoConfigurationTransformer;
+import de.fhg.iais.roberta.transformers.arduino.Jaxb2ArduinoConfigurationTransformer;
 import de.fhg.iais.roberta.util.Key;
 import de.fhg.iais.roberta.util.jaxb.JaxbHelper;
 
@@ -45,7 +45,7 @@ public class CompilerWorkflow extends AbstractCompilerWorkflow {
         if ( data.getErrorMessage() != null ) {
             return null;
         }
-        return CppVisitor.generate((UnoConfiguration) data.getBrickConfiguration(), data.getProgramTransformer().getTree(), true);
+        return CppVisitor.generate((ArduinoConfiguration) data.getBrickConfiguration(), data.getProgramTransformer().getTree(), true);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CompilerWorkflow extends AbstractCompilerWorkflow {
     @Override
     public Configuration generateConfiguration(IRobotFactory factory, String blocklyXml) throws Exception {
         BlockSet project = JaxbHelper.xml2BlockSet(blocklyXml);
-        Jaxb2UnoConfigurationTransformer transformer = new Jaxb2UnoConfigurationTransformer(factory);
+        Jaxb2ArduinoConfigurationTransformer transformer = new Jaxb2ArduinoConfigurationTransformer(factory);
         return transformer.transform(project);
     }
 
@@ -111,7 +111,7 @@ public class CompilerWorkflow extends AbstractCompilerWorkflow {
                 "-hardware=" + this.robotCompilerResourcesDir + "/hardware",
                 "-tools=" + this.robotCompilerResourcesDir + "/" + os + "/tools-builder",
                 "-libraries=" + this.robotCompilerResourcesDir + "/libraries",
-                "-fqbn=arduino:avr:uno",
+                "-fqbn=arduino:avr:arduino",
                 "-prefs=compiler.path=" + this.robotCompilerDir,
                 "-build-path=" + base.resolve(path).toAbsolutePath().normalize().toString() + "/target/",
                 base.resolve(path).toAbsolutePath().normalize().toString() + "/src/" + mainFile + ".ino"
