@@ -39,7 +39,7 @@ define([ 'exports', 'log', 'util', 'comm', 'message', 'guiState.controller', 'bl
                 minScale : .25,
                 scaleSpeed : 1.1
             },
-            checkInTask : [ '-Brick' ],
+            checkInTask : [ '-Brick', 'robConf' ],
             variableDeclaration : true,
             robControls : true
         });

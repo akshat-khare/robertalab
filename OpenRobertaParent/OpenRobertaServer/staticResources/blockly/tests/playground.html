@@ -201,11 +201,7 @@ function spaghetti(n) {
 }
 
 function toggleDevice() {
-  if (device ==='ev3')
-      device = 'ardu';
-      else
-          device = 'ev3';
-  workspace.setDevice(device);
+  workspace.setDevice('arduino');
 }
 
 var spaghettiXml = [
