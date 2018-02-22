@@ -18,9 +18,9 @@ import de.fhg.iais.roberta.util.jaxb.JaxbHelper;
  */
 public class BlocklyProgramAndConfigTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(BlocklyProgramAndConfigTransformer.class);
-    private Key errorMessage;
-    private Jaxb2BlocklyProgramTransformer<Void> programTransformer;
-    private Configuration brickConfiguration;
+    private final Key errorMessage;
+    private final Jaxb2BlocklyProgramTransformer<Void> programTransformer;
+    private final Configuration brickConfiguration;
 
     private BlocklyProgramAndConfigTransformer(Key errorMessage, Jaxb2BlocklyProgramTransformer<Void> programTransformer, Configuration brickConfiguration) {
         super();
@@ -66,9 +66,9 @@ public class BlocklyProgramAndConfigTransformer {
      */
     public static BlocklyProgramAndConfigTransformer transform(IRobotFactory factory, String programText, String configurationText) {
         Key errorMessage = null;
-        if ( programText == null || programText.trim().equals("") ) {
+        if ( (programText == null) || programText.trim().equals("") ) {
             errorMessage = Key.COMPILERWORKFLOW_ERROR_PROGRAM_NOT_FOUND;
-        } else if ( configurationText == null || configurationText.trim().equals("") ) {
+        } else if ( (configurationText == null) || configurationText.trim().equals("") ) {
             errorMessage = Key.COMPILERWORKFLOW_ERROR_CONFIGURATION_NOT_FOUND;
         }
 

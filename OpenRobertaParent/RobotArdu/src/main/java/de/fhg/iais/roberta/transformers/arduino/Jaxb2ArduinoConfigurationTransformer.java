@@ -2,27 +2,17 @@ package de.fhg.iais.roberta.transformers.arduino;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.fhg.iais.roberta.blockly.generated.Block;
 import de.fhg.iais.roberta.blockly.generated.BlockSet;
 import de.fhg.iais.roberta.blockly.generated.Field;
 import de.fhg.iais.roberta.blockly.generated.Instance;
-import de.fhg.iais.roberta.blockly.generated.Value;
-import de.fhg.iais.roberta.components.Actor;
-import de.fhg.iais.roberta.components.ActorType;
 import de.fhg.iais.roberta.components.Configuration;
-import de.fhg.iais.roberta.components.Sensor;
-import de.fhg.iais.roberta.components.SensorType;
+import de.fhg.iais.roberta.components.ConfigurationBlock;
+import de.fhg.iais.roberta.components.ConfigurationBlockType;
 import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.factory.IRobotFactory;
-import de.fhg.iais.roberta.inter.mode.action.IActorPort;
-import de.fhg.iais.roberta.inter.mode.action.IMotorSide;
-import de.fhg.iais.roberta.inter.mode.sensor.ISensorPort;
-import de.fhg.iais.roberta.mode.action.DriveDirection;
-import de.fhg.iais.roberta.mode.action.MotorSide;
-import de.fhg.iais.roberta.util.Pair;
-import de.fhg.iais.roberta.util.dbc.Assert;
+import de.fhg.iais.roberta.util.Quadruplet;
 import de.fhg.iais.roberta.util.dbc.DbcException;
 
 /**
@@ -37,8 +27,11 @@ public class Jaxb2ArduinoConfigurationTransformer {
 
     public Configuration transform(BlockSet blockSet) {
         List<Instance> instances = blockSet.getInstance();
-        List<Block> blocks = instances.get(0).getBlock();
-        return blockToBrickConfiguration(blocks.get(0));
+        List<List<Block>> blocks = new ArrayList<>();
+        for ( int i = 0; i < instances.size(); i++ ) {
+            blocks.add(instances.get(i).getBlock());
+        }
+        return blockToBrickConfiguration(blocks);
     }
 
     public BlockSet transformInverse(Configuration conf) {
@@ -50,39 +43,7 @@ public class Jaxb2ArduinoConfigurationTransformer {
         instance.setY("20");
         Block block = mkBlock(idCount++);
         block.setType("robBrick_Arduino-board");
-        instance.getBlock().add(block);
-        List<Value> values = block.getValue();
-        {
-            Map<ISensorPort, Sensor> sensors = conf.getSensors();
-            for ( ISensorPort port : sensors.keySet() ) {
-                Sensor sensor = sensors.get(port);
-                Value hardwareComponent = new Value();
-                hardwareComponent.setName(port.toString());
-                Block sensorBlock = mkBlock(idCount++);
-                hardwareComponent.setBlock(sensorBlock);
-                sensorBlock.setType(sensor.getType().blocklyName());
-                values.add(hardwareComponent);
-            }
-        }
-        {
-            Map<IActorPort, Actor> actors = conf.getActors();
-            for ( IActorPort port : actors.keySet() ) {
-                Actor actor = actors.get(port);
-                Value hardwareComponent = new Value();
-                hardwareComponent.setName(port.getPortNumber());
-                Block actorBlock = mkBlock(idCount++);
-                hardwareComponent.setBlock(actorBlock);
-                actorBlock.setType(actor.getName().blocklyName());
-                List<Field> actorFields = actorBlock.getField();
-                actorFields.add(mkField("MOTOR_REGULATION", ("" + actor.isRegulated()).toUpperCase()));
-                String rotation = actor.getRotationDirection() == DriveDirection.FOREWARD ? "OFF" : "ON";
-                actorFields.add(mkField("MOTOR_REVERSE", rotation));
-                if ( !actor.getName().blocklyName().equals("robBrick_motor_middle") ) {
-                    actorFields.add(mkField("MOTOR_DRIVE", actor.getMotorSide().toString()));
-                }
-                values.add(hardwareComponent);
-            }
-        }
+        //TODO: add other configuration blocks
         return blockSet;
     }
 
@@ -102,62 +63,35 @@ public class Jaxb2ArduinoConfigurationTransformer {
         return field;
     }
 
-    private Configuration blockToBrickConfiguration(Block block) {
-        switch ( block.getType() ) {
-            case "robBrick_ardu-Brick":
-                List<Pair<ISensorPort, Sensor>> sensors = new ArrayList<>();
-                List<Pair<IActorPort, Actor>> actors = new ArrayList<>();
-
-                List<Value> values = extractValues(block, (short) 14);
-                extractHardwareComponent(values, sensors, actors);
-
-                return new ArduinoConfiguration.Builder().addActors(actors).addSensors(sensors).build();
-            default:
-                throw new DbcException("There was no correct configuration block found! " + block.getType());
-        }
-    }
-
-    private void extractHardwareComponent(List<Value> values, List<Pair<ISensorPort, Sensor>> sensors, List<Pair<IActorPort, Actor>> actors) {
-        for ( Value value : values ) {
-            if ( value.getName().startsWith("S") ) {
-                // Extract sensor
-                sensors.add(Pair.of(this.factory.getSensorPort(value.getName()), new Sensor(SensorType.get(value.getBlock().getType()))));
-            } else {
-                // Extract actor
-                IMotorSide motorSide;
-                switch ( value.getBlock().getType() ) {
-                    case "robBrick_motor_ardu":
-                        motorSide = MotorSide.NONE;
-                        actors.add(
-                            Pair.of(
-                                this.factory.getActorPort(value.getName()),
-                                new Actor(ActorType.get(value.getBlock().getType()), true, DriveDirection.FOREWARD, motorSide)));
-
-                        break;
-                    default:
-                        throw new DbcException("Invalide motor type! " + value.getBlock().getType());
+    @SuppressWarnings("rawtypes")
+    private Configuration blockToBrickConfiguration(List<List<Block>> blocks) {
+        switch ( blocks.get(0).get(0).getType() ) {
+            case "robBrick_Arduino-Brick":
+                // Quadruplet: block type; block name; list of block' port names; list of block's pin names
+                List<Quadruplet<ConfigurationBlock, String, List<String>, List<String>>> configurationBlocks = new ArrayList<>();
+                for ( int i = 1; i < blocks.size(); i++ ) {
+                    configurationBlocks.add(extractConfigurationBlockComponents(blocks.get(i)));
                 }
-            }
+                System.out.println("Config");
+                System.out.println(new ArduinoConfiguration(configurationBlocks).getConfigurationBlock().getType());
+                System.out.println(new ArduinoConfiguration(configurationBlocks).getBlockName());
+                System.out.println(new ArduinoConfiguration(configurationBlocks).getPorts());
+                System.out.println(new ArduinoConfiguration(configurationBlocks).getPins());
+                return new ArduinoConfiguration(configurationBlocks).getConfiguration();
+            default:
+                throw new DbcException("There was no correct configuration block found! " + blocks.get(0).get(0).getType());
         }
     }
 
-    private List<Value> extractValues(Block block, int numOfValues) {
-        List<Value> values;
-        values = block.getValue();
-        Assert.isTrue(values.size() <= numOfValues, "Values size is not less or equal to " + numOfValues + "!");
-        return values;
-    }
-
-    private List<Field> extractFields(Block block, int numOfFields) {
-        List<Field> fields;
-        fields = block.getField();
-        Assert.isTrue(fields.size() == numOfFields, "Number of fields is not equal to " + numOfFields + "!");
-        return fields;
-    }
-
-    private String extractField(List<Field> fields, String name, int fieldLocation) {
-        Field field = fields.get(fieldLocation);
-        Assert.isTrue(field.getName().equals(name), "Field name is not equal to " + name + "!");
-        return field.getValue();
+    private Quadruplet<ConfigurationBlock, String, List<String>, List<String>> extractConfigurationBlockComponents(List<Block> block) {
+        ConfigurationBlock confBlock = new ConfigurationBlock(ConfigurationBlockType.get(block.get(0).getType()));
+        String name = block.get(0).getField().get(0).getValue();
+        List<String> portNames = new ArrayList<>();
+        List<String> pinNumbers = new ArrayList<>();
+        for ( int i = 1; i < block.get(0).getField().size(); i++ ) {
+            portNames.add(block.get(0).getField().get(i).getName());
+            pinNumbers.add(block.get(0).getField().get(i).getValue());
+        }
+        return Quadruplet.of(confBlock, name, portNames, pinNumbers);
     }
 }

@@ -111,10 +111,8 @@ public class Jaxb2BotNrollConfigurationTransformer {
             case "robBrick_ardu-Brick":
                 List<Pair<ISensorPort, Sensor>> sensors = new ArrayList<>();
                 List<Pair<IActorPort, Actor>> actors = new ArrayList<>();
-
                 List<Value> values = extractValues(block, (short) 14);
                 extractHardwareComponent(values, sensors, actors);
-
                 return new BotNrollConfiguration.Builder().addActors(actors).addSensors(sensors).build();
             default:
                 throw new DbcException("There was no correct configuration block found! " + block.getType());
@@ -136,7 +134,6 @@ public class Jaxb2BotNrollConfigurationTransformer {
                             Pair.of(
                                 this.factory.getActorPort(value.getName()),
                                 new Actor(ActorType.get(value.getBlock().getType()), true, DriveDirection.FOREWARD, motorSide)));
-
                         break;
                     case "robBrick_motor_middle":
                         //fields = extractFields(value.getBlock(), (short) 2);

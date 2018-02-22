@@ -3,6 +3,7 @@
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		"lastupdated": "2018-03-14 17:18:07.865391",
 =======
 		"lastupdated": "2018-02-07 16:55:31.254062",
@@ -10,6 +11,9 @@
 =======
 		"lastupdated": "2018-02-16 13:54:35.119105",
 >>>>>>> #745 chanhed arduino configuration blokcs so they would be always enabled
+=======
+		"lastupdated": "2018-02-21 12:28:51.856000",
+>>>>>>> #756 implmented Arduino Configuration
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
