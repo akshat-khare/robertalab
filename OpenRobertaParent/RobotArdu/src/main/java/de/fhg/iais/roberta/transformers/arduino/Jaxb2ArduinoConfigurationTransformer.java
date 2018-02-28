@@ -43,7 +43,7 @@ public class Jaxb2ArduinoConfigurationTransformer {
         instance.setY("20");
         Block block = mkBlock(idCount++);
         block.setType("robBrick_Arduino-board");
-        //TODO: add other configuration blocks
+        //TODO: add other configuration blocks and fix the whole reverse transform for the Arduino
         return blockSet;
     }
 
@@ -72,11 +72,6 @@ public class Jaxb2ArduinoConfigurationTransformer {
                 for ( int i = 1; i < blocks.size(); i++ ) {
                     configurationBlocks.add(extractConfigurationBlockComponents(blocks.get(i)));
                 }
-                System.out.println("Config");
-                System.out.println(new ArduinoConfiguration(configurationBlocks).getConfigurationBlock().getType());
-                System.out.println(new ArduinoConfiguration(configurationBlocks).getBlockName());
-                System.out.println(new ArduinoConfiguration(configurationBlocks).getPorts());
-                System.out.println(new ArduinoConfiguration(configurationBlocks).getPins());
                 return new ArduinoConfiguration(configurationBlocks).getConfiguration();
             default:
                 throw new DbcException("There was no correct configuration block found! " + blocks.get(0).get(0).getType());

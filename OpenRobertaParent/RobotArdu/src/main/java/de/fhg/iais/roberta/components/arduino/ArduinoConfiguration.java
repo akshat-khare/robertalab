@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.fhg.iais.roberta.components.Configuration;
 import de.fhg.iais.roberta.components.ConfigurationBlock;
+import de.fhg.iais.roberta.components.ConfigurationBlockType;
 import de.fhg.iais.roberta.util.Quadruplet;
 
 public class ArduinoConfiguration extends Configuration {
@@ -39,20 +40,28 @@ public class ArduinoConfiguration extends Configuration {
         }
     }
 
-    public ConfigurationBlock getConfigurationBlock() {
-        return this.configurationBlocks.get(0).getFirst();
+    public List<Quadruplet<ConfigurationBlock, String, List<String>, List<String>>> getConfigurationBlocks() {
+        return this.configurationBlocks;
     }
 
-    public String getBlockName() {
-        return this.configurationBlocks.get(0).getSecond();
+    public ConfigurationBlock getConfigurationBlock(Quadruplet<ConfigurationBlock, String, List<String>, List<String>> configurationBlock) {
+        return configurationBlock.getFirst();
     }
 
-    public List<String> getPorts() {
-        return this.configurationBlocks.get(0).getThird();
+    public ConfigurationBlockType getConfigurationBlockType(Quadruplet<ConfigurationBlock, String, List<String>, List<String>> configurationBlock) {
+        return configurationBlock.getFirst().getType();
     }
 
-    public List<String> getPins() {
-        return this.configurationBlocks.get(0).getFourth();
+    public String getBlockName(Quadruplet<ConfigurationBlock, String, List<String>, List<String>> configurationBlock) {
+        return configurationBlock.getSecond();
+    }
+
+    public List<String> getPorts(Quadruplet<ConfigurationBlock, String, List<String>, List<String>> configurationBlock) {
+        return configurationBlock.getThird();
+    }
+
+    public List<String> getPins(Quadruplet<ConfigurationBlock, String, List<String>, List<String>> configurationBlock) {
+        return configurationBlock.getFourth();
     }
 
     @Override

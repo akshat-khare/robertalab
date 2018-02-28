@@ -2,8 +2,8 @@ package de.fhg.iais.roberta.syntax.codegen.arduino.arduino;
 
 import java.util.ArrayList;
 
-import de.fhg.iais.roberta.components.SensorType;
-import de.fhg.iais.roberta.components.UsedSensor;
+import de.fhg.iais.roberta.components.ConfigurationBlockType;
+import de.fhg.iais.roberta.components.UsedConfigurationBlock;
 import de.fhg.iais.roberta.components.arduino.ArduinoConfiguration;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.action.display.ClearDisplayAction;
@@ -54,12 +54,12 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
      * @param programPhrases to generate the code from
      * @param indentation to start with. Will be incr/decr depending on block structure
      */
-    private CppVisitor(ArrayList<ArrayList<Phrase<Void>>> phrases, int indentation) {
+    private CppVisitor(ArduinoConfiguration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> phrases, int indentation) {
         super(phrases, indentation);
-        UsedHardwareCollectorVisitor codePreprocessVisitor = new UsedHardwareCollectorVisitor(phrases);
+        UsedHardwareCollectorVisitor codePreprocessVisitor = new UsedHardwareCollectorVisitor(phrases, brickConfiguration);
         this.usedVars = codePreprocessVisitor.getVisitedVars();
-        this.usedSensors = codePreprocessVisitor.getUsedSensors();
-        this.usedActors = codePreprocessVisitor.getUsedActors();
+        this.usedConfigurationBlocks = codePreprocessVisitor.getUsedConfigurationBlocks();
+        //TODO: fix how the timer is detected for all robots
         this.isTimerSensorUsed = codePreprocessVisitor.isTimerSensorUsed();
         this.loopsLabels = codePreprocessVisitor.getloopsLabelContainer();
     }
@@ -73,7 +73,7 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
      */
     public static String generate(ArduinoConfiguration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> programPhrases, boolean withWrapping) {
 
-        CppVisitor astVisitor = new CppVisitor(programPhrases, withWrapping ? 1 : 0);
+        CppVisitor astVisitor = new CppVisitor(brickConfiguration, programPhrases, withWrapping ? 1 : 0);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }
@@ -216,7 +216,7 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
         nlIndent();
         this.sb.append("Serial.begin(9600); ");
         nlIndent();
-        this.generateSensors();
+        this.generateConfigurationBlocks();
         generateUsedVars();
         this.sb.append("\n}\n");
         this.sb.append("\n").append("void loop() \n");
@@ -239,21 +239,35 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
         }
     }
 
-    private void generateSensors() {
-        for ( UsedSensor usedSensor : this.usedSensors ) {
-            switch ( (SensorType) usedSensor.getType() ) {
-                case COLOR:
-                case INFRARED:
+    private void generateConfigurationBlocks() {
+        for ( UsedConfigurationBlock usedConfigurationBlock : this.usedConfigurationBlocks ) {
+            switch ( (ConfigurationBlockType) usedConfigurationBlock.getType() ) {
                 case ULTRASONIC:
-                case VOLTAGE:
-                case TIMER:
+                    this.sb
+                        .append("here be the code for ultrasonic sensor ")
+                        .append(usedConfigurationBlock.getBlockName())
+                        .append(usedConfigurationBlock.getPorts())
+                        .append(usedConfigurationBlock.getPins())
+                        .append("\n");
+                    break;
+                case MOISTURE:
+                    this.sb
+                        .append("here be the code for moisture sensor ")
+                        .append(usedConfigurationBlock.getBlockName())
+                        .append(usedConfigurationBlock.getPorts())
+                        .append(usedConfigurationBlock.getPins())
+                        .append("\n");
+                    break;
                 case LIGHT:
-                case COMPASS:
-                case SOUND:
-                case TOUCH:
+                    this.sb
+                        .append("here be the code for light sensor ")
+                        .append(usedConfigurationBlock.getBlockName())
+                        .append(usedConfigurationBlock.getPorts())
+                        .append(usedConfigurationBlock.getPins())
+                        .append("\n");
                     break;
                 default:
-                    throw new DbcException("Sensor is not supported: " + usedSensor.getType());
+                    throw new DbcException("Sensor is not supported: " + usedConfigurationBlock.getType());
             }
         }
     }

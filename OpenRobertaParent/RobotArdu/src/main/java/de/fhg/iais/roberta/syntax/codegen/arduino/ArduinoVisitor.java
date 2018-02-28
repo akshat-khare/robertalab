@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import de.fhg.iais.roberta.components.UsedActor;
+import de.fhg.iais.roberta.components.UsedConfigurationBlock;
 import de.fhg.iais.roberta.components.UsedSensor;
 import de.fhg.iais.roberta.mode.general.IndexLocation;
 import de.fhg.iais.roberta.mode.sensor.TimerSensorMode;
@@ -40,6 +41,7 @@ import de.fhg.iais.roberta.util.dbc.DbcException;
 public abstract class ArduinoVisitor extends RobotCppVisitor {
 
     protected Set<UsedSensor> usedSensors;
+    protected Set<UsedConfigurationBlock> usedConfigurationBlocks;
     protected Set<UsedActor> usedActors;
     protected ArrayList<VarDeclaration<Void>> usedVars;
 
@@ -241,7 +243,7 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
 
     @Override
     public Void visitRepeatStmt(RepeatStmt<Void> repeatStmt) {
-        boolean isWaitStmt = repeatStmt.getMode() == RepeatStmt.Mode.WAIT || repeatStmt.getMode() == RepeatStmt.Mode.FOREVER_ARDU;
+        boolean isWaitStmt = (repeatStmt.getMode() == RepeatStmt.Mode.WAIT) || (repeatStmt.getMode() == RepeatStmt.Mode.FOREVER_ARDU);
         switch ( repeatStmt.getMode() ) {
             case UNTIL:
             case WHILE:
