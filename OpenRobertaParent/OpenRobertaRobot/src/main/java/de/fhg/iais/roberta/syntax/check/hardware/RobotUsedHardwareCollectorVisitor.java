@@ -48,6 +48,7 @@ import de.fhg.iais.roberta.syntax.sensor.generic.GyroSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.IRSeekerSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.InfraredSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.LightSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.MoistureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.SoundSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.TemperatureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.TimerSensor;
@@ -63,8 +64,8 @@ import de.fhg.iais.roberta.visitor.sensor.AstSensorsVisitor;
 
 public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor implements AstSensorsVisitor<Void>, AstActorMotorVisitor<Void>,
     AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<Void>, AstActorCommunicationVisitor<Void> {
-    protected final Set<UsedSensor> usedSensors = new LinkedHashSet<UsedSensor>();
-    protected final Set<UsedActor> usedActors = new LinkedHashSet<UsedActor>();
+    protected final Set<UsedSensor> usedSensors = new LinkedHashSet<>();
+    protected final Set<UsedActor> usedActors = new LinkedHashSet<>();
 
     protected final Configuration brickConfiguration;
 
@@ -181,6 +182,12 @@ public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor imp
     }
 
     @Override
+    public Void visitMoistureSensor(MoistureSensor<Void> moistureSensor) {
+        this.usedSensors.add(new UsedSensor((ISensorPort) moistureSensor.getPort(), SensorType.MOISTURE, moistureSensor.getMode()));
+        return null;
+    }
+
+    @Override
     public Void visitCompassSensor(CompassSensor<Void> compassSensor) {
         this.usedSensors.add(new UsedSensor((ISensorPort) compassSensor.getPort(), SensorType.COMPASS, compassSensor.getMode()));
         return null;
@@ -199,7 +206,7 @@ public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor imp
             driveAction.getParam().getDuration().getValue().visit(this);
         }
         if ( this.brickConfiguration != null ) {
-            if ( this.brickConfiguration.getLeftMotorPort() != null && this.brickConfiguration.getRightMotorPort() != null ) {
+            if ( (this.brickConfiguration.getLeftMotorPort() != null) && (this.brickConfiguration.getRightMotorPort() != null) ) {
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getLeftMotorPort(), ActorType.LARGE));
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getRightMotorPort(), ActorType.LARGE));
             }
@@ -215,7 +222,7 @@ public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor imp
             curveAction.getParamLeft().getDuration().getValue().visit(this);
         }
         if ( this.brickConfiguration != null ) {
-            if ( this.brickConfiguration.getLeftMotorPort() != null && this.brickConfiguration.getRightMotorPort() != null ) {
+            if ( (this.brickConfiguration.getLeftMotorPort() != null) && (this.brickConfiguration.getRightMotorPort() != null) ) {
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getLeftMotorPort(), ActorType.LARGE));
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getRightMotorPort(), ActorType.LARGE));
             }
@@ -230,7 +237,7 @@ public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor imp
             turnAction.getParam().getDuration().getValue().visit(this);
         }
         if ( this.brickConfiguration != null ) {
-            if ( this.brickConfiguration.getLeftMotorPort() != null && this.brickConfiguration.getRightMotorPort() != null ) {
+            if ( (this.brickConfiguration.getLeftMotorPort() != null) && (this.brickConfiguration.getRightMotorPort() != null) ) {
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getLeftMotorPort(), ActorType.LARGE));
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getRightMotorPort(), ActorType.LARGE));
             }
@@ -292,7 +299,7 @@ public abstract class RobotUsedHardwareCollectorVisitor extends CheckVisitor imp
     @Override
     public Void visitMotorDriveStopAction(MotorDriveStopAction<Void> stopAction) {
         if ( this.brickConfiguration != null ) {
-            if ( this.brickConfiguration.getLeftMotorPort() != null && this.brickConfiguration.getRightMotorPort() != null ) {
+            if ( (this.brickConfiguration.getLeftMotorPort() != null) && (this.brickConfiguration.getRightMotorPort() != null) ) {
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getLeftMotorPort(), ActorType.LARGE));
                 this.usedActors.add(new UsedActor(this.brickConfiguration.getRightMotorPort(), ActorType.LARGE));
             }

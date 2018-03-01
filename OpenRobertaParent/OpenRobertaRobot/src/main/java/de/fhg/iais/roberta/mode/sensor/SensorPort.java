@@ -22,7 +22,9 @@ public enum SensorPort implements ISensorPort {
     ANY( "3" ),
     BOTH( "3" ),
     MOTOR_LEFT( "2" ),
-    MOTOR_RIGHT( "1" );
+    MOTOR_RIGHT( "1" ),
+    TEST1( "Test1" ),
+    TEST2( "Test2" );
 
     private final String[] values;
 

@@ -33,6 +33,7 @@ import de.fhg.iais.roberta.inter.mode.sensor.IIRSeekerSensorMode;
 import de.fhg.iais.roberta.inter.mode.sensor.IInfraredSensorMode;
 import de.fhg.iais.roberta.inter.mode.sensor.IJoystickMode;
 import de.fhg.iais.roberta.inter.mode.sensor.ILightSensorMode;
+import de.fhg.iais.roberta.inter.mode.sensor.IMoistureSensorMode;
 import de.fhg.iais.roberta.inter.mode.sensor.IMotorTachoMode;
 import de.fhg.iais.roberta.inter.mode.sensor.IPinValue;
 import de.fhg.iais.roberta.inter.mode.sensor.ISensorPort;
@@ -68,6 +69,7 @@ import de.fhg.iais.roberta.mode.sensor.IBirckKeyPressMode;
 import de.fhg.iais.roberta.mode.sensor.IRSeekerSensorMode;
 import de.fhg.iais.roberta.mode.sensor.InfraredSensorMode;
 import de.fhg.iais.roberta.mode.sensor.LightSensorMode;
+import de.fhg.iais.roberta.mode.sensor.MoistureSensorMode;
 import de.fhg.iais.roberta.mode.sensor.MotorTachoMode;
 import de.fhg.iais.roberta.mode.sensor.PinValue;
 import de.fhg.iais.roberta.mode.sensor.SensorPort;
@@ -442,6 +444,17 @@ public interface IRobotFactory {
      */
     default IVoltageSensorMode getVoltageSensorMode(String mode) {
         return IRobotFactory.getModeValue(mode, VoltageSensorMode.class);
+    }
+
+    /**
+     * Get a moisture sensor mode from {@link IMoistureSensorMode} given string parameter. It is possible for one voltage sensor mode to have multiple string
+     * mappings. Throws exception if the voltage sensor mode does not exists.
+     *
+     * @param name of the moisture sensor mode
+     * @return the moisture sensor mode from the enum {@link IMoistureSensorMode}
+     */
+    default IMoistureSensorMode getMoistureSensorMode(String mode) {
+        return IRobotFactory.getModeValue(mode, MoistureSensorMode.class);
     }
 
     /**

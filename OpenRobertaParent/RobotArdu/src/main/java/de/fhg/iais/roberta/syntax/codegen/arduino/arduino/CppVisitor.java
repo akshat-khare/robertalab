@@ -34,7 +34,9 @@ import de.fhg.iais.roberta.syntax.codegen.arduino.ArduinoVisitor;
 import de.fhg.iais.roberta.syntax.expressions.arduino.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask;
 import de.fhg.iais.roberta.syntax.sensor.generic.BrickSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.ColorSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.LightSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.MoistureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.UltrasonicSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.VoltageSensor;
 import de.fhg.iais.roberta.util.dbc.DbcException;
@@ -72,7 +74,6 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
      * @param withWrapping if false the generated code will be without the surrounding configuration code
      */
     public static String generate(ArduinoConfiguration brickConfiguration, ArrayList<ArrayList<Phrase<Void>>> programPhrases, boolean withWrapping) {
-
         CppVisitor astVisitor = new CppVisitor(brickConfiguration, programPhrases, withWrapping ? 1 : 0);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
@@ -85,7 +86,7 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
 
     @Override
     public Void visitShowTextAction(ShowTextAction<Void> showTextAction) {
-        //this.sb.append("lcd.setCursor(0," + showTextAction.getY() + ");");
+        //this.sb.append("lcd.setCursor(0," + showTextAction.getX() + ");");
         //nlIndent();
         //this.sb.append("lcd.print(\"");
         //showTextAction.visit(this);
@@ -181,12 +182,18 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
 
     @Override
     public Void visitLightSensor(LightSensor<Void> lightSensor) {
+        this.sb.append("analogRead(_eingang_" + lightSensor.getPort().getPortNumber() + ")");
+        //this.sb.append("analogRead(eingang_" + lightSensor.getBlockName() + ")");
+        return null;
+    }
+
+    @Override
+    public Void visitColorSensor(ColorSensor<Void> colorSensor) {
         return null;
     }
 
     @Override
     public Void visitBrickSensor(BrickSensor<Void> button) {
-
         return null;
     }
 
@@ -197,7 +204,14 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
     }
 
     @Override
-    public Void visitUltrasonicSensor(UltrasonicSensor<Void> usSensor) {
+    public Void visitUltrasonicSensor(UltrasonicSensor<Void> ultrasonicSensor) {
+        this.sb.append("pulseIn(_echo_" + ultrasonicSensor.getPort().getPortNumber() + ", HIGH)*_signalToDistance");
+        return null;
+    }
+
+    @Override
+    public Void visitMoistureSensor(MoistureSensor<Void> moistureSensor) {
+        this.sb.append("analogRead(_moisturePin_" + moistureSensor.getPort().getPortNumber() + ")");
         return null;
     }
 
@@ -205,6 +219,8 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
     public Void visitMainTask(MainTask<Void> mainTask) {
         decrIndentation();
         mainTask.getVariables().visit(this);
+        nlIndent();
+        generateConfigurationVariables();
         if ( this.isTimerSensorUsed ) {
             nlIndent();
             this.sb.append("unsigned long __time = millis(); \n");
@@ -216,7 +232,7 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
         nlIndent();
         this.sb.append("Serial.begin(9600); ");
         nlIndent();
-        this.generateConfigurationBlocks();
+        this.generateConfigurationSetup();
         generateUsedVars();
         this.sb.append("\n}\n");
         this.sb.append("\n").append("void loop() \n");
@@ -239,32 +255,45 @@ public class CppVisitor extends ArduinoVisitor implements ArduinoAstVisitor<Void
         }
     }
 
-    private void generateConfigurationBlocks() {
+    private void generateConfigurationSetup() {
         for ( UsedConfigurationBlock usedConfigurationBlock : this.usedConfigurationBlocks ) {
             switch ( (ConfigurationBlockType) usedConfigurationBlock.getType() ) {
                 case ULTRASONIC:
-                    this.sb
-                        .append("here be the code for ultrasonic sensor ")
-                        .append(usedConfigurationBlock.getBlockName())
-                        .append(usedConfigurationBlock.getPorts())
-                        .append(usedConfigurationBlock.getPins())
-                        .append("\n");
+                    this.sb.append("pinMode(_trigger_" + usedConfigurationBlock.getBlockName() + ", OUTPUT);");
+                    nlIndent();
+                    this.sb.append("pinMode(_echo_" + usedConfigurationBlock.getBlockName() + ", INPUT);");
+                    nlIndent();
                     break;
                 case MOISTURE:
-                    this.sb
-                        .append("here be the code for moisture sensor ")
-                        .append(usedConfigurationBlock.getBlockName())
-                        .append(usedConfigurationBlock.getPorts())
-                        .append(usedConfigurationBlock.getPins())
-                        .append("\n");
                     break;
                 case LIGHT:
-                    this.sb
-                        .append("here be the code for light sensor ")
-                        .append(usedConfigurationBlock.getBlockName())
-                        .append(usedConfigurationBlock.getPorts())
-                        .append(usedConfigurationBlock.getPins())
-                        .append("\n");
+                    break;
+                default:
+                    throw new DbcException("Sensor is not supported: " + usedConfigurationBlock.getType());
+            }
+        }
+    }
+
+    private void generateConfigurationVariables() {
+        for ( UsedConfigurationBlock usedConfigurationBlock : this.usedConfigurationBlocks ) {
+            switch ( (ConfigurationBlockType) usedConfigurationBlock.getType() ) {
+                case ULTRASONIC:
+                    this.sb.append("int _trigger_" + usedConfigurationBlock.getBlockName() + " = ").append(usedConfigurationBlock.getPins().get(0)).append(";");
+                    nlIndent();
+                    this.sb.append("int _echo_" + usedConfigurationBlock.getBlockName() + " = ").append(usedConfigurationBlock.getPins().get(1)).append(";");
+                    nlIndent();
+                    this.sb.append(
+                        "double _signalToDistance = 0.03432/2; //Nun berechnet man die Entfernung in Zentimetern. Man teilt zunächst die Zeit durch zwei (Weil man ja nur eine Strecke berechnen möchte und nicht die Strecke hin- und zurück). Den Wert multipliziert man mit der Schallgeschwindigkeit in der Einheit Zentimeter/Mikrosekunde und erhält dann den Wert in Zentimetern.");
+                    nlIndent();
+                    break;
+                case MOISTURE:
+                    this.sb.append("int _moisturePin_" + usedConfigurationBlock.getBlockName() + " = ").append(usedConfigurationBlock.getPins().get(0)).append(
+                        ";");
+                    nlIndent();
+                    break;
+                case LIGHT:
+                    this.sb.append("int _eingang_" + usedConfigurationBlock.getBlockName() + " = ").append(usedConfigurationBlock.getPins().get(0)).append(";");
+                    nlIndent();
                     break;
                 default:
                     throw new DbcException("Sensor is not supported: " + usedConfigurationBlock.getType());
