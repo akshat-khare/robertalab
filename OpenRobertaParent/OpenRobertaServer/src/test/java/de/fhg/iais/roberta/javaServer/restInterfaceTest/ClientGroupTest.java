@@ -1,9 +1,6 @@
 package de.fhg.iais.roberta.javaServer.restInterfaceTest;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.ws.rs.core.Response;
 
@@ -24,7 +21,6 @@ import de.fhg.iais.roberta.testutil.JSONUtilForServer;
 import de.fhg.iais.roberta.util.Key;
 import de.fhg.iais.roberta.util.RobertaProperties;
 import de.fhg.iais.roberta.util.Util1;
-import de.fhg.iais.roberta.util.dbc.DbcException;
 
 /**
  * Testing the REST interface for groups of the OpenRoberta server
@@ -41,29 +37,24 @@ public class ClientGroupTest {
 
     // objects for specialized user stories
     private String connectionUrl;
-
-    private RobotCommunicator brickCommunicator;
-
+    private RobertaProperties robertaProperties;
     private ClientUser restUser;
     private ClientGroup restGroup;
+    private RobotCommunicator robotCommunicator;
 
     @Before
     public void setup() throws Exception {
-        Properties robertaProperties = Util1.loadProperties(null);
-        RobertaProperties.setRobertaProperties(robertaProperties);
-
-        this.connectionUrl = "jdbc:hsqldb:mem:performanceInMemoryGropus";
-        this.brickCommunicator = new RobotCommunicator();
-        this.restUser = new ClientUser(this.brickCommunicator, null);
-        this.restGroup = new ClientGroup(this.brickCommunicator);
-
+        this.robertaProperties = new RobertaProperties(Util1.loadProperties(null));
+        this.connectionUrl = "jdbc:hsqldb:mem:restTestInMemoryDb";
+        this.robotCommunicator = new RobotCommunicator();
+        this.restUser = new ClientUser(this.robotCommunicator, this.robertaProperties, null);
+        this.restGroup = new ClientGroup(this.robotCommunicator);
         this.sessionFactoryWrapper = new SessionFactoryWrapper("hibernate-test-cfg.xml", this.connectionUrl);
         Session nativeSession = this.sessionFactoryWrapper.getNativeSession();
         this.memoryDbSetup = new DbSetup(nativeSession);
         this.memoryDbSetup.createEmptyDatabase();
-        Map<String, IRobotFactory> robotPlugins = new HashMap<>();
-        loadPlugin(robotPlugins);
-        this.sPid = HttpSessionState.init(this.brickCommunicator, robotPlugins, 1);
+        Map<String, IRobotFactory> robotPlugins = ServerStarter.configureRobotPlugins(this.robotCommunicator, this.robertaProperties);
+        this.sPid = HttpSessionState.init(this.robotCommunicator, robotPlugins, this.robertaProperties, 1);
     }
 
     private void createTwoUsers() throws Exception {
@@ -272,15 +263,4 @@ public class ClientGroupTest {
         JSONUtilForServer.assertEntityRc(this.response, result, msgOpt);
     }
 
-    private void loadPlugin(Map<String, IRobotFactory> robotPlugins) {
-        try {
-            @SuppressWarnings("unchecked")
-            Class<IRobotFactory> factoryClass =
-                (Class<IRobotFactory>) ServerStarter.class.getClassLoader().loadClass("de.fhg.iais.roberta.factory.ev3.lejos.v0.Factory");
-            Constructor<IRobotFactory> factoryConstructor = factoryClass.getDeclaredConstructor();
-            robotPlugins.put("ev3lejos", factoryConstructor.newInstance());
-        } catch ( Exception e ) {
-            throw new DbcException("robot plugin ev3 has an invalid factory. Check the properties. Server does NOT start", e);
-        }
-    }
 }
