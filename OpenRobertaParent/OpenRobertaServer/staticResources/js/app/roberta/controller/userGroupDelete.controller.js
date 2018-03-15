@@ -12,7 +12,7 @@ define([ 'require', 'exports', 'log', 'util', 'message', 'comm', 'userGroup.mode
          * Delete the user groups those were selected in a user group list
          */
         $('#doDeleteUserGroup').onWrap('click', function() {
-            var userGroup = $("#confirmDeleteUserGroup").data('userGroup');
+            var userGroup = $("#confirmDeleteUserGroup").data('usergroup');
             for (var i = 0; i < userGroup.length; i++) {
                 var userName = userGroup[i][0];
                 var groupName = GUISTATE_C.getGroupName();
