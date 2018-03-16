@@ -266,11 +266,7 @@ Blockly.Msg.INFRARED_TOOLTIP = "Represents an infrared sensor.";
 Blockly.Msg.INLINE_INPUTS = "Inline Inputs";
 Blockly.Msg.INPUT = "input";
 Blockly.Msg.INTERNAL_PORT = "internal";
-<<<<<<< HEAD
 Blockly.Msg.IRSEEKER_TOOLTIP = "Represents a HiTechnic NXT IRSeeker V2 sensor.";
-=======
-Blockly.Msg.IRSEEKER_TOOLTIP = "Represents a HighTechnic NXT IRSeeker V2 sensor.";
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.JOYSTICK_GETSAMPLE_TOOLTIP = "Gets the current reading of one of the axises of the joystick";
 Blockly.Msg.KEY_ISPRESSED_TOOLTIP = "Is the selected button pressed?";
 Blockly.Msg.LANGUAGE_ARABIC = "Arabic";
@@ -616,10 +612,7 @@ Blockly.Msg.MODE_DIGITAL = "digital";
 Blockly.Msg.MODE_DISTANCE = "distance";
 Blockly.Msg.MODE_LIGHT = "light";
 Blockly.Msg.MODE_MODULATED = "modulated";
-<<<<<<< HEAD
-=======
 Blockly.Msg.MODE_MOISTURE = "moisture";
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.MODE_OBSTACLE = "obstacle";
 Blockly.Msg.MODE_OPEN = "open";
 Blockly.Msg.MODE_ORIENTATION = "orientation";

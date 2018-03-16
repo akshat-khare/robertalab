@@ -861,10 +861,7 @@
 	"SENSOR_COMPASS": "",
 	"SENSOR_COMPASS_EV3": "",
 	"COMPASS_TOOLTIP": "",
-<<<<<<< HEAD
 	"COMPASS_TOOLTIP_EV3": "",
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 	"COMPASS_CALIBRATE_TOOLTIP": "",
 	"SOUND_TOOLTIP": "",
 	"MOTOR_ARDU_TOOLTIP": "",

@@ -612,10 +612,7 @@ Blockly.Msg.MODE_DIGITAL = "digitalen";
 Blockly.Msg.MODE_DISTANCE = "Abstand";
 Blockly.Msg.MODE_LIGHT = "Licht";
 Blockly.Msg.MODE_MODULATED = "Moduliert";
-<<<<<<< HEAD
-=======
 Blockly.Msg.MODE_MOISTURE = "moisture";  // untranslated
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.MODE_OBSTACLE = "Hindernis";
 Blockly.Msg.MODE_OPEN = "öffnen";
 Blockly.Msg.MODE_ORIENTATION = "orientation";  // untranslated

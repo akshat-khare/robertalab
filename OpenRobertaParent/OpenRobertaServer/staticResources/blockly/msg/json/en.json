@@ -1,27 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-		"lastupdated": "2018-03-14 17:18:07.865391",
-=======
-		"lastupdated": "2018-02-07 16:55:31.254062",
->>>>>>> #756 added base Uno files, main configuration block, most of the sensor/actor configuration blocks
-=======
-		"lastupdated": "2018-02-16 13:54:35.119105",
->>>>>>> #745 chanhed arduino configuration blokcs so they would be always enabled
-=======
-		"lastupdated": "2018-02-21 12:28:51.856000",
->>>>>>> #756 implmented Arduino Configuration
-=======
-		"lastupdated": "2018-02-28 14:24:11.875979",
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
-=======
-		"lastupdated": "2018-03-01 17:37:58.578657",
->>>>>>> #755, #756 implemented moisture sensor, added test code generation for moisture, ultrasonic and light sensors
+		"lastupdated": "2018-03-16 13:07:19.406505",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -434,11 +414,7 @@
 	"ULTRASONIC_TOOLTIP": "Represents an ultrasonic sensor.",
 	"COLOUR_TOOLTIP": "Represents a colour sensor.",
 	"INFRARED_TOOLTIP": "Represents an infrared sensor.",
-<<<<<<< HEAD
 	"IRSEEKER_TOOLTIP": "Represents a HiTechnic NXT IRSeeker V2 sensor.",
-=======
-	"IRSEEKER_TOOLTIP": "Represents a HighTechnic NXT IRSeeker V2 sensor.",
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 	"TOUCH_TOOLTIP": "Is the touch sensor pressed?",
 	"GYRO_TOOLTIP": "Represents a gyro sensor.",
 	"FLAME_TOOLTIP": "Represents a flame sensor.",
@@ -891,10 +867,7 @@
 	"SENSOR_COMPASS": "compass sensor",
 	"SENSOR_COMPASS_EV3": "HT compass sensor",
 	"COMPASS_TOOLTIP": "Represents a compass sensor.",
-<<<<<<< HEAD
 	"COMPASS_TOOLTIP_EV3": "Represents a HiTechnic NXT compass sensor.",
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 	"COMPASS_CALIBRATE_TOOLTIP": "Calibrates the compass. Turn the compass sensor VERY slowly for two times (about 40 seconds).",
 	"SOUND_TOOLTIP": "Represents a sound sensor.",
 	"MOTOR_ARDU_TOOLTIP": "Represents a Bot'n Roll chassis motor.",

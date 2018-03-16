@@ -64,19 +64,12 @@ Blockly.Msg.COLOUR_RGB_HELPURL = "http://www.december.com/html/spec/colorper.htm
 Blockly.Msg.COLOUR_RGB_RED = "röd";
 Blockly.Msg.COLOUR_RGB_TITLE = "färg med";
 Blockly.Msg.COLOUR_RGB_TOOLTIP = "Skapa en färg med det angivna mängden röd, grön och blå. Alla värden måste vara mellan 0 och 100.";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.COLOUR_RGB_WHITE = "white";
 Blockly.Msg.COLOUR_TOOLTIP = "Represents a colour sensor.";
 Blockly.Msg.COMPASS_CALIBRATE_TOOLTIP = "Calibrates the compass. Turn the compass sensor VERY slowly for two times (about 40 seconds).";  // untranslated
 Blockly.Msg.COMPASS_GETSAMPLE_TOOLTIP = "Gets the current reading from the compass sensor.";
 Blockly.Msg.COMPASS_TOOLTIP = "Represents a compass sensor.";
-<<<<<<< HEAD
 Blockly.Msg.COMPASS_TOOLTIP_EV3 = "Represents a HiTechnic NXT compass sensor.";  // untranslated
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.CONFIGURATION_ERROR_MOTORS_ROTATION_DIRECTION = "The direction of rotation of the left and right motor is different!";
 Blockly.Msg.CONFIGURATION_ERROR_MOTOR_LEFT_MISSING = "Left motor missing in the configuration!";
 Blockly.Msg.CONFIGURATION_ERROR_MOTOR_LEFT_UNREGULATED = "Left motor is not regulated!";
@@ -85,10 +78,7 @@ Blockly.Msg.CONFIGURATION_ERROR_MOTOR_RIGHT_MISSING = "Right motor missing in th
 Blockly.Msg.CONFIGURATION_ERROR_MOTOR_RIGHT_UNREGULATED = "Right motor is not regulated!";
 Blockly.Msg.CONFIGURATION_ERROR_MULTIPLE_LEFT_MOTORS = "You have multiple left motors assigned to your configuration!";
 Blockly.Msg.CONFIGURATION_ERROR_MULTIPLE_RIGHT_MOTORS = "You have multiple right motors assigned to your configuration!";
-<<<<<<< HEAD
 Blockly.Msg.CONFIGURATION_ERROR_OTHER_NOT_SUPPORTED = "Other power consumer does not support this type of block!";  // untranslated
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.CONFIGURATION_ERROR_SENSOR_MISSING = "This sensor is not set to the port!";
 Blockly.Msg.CONFIGURATION_ERROR_SENSOR_WRONG = "Connected wrong sensor to the given port!";
 Blockly.Msg.CONFLIST_DELETE_ALL_TOOLTIP = "Click here to delete all selected programs.";
@@ -118,52 +108,6 @@ Blockly.Msg.CONNECTION_TO_CONNECTION = "to connection";
 Blockly.Msg.CONNECTION_TO_ROBOT = "to robot";
 Blockly.Msg.CONNECTION_WAIT_FOR_CONNECTION = "wait for connection";
 Blockly.Msg.CONNECTION_WAIT_TOOLTIP = "Waits for a connection via Bluetooth.";
-<<<<<<< HEAD
-=======
-Blockly.Msg.COLOUR_RGB_WHITE = "white";  // untranslated
-Blockly.Msg.COLOUR_TOOLTIP = "Represents a colour sensor.";  // untranslated
-Blockly.Msg.COMPASS_GETSAMPLE_TOOLTIP = "Gets the current reading from the compass sensor.";  // untranslated
-Blockly.Msg.COMPASS_TOOLTIP = "Represents a compass sensor.";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTORS_ROTATION_DIRECTION = "The direction of rotation of the left and right motor is different!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTOR_LEFT_MISSING = "Left motor missing in the configuration!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTOR_LEFT_UNREGULATED = "Left motor is not regulated!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTOR_MISSING = "Motor is missing on the given port!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTOR_RIGHT_MISSING = "Right motor missing in the configuration!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MOTOR_RIGHT_UNREGULATED = "Right motor is not regulated!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MULTIPLE_LEFT_MOTORS = "You have multiple left motors assigned to your configuration!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_MULTIPLE_RIGHT_MOTORS = "You have multiple right motors assigned to your configuration!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_SENSOR_MISSING = "This sensor is not set to the port!";  // untranslated
-Blockly.Msg.CONFIGURATION_ERROR_SENSOR_WRONG = "Connected wrong sensor to the given port!";  // untranslated
-Blockly.Msg.CONFLIST_DELETE_ALL_TOOLTIP = "Click here to delete all selected programs.";  // untranslated
-Blockly.Msg.CONFLIST_DELETE_TOOLTIP = "Click here to delete your robot configuration.";  // untranslated
-Blockly.Msg.CONFLIST_LOAD_TOOLTIP = "Click here to load your robot configuration in the configuration environment.";  // untranslated
-Blockly.Msg.CONNECTION_BOB3_RECEIVE_TOOLTIP = "Reads a message via the IR receiver. Only numbers can be received.";  // untranslated
-Blockly.Msg.CONNECTION_BOB3_SEND_TOOLTIP = "Sends a message of type number to another Bob3. Hold the Bob3's face to face!";  // untranslated
-Blockly.Msg.CONNECTION_CHECK = "connection to robot %1 active?";  // untranslated
-Blockly.Msg.CONNECTION_CHECK_TOOLTIP = "Check if the connection to the robot is active.";  // untranslated
-Blockly.Msg.CONNECTION_CONNECT = "connect to robot name";  // untranslated
-Blockly.Msg.CONNECTION_FROM_CONNECTION = "from connection";  // untranslated
-Blockly.Msg.CONNECTION_FROM_ROBOT = "from robot";  // untranslated
-Blockly.Msg.CONNECTION_MBED_RECEIVE_TOOLTIP = "Reads a message over one of the channels (0 - 255). The default channel is 0.";  // untranslated
-Blockly.Msg.CONNECTION_MBED_SEND_TOOLTIP = "Sends a message to another system. You can specify a signal strength from 0 - 7, where 0 is very low and 7 is the strongests. The message is send over channel 0 unless you specify another one.";  // untranslated
-Blockly.Msg.CONNECTION_OVER_CHANNEL = "over channel";  // untranslated
-Blockly.Msg.CONNECTION_POWER = "with strength";  // untranslated
-Blockly.Msg.CONNECTION_PROTOCOL_BLUETOOTH = "Bluetooth";  // untranslated
-Blockly.Msg.CONNECTION_RECEIVED_DATA = "receive message";  // untranslated
-Blockly.Msg.CONNECTION_RECEIVE_TOOLTIP = "Waits for a message from the robot which you declare in the connection.";  // untranslated
-Blockly.Msg.CONNECTION_SEND_DATA = "send message";  // untranslated
-Blockly.Msg.CONNECTION_SEND_TOOLTIP = "Sends a message to another robot.";  // untranslated
-Blockly.Msg.CONNECTION_SET_CHANNEL = "set channel to %1";  // untranslated
-Blockly.Msg.CONNECTION_SET_CHANNEL_TOOLTIP = "Sets the channel for sending and receiving messages. Can be set from 0 to 255.";  // untranslated
-Blockly.Msg.CONNECTION_START_TOOLTIP = "Tries to make a connection to another robot via Bluetooth.";  // untranslated
-Blockly.Msg.CONNECTION_TOOLTIP = "A robot's connection";  // untranslated
-Blockly.Msg.CONNECTION_TO_CONNECTION = "to connection";  // untranslated
-Blockly.Msg.CONNECTION_TO_ROBOT = "to robot";  // untranslated
-Blockly.Msg.CONNECTION_WAIT_FOR_CONNECTION = "wait for connection";  // untranslated
-Blockly.Msg.CONNECTION_WAIT_TOOLTIP = "Waits for a connection via Bluetooth.";  // untranslated
->>>>>>> #745 added base Uno files, configuration draft
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.CONTROLS_FLOW_STATEMENTS_HELPURL = "https://github.com/google/blockly/wiki/Loops#loop-termination-blocks";  // untranslated
 Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_BREAK = "bryt ut ur loop";
 Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_CONTINUE = "fortsätta med nästa upprepning av loop";
@@ -322,12 +266,7 @@ Blockly.Msg.INFRARED_TOOLTIP = "Represents an infrared sensor.";
 Blockly.Msg.INLINE_INPUTS = "Radinmatning";
 Blockly.Msg.INPUT = "input";  // untranslated
 Blockly.Msg.INTERNAL_PORT = "internal";  // untranslated
-<<<<<<< HEAD
-<<<<<<< HEAD
 Blockly.Msg.IRSEEKER_TOOLTIP = "Represents a HiTechnic NXT IRSeeker V2 sensor.";  // untranslated
-=======
-Blockly.Msg.IRSEEKER_TOOLTIP = "Represents a HighTechnic NXT IRSeeker V2 sensor.";  // untranslated
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.JOYSTICK_GETSAMPLE_TOOLTIP = "Gets the current reading of one of the axises of the joystick";
 Blockly.Msg.KEY_ISPRESSED_TOOLTIP = "Is the selected button pressed?";
 Blockly.Msg.LANGUAGE_ARABIC = "Arabic";  // untranslated
@@ -351,14 +290,6 @@ Blockly.Msg.LANGUAGE_RUSSIAN = "Russian";  // untranslated
 Blockly.Msg.LANGUAGE_SPANISH = "Spanish";  // untranslated
 Blockly.Msg.LANGUAGE_SWEDISH = "Swedish";  // untranslated
 Blockly.Msg.LANGUAGE_TURKISH = "Turkish";  // untranslated
-<<<<<<< HEAD
-=======
-Blockly.Msg.JOYSTICK_GETSAMPLE_TOOLTIP = "Gets the current reading of one of the axises of the joystick";  // untranslated
-Blockly.Msg.KEY_ISPRESSED_TOOLTIP = "Is the selected button pressed?";  // untranslated
-Blockly.Msg.LCD = "LCD";  // untranslated
->>>>>>> #756 added base Uno files, main configuration block, most of the sensor/actor configuration blocks
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.LED = "LED";  // untranslated
 Blockly.Msg.LED_OFF = "turn LED off";
 Blockly.Msg.LED_OFF_TOOLTIP = "Turns the LED off.";
@@ -672,39 +603,11 @@ Blockly.Msg.MODE = "mode";
 Blockly.Msg.MODE_ACCELERATION = "acceleration";
 Blockly.Msg.MODE_AMBIENTLIGHT = "ambient light";
 Blockly.Msg.MODE_ANALOG = "analog";  // untranslated
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.MODE_ANGLE = "angle";
 Blockly.Msg.MODE_CLOSE = "close";
 Blockly.Msg.MODE_COLOUR = "colour";
 Blockly.Msg.MODE_COMPASS = "compass";  // untranslated
 Blockly.Msg.MODE_DEGREE = "degree";
-<<<<<<< HEAD
-Blockly.Msg.MODE_DIGITAL = "digital";  // untranslated
-Blockly.Msg.MODE_DISTANCE = "distance";
-Blockly.Msg.MODE_LIGHT = "light";
-Blockly.Msg.MODE_MODULATED = "modulated";  // untranslated
-Blockly.Msg.MODE_OBSTACLE = "obstacle";
-Blockly.Msg.MODE_OPEN = "open";
-Blockly.Msg.MODE_ORIENTATION = "orientation";
-Blockly.Msg.MODE_PRESENCE = "presence";
-Blockly.Msg.MODE_PRESSED = "pressed";  // untranslated
-Blockly.Msg.MODE_PULSE_HIGH = "pulse time HIGH";  // untranslated
-Blockly.Msg.MODE_PULSE_LOW = "pulse time LOW";  // untranslated
-Blockly.Msg.MODE_RATE = "rate";
-Blockly.Msg.MODE_RGB = "RGB";
-Blockly.Msg.MODE_ROTATION = "rotation";
-Blockly.Msg.MODE_SOUND = "sound";
-Blockly.Msg.MODE_UNMODULATED = "unmodulated";  // untranslated
-=======
-Blockly.Msg.MODE_ANGLE = "angle";  // untranslated
-Blockly.Msg.MODE_CLOSE = "close";  // untranslated
-Blockly.Msg.MODE_COLOUR = "colour";  // untranslated
-Blockly.Msg.MODE_DEGREE = "degree";  // untranslated
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.MODE_DIGITAL = "digital";  // untranslated
 Blockly.Msg.MODE_DISTANCE = "distance";
 Blockly.Msg.MODE_LIGHT = "light";
@@ -717,19 +620,11 @@ Blockly.Msg.MODE_PRESENCE = "presence";
 Blockly.Msg.MODE_PRESSED = "pressed";  // untranslated
 Blockly.Msg.MODE_PULSE_HIGH = "pulse time HIGH";  // untranslated
 Blockly.Msg.MODE_PULSE_LOW = "pulse time LOW";  // untranslated
-<<<<<<< HEAD
-Blockly.Msg.MODE_RATE = "rate";  // untranslated
-Blockly.Msg.MODE_RGB = "RGB";  // untranslated
-Blockly.Msg.MODE_ROTATION = "rotation";  // untranslated
-Blockly.Msg.MODE_SOUND = "sound";  // untranslated
->>>>>>> #745 added base Uno files, configuration draft
-=======
 Blockly.Msg.MODE_RATE = "rate";
 Blockly.Msg.MODE_RGB = "RGB";
 Blockly.Msg.MODE_ROTATION = "rotation";
 Blockly.Msg.MODE_SOUND = "sound";
 Blockly.Msg.MODE_UNMODULATED = "unmodulated";  // untranslated
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.MODE_VALUE = "value";  // untranslated
 Blockly.Msg.MOTION_SENSOR = "motion sensor";  // untranslated
 Blockly.Msg.MOTOR = "motor";
@@ -1139,10 +1034,6 @@ Blockly.Msg.SAY_PARAMETERS_TOOLTIP = "The robot says the given text. It is also 
 Blockly.Msg.SAY_TOOLTIP = "The robot says the given text. It is also possible to enter special charaters. The robot will use the selected language to try and speak the entered text.";  // untranslated
 Blockly.Msg.SEND_DATA = "data to send";  // untranslated
 Blockly.Msg.SENSOR_ACCELEROMETER = "accelerometer";  // untranslated
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_AMBIENTLIGHT = "ambientlight sensor";
 Blockly.Msg.SENSOR_ANY = "anyplace";
 Blockly.Msg.SENSOR_ARM_TOOLTIP = "Returns true, if the selected part of the arm is touched, otherwise false.";
@@ -1158,24 +1049,6 @@ Blockly.Msg.SENSOR_FLAME = "flame sensor";
 Blockly.Msg.SENSOR_GESTURE = "gesture";
 Blockly.Msg.SENSOR_GESTURE_ACTIVE = "active?";
 Blockly.Msg.SENSOR_GESTURE_DOWN = "upside down";
-<<<<<<< HEAD
-=======
-Blockly.Msg.SENSOR_AMBIENTLIGHT = "ambientlight sensor";  // untranslated
-Blockly.Msg.SENSOR_ANY = "anyplace";  // untranslated
-Blockly.Msg.SENSOR_ARM_TOOLTIP = "Returns true, if the selected part of the arm is touched, otherwise false.";  // untranslated
-Blockly.Msg.SENSOR_BATTERY = "battery charge";  // untranslated
-Blockly.Msg.SENSOR_BOTTOM = "bottom";  // untranslated
-Blockly.Msg.SENSOR_CODE = "code pad";  // untranslated
-Blockly.Msg.SENSOR_COLOUR = "colour sensor";  // untranslated
-Blockly.Msg.SENSOR_COMPASS = "compass sensor";  // untranslated
-Blockly.Msg.SENSOR_ENCODER = "encoder";  // untranslated
-Blockly.Msg.SENSOR_FLAME = "flame sensor";  // untranslated
-Blockly.Msg.SENSOR_GESTURE = "gesture";  // untranslated
-Blockly.Msg.SENSOR_GESTURE_ACTIVE = "active?";  // untranslated
-Blockly.Msg.SENSOR_GESTURE_DOWN = "upside down";  // untranslated
->>>>>>> #745 added base Uno files, configuration draft
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_GESTURE_DOWN_GETSAMPLE_TOOLTIP = "Returns »true« if the posture is down.";  // untranslated
 Blockly.Msg.SENSOR_GESTURE_FACE_DOWN = "at the front side";
 Blockly.Msg.SENSOR_GESTURE_FACE_DOWN_GETSAMPLE_TOOLTIP = "Returns »true« if the posture is face down.";  // untranslated
@@ -1188,10 +1061,6 @@ Blockly.Msg.SENSOR_GESTURE_SHAKE_GETSAMPLE_TOOLTIP = "Returns »true« if it is 
 Blockly.Msg.SENSOR_GESTURE_TOOLTIP = "Is the system in the selected state?";  // untranslated
 Blockly.Msg.SENSOR_GESTURE_UP = "upright";
 Blockly.Msg.SENSOR_GESTURE_UP_GETSAMPLE_TOOLTIP = "Returns »true« if the posture is upright.";  // untranslated
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_GET = "get";
 Blockly.Msg.SENSOR_GET_SAMPLE = "get value";
 Blockly.Msg.SENSOR_GROVE = "Grove";
@@ -1214,80 +1083,26 @@ Blockly.Msg.SENSOR_KEY_RIGHT = "right";
 Blockly.Msg.SENSOR_KEY_UP = "up";
 Blockly.Msg.SENSOR_LIGHT = "light sensor";
 Blockly.Msg.SENSOR_MIC = "microphone";
-<<<<<<< HEAD
-Blockly.Msg.SENSOR_MS_TIMER = "in ms";
-Blockly.Msg.SENSOR_PIN = "pin";
-Blockly.Msg.SENSOR_PINTOUCH = "pin";  // untranslated
-Blockly.Msg.SENSOR_PINTOUCH_BOB3 = "arm";  // untranslated
-Blockly.Msg.SENSOR_PRESSED = " (pressed)";
-Blockly.Msg.SENSOR_RADIO_RSSI = "radio RSSI sensor";
-Blockly.Msg.SENSOR_RESET = "reset";
-=======
-Blockly.Msg.SENSOR_GET = "get";  // untranslated
-Blockly.Msg.SENSOR_GET_SAMPLE = "get value";  // untranslated
-Blockly.Msg.SENSOR_GROVE = "Grove";  // untranslated
-Blockly.Msg.SENSOR_GYRO = "gyroscope";  // untranslated
-Blockly.Msg.SENSOR_INFRARED = "infrared sensor";  // untranslated
-Blockly.Msg.SENSOR_IS_ARM = "is arm";  // untranslated
-Blockly.Msg.SENSOR_IS_PIN = "is";  // untranslated
-Blockly.Msg.SENSOR_IS_PRESSED = "pressed?";  // untranslated
-Blockly.Msg.SENSOR_IS_TOUCHED = "touched?";  // untranslated
-Blockly.Msg.SENSOR_JOYSTICK = "joystick";  // untranslated
-Blockly.Msg.SENSOR_KEY = "button";  // untranslated
-Blockly.Msg.SENSOR_KEY_ANY = "any";  // untranslated
-Blockly.Msg.SENSOR_KEY_DOWN = "down";  // untranslated
-Blockly.Msg.SENSOR_KEY_ENTER = "enter";  // untranslated
-Blockly.Msg.SENSOR_KEY_ESCAPE = "escape";  // untranslated
-Blockly.Msg.SENSOR_KEY_LEFT = "left";  // untranslated
-Blockly.Msg.SENSOR_KEY_RIGHT = "right";  // untranslated
-Blockly.Msg.SENSOR_KEY_UP = "up";  // untranslated
-Blockly.Msg.SENSOR_LIGHT = "light sensor";  // untranslated
-Blockly.Msg.SENSOR_MIC = "microphone";  // untranslated
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_MOISTURE = "moisture sensor";  // untranslated
 Blockly.Msg.SENSOR_MS_TIMER = "in ms";
 Blockly.Msg.SENSOR_PIN = "pin";
 Blockly.Msg.SENSOR_PINTOUCH = "pin";  // untranslated
-<<<<<<< HEAD
-Blockly.Msg.SENSOR_PRESSED = " (pressed)";  // untranslated
-Blockly.Msg.SENSOR_RADIO_RSSI = "radio RSSI sensor";  // untranslated
-Blockly.Msg.SENSOR_RESET = "reset";  // untranslated
->>>>>>> #745 added base Uno files, configuration draft
-=======
 Blockly.Msg.SENSOR_PINTOUCH_BOB3 = "arm";  // untranslated
 Blockly.Msg.SENSOR_PRESSED = " (pressed)";
 Blockly.Msg.SENSOR_RADIO_RSSI = "radio RSSI sensor";
 Blockly.Msg.SENSOR_RESET = "reset";
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_RESET_II = "";  // untranslated
 Blockly.Msg.SENSOR_RSSI = "signal strength";  // untranslated
 Blockly.Msg.SENSOR_RSSI_VALUE_GETSAMPLE_TOOLTIP = "Gets the signal strength from the last received message.";  // untranslated
 Blockly.Msg.SENSOR_SONAR = "sonar";
 Blockly.Msg.SENSOR_SOUND = "sound sensor";
 Blockly.Msg.SENSOR_SOUND_CALLIOPE = "microphone";  // untranslated
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_TEMPERATURE = "temperature sensor";
 Blockly.Msg.SENSOR_TIME = "time";
 Blockly.Msg.SENSOR_TIMER = "timer";
 Blockly.Msg.SENSOR_TOP = "top";
 Blockly.Msg.SENSOR_TOUCH = "touch sensor";
 Blockly.Msg.SENSOR_ULTRASONIC = "ultrasonic sensor";
-<<<<<<< HEAD
-=======
-Blockly.Msg.SENSOR_TEMPERATURE = "temperature sensor";  // untranslated
-Blockly.Msg.SENSOR_TIME = "time";  // untranslated
-Blockly.Msg.SENSOR_TIMER = "timer";  // untranslated
-Blockly.Msg.SENSOR_TOP = "top";  // untranslated
-Blockly.Msg.SENSOR_TOUCH = "touch sensor";  // untranslated
-Blockly.Msg.SENSOR_TOUCH_BOB3 = "arm";  // untranslated
-Blockly.Msg.SENSOR_ULTRASONIC = "ultrasonic sensor";  // untranslated
->>>>>>> #745 added base Uno files, configuration draft
-=======
->>>>>>> #756 added hardware visitor that extracts information about used configuration blocks
 Blockly.Msg.SENSOR_UNIT_CM = "cm";  // untranslated
 Blockly.Msg.SENSOR_UNIT_DEGREE = "°";  // untranslated
 Blockly.Msg.SENSOR_UNIT_MILLIG = "milli-g";  // untranslated
