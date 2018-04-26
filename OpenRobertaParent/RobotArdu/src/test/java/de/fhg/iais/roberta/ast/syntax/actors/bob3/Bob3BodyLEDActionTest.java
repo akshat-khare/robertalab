@@ -3,12 +3,12 @@ package de.fhg.iais.roberta.ast.syntax.actors.bob3;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.ardu.HelperBob3;
+import de.fhg.iais.roberta.util.test.ardu.HelperBob3ForXmlTest;
 
 @Ignore
 public class Bob3BodyLEDActionTest {
 
-    HelperBob3 h = new HelperBob3();
+    private final HelperBob3ForXmlTest h = new HelperBob3ForXmlTest();
 
     @Test
     public void turnOnLeftLED() throws Exception {

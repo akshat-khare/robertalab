@@ -7,10 +7,10 @@ import de.fhg.iais.roberta.mode.actors.arduino.botnroll.ActorPort;
 import de.fhg.iais.roberta.mode.sensor.MotorTachoMode;
 import de.fhg.iais.roberta.syntax.sensor.generic.EncoderSensor;
 import de.fhg.iais.roberta.transformer.Jaxb2BlocklyProgramTransformer;
-import de.fhg.iais.roberta.util.test.ardu.HelperBotNroll;
+import de.fhg.iais.roberta.util.test.ardu.HelperBotNrollForXmlTest;
 
 public class EncoderSensorTest {
-    HelperBotNroll h = new HelperBotNroll();
+    private final HelperBotNrollForXmlTest h = new HelperBotNrollForXmlTest();
 
     @Test
     public void sensorSetEncoder() throws Exception {

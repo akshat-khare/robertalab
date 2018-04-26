@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<export xmlns="http://de.fhg.iais.roberta.blockly">
+  <program>
+    <block_set xmlns="http://de.fhg.iais.roberta.blockly" robottype="calliope" xmlversion="2.0" description="" tags="">
+      <instance x="384" y="50">
+        <block type="robControls_start" id="lUcz4bv_gaUKq{`}?!2b" intask="true" deletable="false">
+          <mutation declare="false"/>
+          <field name="DEBUG"/>
+        </block>
+        <block type="mbedActions_leds_on" id="0g|n`MuBB-aBf,7=2+CL" intask="true">
+          <value name="COLOR">
+            <block type="mbedColour_picker" id="aw{rF{)gHa8zhW8Bwpz3" intask="true">
+              <field name="COLOUR">#ff0000</field>
+            </block>
+          </value>
+        </block>
+        <block type="mbedActions_display_clear" id="St*8;sa!u_!kPUDz.Q{Q" intask="true"/>
+      </instance>
+    </block_set>
+  </program>
+  <config>
+    <block_set xmlns="http://de.fhg.iais.roberta.blockly" robottype="calliope" xmlversion="2.0" description="" tags="">
+      <instance x="138" y="88">
+        <block type="mbedBrick_Calliope-Brick" id="1" intask="true"/>
+      </instance>
+    </block_set>
+  </config>
+</export>

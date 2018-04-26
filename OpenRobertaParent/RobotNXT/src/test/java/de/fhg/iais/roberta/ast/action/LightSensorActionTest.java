@@ -8,10 +8,10 @@ import de.fhg.iais.roberta.mode.general.WorkingState;
 import de.fhg.iais.roberta.mode.sensor.SensorPort;
 import de.fhg.iais.roberta.syntax.action.nxt.LightSensorAction;
 import de.fhg.iais.roberta.transformer.Jaxb2BlocklyProgramTransformer;
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class LightSensorActionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void make() throws Exception {
@@ -62,7 +62,7 @@ public class LightSensorActionTest {
             Assert.assertEquals("No enum constant de.fhg.iais.roberta.syntax.action.generic.VolumeAction.Mode.invalid", e.getMessage());
         }
     }
-
+    
     @Test
     public void getVolumeAction() throws Exception {
         String a = "BlockAST [project=[[Location [x=-2, y=189], VolumeAction [GET, NullConst [null]]]]]";

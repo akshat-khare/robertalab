@@ -7,20 +7,23 @@ else
    echo 'not running in a docker container - exit 1 to avoid destruction and crash :-)'
    exit 1
 fi
-VERSION="$1"
+BRANCH=$1
+if [ -z "$BRANCH" ]
+then
+    echo 'the branch to build is missing (first parameter) - exit 12'
+    exit 12
+fi
+VERSION="$2"
 if [ -z "$VERSION" ]
 then
-    echo 'the only one parameter version of form x.y.z is missing - exit 12'
+    echo 'the version parameter of form x.y.z is missing (second parameter) - exit 12'
     exit 12
-else
-    echo "generating the version $VERSION"
 fi
-
-cd /opt
-git clone --depth=1 -b develop https://github.com/OpenRoberta/robertalab.git
-
+echo "building branch $BRANCH with version $VERSION"
+git clone --depth=1 -b $BRANCH https://github.com/OpenRoberta/robertalab.git
 cd /opt/robertalab/OpenRobertaParent
-mvn clean install -DskipTests -DskipITs
+mvn clean install
+chmod +x RobotArdu/resources/linux/arduino-builder RobotArdu/resources/linux/tools-builder/ctags/5.8*/ctags
 
 cd /opt/robertalab
 rm -rf DockerInstallation
@@ -32,10 +35,11 @@ cp -r OpenRobertaParent/OpenRobertaServer/db-$VERSION DockerInstallation
 cp Docker/Dockerfile* Docker/*.sh DockerInstallation
 
 cd /opt/robertalab/DockerInstallation
-docker build -t rbudde/openrobertalab:$VERSION -f DockerfileLab .
-docker build --build-arg version=$VERSION -t rbudde/openrobertadb:$VERSION -f DockerfileDb .
 
-docker build -t rbudde/openrobertaupgrade:$VERSION -f DockerfileUpgrade .
+docker build -t rbudde/openroberta_lab:$BRANCH-$VERSION            -f DockerfileLab                                         .
+docker build -t rbudde/openroberta_db:$BRANCH-$VERSION             -f DockerfileDb             --build-arg version=$VERSION .
 
-docker build -t rbudde/openrobertalabembedded:$VERSION -f DockerfileLabEmbedded .
-docker build --build-arg version=$VERSION -t rbudde/openrobertaemptydbfortest:$VERSION -f DockerfileDbEmptyForTest .
+docker build -t rbudde/openroberta_upgrade:$BRANCH-$VERSION        -f DockerfileUpgrade                                     .
+
+docker build -t rbudde/openroberta_embedded:$BRANCH-$VERSION       -f DockerfileLabEmbedded                                 .
+docker build -t rbudde/openroberta_emptydbfortest:$BRANCH-$VERSION -f DockerfileDbEmptyForTest --build-arg version=$VERSION .

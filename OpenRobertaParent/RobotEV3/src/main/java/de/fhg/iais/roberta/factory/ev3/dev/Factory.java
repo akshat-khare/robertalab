@@ -5,10 +5,9 @@ import de.fhg.iais.roberta.util.RobertaProperties;
 
 public class Factory extends EV3AbstractFactory {
 
-    public Factory() {
-        super("EV3dev.properties");
-        this.robotCompilerWorkflow = new CompilerWorkflow(RobertaProperties.getTempDirForUserProjects());
-
+    public Factory(RobertaProperties robertaProperties) {
+        super(robertaProperties, "EV3dev.properties");
+        this.robotCompilerWorkflow = new CompilerWorkflow(robertaProperties.getTempDirForUserProjects());
     }
 
     @Override

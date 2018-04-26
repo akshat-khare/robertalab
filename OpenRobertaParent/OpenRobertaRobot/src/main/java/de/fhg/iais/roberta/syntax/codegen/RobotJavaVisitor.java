@@ -247,7 +247,7 @@ public abstract class RobotJavaVisitor extends CommonLanguageVisitor {
         this.sb.append(")");
         return null;
     }
-    
+
     @Override
     public Void visitStmtTextComment(StmtTextComment<Void> stmtTextComment) {
         this.sb.append("// " + stmtTextComment.getTextComment());
@@ -400,6 +400,8 @@ public abstract class RobotJavaVisitor extends CommonLanguageVisitor {
                 return "ArrayList<PickColor>";
             case ARRAY_BOOLEAN:
                 return "ArrayList<Boolean>";
+            case ARRAY_CONNECTION:
+                return "ArrayList<NXTConnection>";
             case BOOLEAN:
                 return "boolean";
             case NUMBER:

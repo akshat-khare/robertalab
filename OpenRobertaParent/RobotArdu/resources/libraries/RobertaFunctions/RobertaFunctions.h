@@ -10,10 +10,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
 #include "Arduino.h"
 
+#ifdef ARDUINO_AVR_BOB3
+#include "BOB3.h"
+#endif
 
 class RobertaFunctions
 {
@@ -27,6 +30,9 @@ class RobertaFunctions
 	    void createArray(bool   *arr, int len, bool arrAssign[]);
 	    void createArray(String *arr, int len, String arrAssign[]);
 	    void createArray(int *arr, int len, int arrAssign[]);
+#ifdef ARDUINO_AVR_BOB3
+        void createArray(Bob3Color *arr, int len, Bob3Color arrAssign[]);  
+#endif
 		int arrFindFirst(int len, double arr[], double item);
 		int arrFindFirst(int len,   bool arr[],   bool item);
 		int arrFindFirst(int len, char **arr,   String item);

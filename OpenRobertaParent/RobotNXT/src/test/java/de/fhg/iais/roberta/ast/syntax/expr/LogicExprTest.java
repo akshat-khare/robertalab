@@ -3,10 +3,10 @@ package de.fhg.iais.roberta.ast.syntax.expr;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class LogicExprTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void test1() throws Exception {

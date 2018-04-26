@@ -1,23 +1,15 @@
 package de.fhg.iais.roberta.ast.sensor;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.factory.arduino.botnroll.Factory;
 import de.fhg.iais.roberta.mode.sensor.BrickKey;
 import de.fhg.iais.roberta.syntax.sensor.generic.BrickSensor;
 import de.fhg.iais.roberta.transformer.Jaxb2BlocklyProgramTransformer;
-import de.fhg.iais.roberta.util.test.ardu.HelperBotNroll;
+import de.fhg.iais.roberta.util.test.ardu.HelperBotNrollForXmlTest;
 
 public class BrickSensorTest {
-    HelperBotNroll h = new HelperBotNroll();
-    Factory robotFactory = new Factory();
-
-    @Before
-    public void setUp() throws Exception {
-        this.h.setRobotFactory(this.robotFactory);
-    }
+    private final HelperBotNrollForXmlTest h = new HelperBotNrollForXmlTest();
 
     @Test
     public void main() throws Exception {

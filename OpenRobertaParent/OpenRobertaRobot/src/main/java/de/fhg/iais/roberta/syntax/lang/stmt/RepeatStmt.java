@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import de.fhg.iais.roberta.blockly.generated.Block;
 import de.fhg.iais.roberta.blockly.generated.Field;
+import de.fhg.iais.roberta.blockly.generated.Mutation;
 import de.fhg.iais.roberta.blockly.generated.Value;
 import de.fhg.iais.roberta.syntax.BlockTypeContainer;
 import de.fhg.iais.roberta.syntax.BlocklyBlockProperties;
@@ -31,9 +32,8 @@ import de.fhg.iais.roberta.visitor.AstVisitor;
 import de.fhg.iais.roberta.visitor.lang.AstLanguageVisitor;
 
 /**
- * This class represents the <b>repeat statement</b> blocks from Blockly into the AST (abstract syntax
- * tree).
- * Object from this class will generate repeat statement statement.<br/>
+ * This class represents the <b>repeat statement</b> blocks from Blockly into the AST (abstract syntax tree). Object from this class will generate repeat
+ * statement statement.<br/>
  * <br>
  * See {@link #getMode()} for the kind of the repeat statements.
  */
@@ -162,7 +162,8 @@ public class RepeatStmt<V> extends Stmt<V> {
             case BlocklyConstants.ROB_CONTROLS_FOR_EACH:
             case BlocklyConstants.CONTROLS_FOR_EACH:
                 fields = helper.extractFields(block, (short) 2);
-                EmptyExpr<V> empty = EmptyExpr.make(BlocklyType.NUMBER_INT);
+                String type = fields.get(0).getValue();
+                EmptyExpr<V> empty = EmptyExpr.make(BlocklyType.get(type));
                 var =
                     VarDeclaration.make(
                         BlocklyType.get(helper.extractField(fields, BlocklyConstants.TYPE)),
@@ -246,6 +247,9 @@ public class RepeatStmt<V> extends Stmt<V> {
 
             case FOR_EACH:
                 Binary<?> exprBinary = (Binary<?>) getExpr();
+                Mutation mutation = new Mutation();
+                mutation.setListType(((VarDeclaration<?>) exprBinary.getLeft()).getTypeVar().getBlocklyName());
+                jaxbDestination.setMutation(mutation);
                 JaxbTransformerHelper
                     .addField(jaxbDestination, BlocklyConstants.TYPE, ((VarDeclaration<?>) exprBinary.getLeft()).getTypeVar().getBlocklyName());
                 JaxbTransformerHelper.addField(jaxbDestination, BlocklyConstants.VAR, ((VarDeclaration<?>) exprBinary.getLeft()).getName());
@@ -278,8 +282,8 @@ public class RepeatStmt<V> extends Stmt<V> {
         }
 
         /**
-         * get mode from {@link Mode} from string parameter. It is possible for one mode to have multiple string mappings.
-         * Throws exception if the mode does not exists.
+         * get mode from {@link Mode} from string parameter. It is possible for one mode to have multiple string mappings. Throws exception if the mode does not
+         * exists.
          *
          * @param name of the mode
          * @return mode from the enum {@link Mode}

@@ -3,10 +3,10 @@ package de.fhg.iais.roberta.syntax.stmt;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.ev3.Helper;
+import de.fhg.iais.roberta.util.test.ev3.HelperEv3ForXmlTest;
 
 public class IfStmtTest {
-    Helper h = new Helper();
+    private final HelperEv3ForXmlTest h = new HelperEv3ForXmlTest();
 
     @Ignore
     public void ifStmt() throws Exception {

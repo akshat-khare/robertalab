@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class ToneActionFunctionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void playTone() throws Exception {
@@ -18,7 +18,7 @@ public class ToneActionFunctionTest {
                 + "Element=0;"
                 + "macheEtwas();}"
                 + "void macheEtwas(){\n"
-                + "volume=50*4/100.0+0.5;"
+                + "volume=(50)*4/100.0;"
                 + "PlayToneEx(300, 100, volume, false);\n"
                 + "Wait(100);}";
 

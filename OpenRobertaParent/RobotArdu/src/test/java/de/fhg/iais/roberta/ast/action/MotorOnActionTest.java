@@ -1,23 +1,15 @@
 package de.fhg.iais.roberta.ast.action;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.factory.arduino.botnroll.Factory;
 import de.fhg.iais.roberta.mode.actors.arduino.botnroll.ActorPort;
 import de.fhg.iais.roberta.syntax.action.motor.MotorOnAction;
 import de.fhg.iais.roberta.transformer.Jaxb2BlocklyProgramTransformer;
-import de.fhg.iais.roberta.util.test.ardu.HelperBotNroll;
+import de.fhg.iais.roberta.util.test.ardu.HelperBotNrollForXmlTest;
 
 public class MotorOnActionTest {
-    HelperBotNroll h = new HelperBotNroll();
-    Factory robotFactory = new Factory();
-
-    @Before
-    public void setUp() throws Exception {
-        this.h.setRobotFactory(this.robotFactory);
-    }
+    private final HelperBotNrollForXmlTest h = new HelperBotNrollForXmlTest();
 
     @Test
     public void make() throws Exception {

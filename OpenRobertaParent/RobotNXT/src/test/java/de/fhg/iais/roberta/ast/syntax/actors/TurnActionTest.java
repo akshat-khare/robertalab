@@ -2,11 +2,11 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class TurnActionTest {
 
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void turn() throws Exception {

@@ -3,15 +3,15 @@ package de.fhg.iais.roberta.syntax.action;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.mbed.Helper;
+import de.fhg.iais.roberta.util.test.mbed.HelperMbedForXmlTest;
 
 public class RadioReciveActionTest {
-    Helper h = new Helper();
+    private final HelperMbedForXmlTest h = new HelperMbedForXmlTest();
 
     @Test
     public void make_ByDefault_ReturnInstanceOfRadioReciveActionClass() throws Exception {
         String expectedResult =
-            "BlockAST [project=[[Location [x=38, y=38], " + "MainTask [], " + "DisplayTextAction [TEXT, ActionExpr [BluetoothReceiveAction []]]]]]";
+            "BlockAST [project=[[Location [x=38, y=38], " + "MainTask [], " + "DisplayTextAction [TEXT, ActionExpr [BluetoothReceiveAction [STRING]]]]]]";
 
         String result = this.h.generateTransformerString("/action/radio_receive_message.xml");
 

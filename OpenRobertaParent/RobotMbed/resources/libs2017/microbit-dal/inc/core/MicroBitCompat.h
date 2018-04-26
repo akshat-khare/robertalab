@@ -65,6 +65,14 @@ inline int max(int a, int b)
     return (a > b ? a : b);
 }
 
+inline bool isWhole(double a)
+{
+  return a == static_cast<int>(a);
+}
+
+bool isPrime(double number);
+
+
 /**
   * Sets a given area of memory to zero.
   *

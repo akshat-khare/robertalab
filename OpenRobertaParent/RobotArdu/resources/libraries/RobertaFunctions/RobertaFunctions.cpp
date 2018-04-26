@@ -64,6 +64,14 @@ void RobertaFunctions::createArray(int *arr, int len, int arrAssign[]){
 	 }
 }
 
+#ifdef ARDUINO_AVR_BOB3
+void RobertaFunctions::createArray(Bob3Color *arr, int len, Bob3Color arrAssign[]){
+	for(int i = 0; i < len; i++){
+		 arr[i] =  arrAssign[i];
+	}
+}
+#endif 
+
 int RobertaFunctions::arrFindFirst(int len, double arr[], double item) {
   int i = 0;
   if (arr[0] == item){

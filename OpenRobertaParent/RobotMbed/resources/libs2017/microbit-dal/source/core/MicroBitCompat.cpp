@@ -118,8 +118,8 @@ int ultoa(unsigned long int n, char *s)
 
     // Calculate each character, starting with the LSB.
     do {
-         s[i++] = abs(n % 10) + '0';
-    } while (abs(n /= 10) > 0);
+         s[i++] = fabs(n % 10) + '0';
+    } while (fabs(n /= 10) > 0);
 
     // Terminate the string.
     s[i] = '\0';
@@ -154,7 +154,7 @@ int dtoa(double n, char *s)
 
     int intPart = (int) n;
     float t = (n-intPart)*100;
-	int fractPart = abs((int) (t / 10));
+	  int fractPart = abs((int) (t / 10));
 
 
 	if (fractPart != 0) {
@@ -183,4 +183,14 @@ int dtoa(double n, char *s)
     string_reverse(s);
 
     return MICROBIT_OK;
+}
+
+bool isPrime(double number) {
+  if ((fmod(number, 2) == 0) || (number == 1)) return false;
+  //if not, then just check the odds
+  for(int i = 3; i * i <= number; i += 2) {
+    if(fmod(number, i) == 0)
+    return false;
+  }
+  return true;
 }

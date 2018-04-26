@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.expr;
 
 import org.junit.Ignore;
 
-import de.fhg.iais.roberta.util.test.ardu.HelperBotNroll;
+import de.fhg.iais.roberta.util.test.ardu.HelperBotNrollForXmlTest;
 
 public class TextJoinTextTest {
-    HelperBotNroll h = new HelperBotNroll();
+    private final HelperBotNrollForXmlTest h = new HelperBotNrollForXmlTest();
 
     @Ignore
     public void Test() throws Exception {

@@ -8,14 +8,13 @@ require.config({
         'bootstrap-table' : 'bootstrap/bootstrap-3.3.1-dist/dist/js/bootstrap-table.min',
         'bootstrap-tagsinput' : 'bootstrap/bootstrap-3.3.1-dist/dist/js/bootstrap-tagsinput.min',
         'bootstrap.wysiwyg' : 'bootstrap/bootstrap-3.3.1-dist/dist/js/bootstrap-wysiwyg.min',
-        'datatables' : 'jquery/jquery.dataTables.min',
         'enjoyHint' : 'enjoyHint/enjoyhint.min',
-        'jquery' : 'jquery/jquery-2.1.4.min',
-        'jquery-cookie' : 'jquery/jquery.cookie',
-        'jquery-scrollto' : 'jquery/jquery.scrollTo.min',
-        'jquery-validate' : 'jquery/jquery.validate.min',
-        'jquery-hotkeys' : 'jquery/jquery.hotkeys',
-        'slick' : 'slick-1.7.1/slick.min',
+        'jquery' : 'jquery/jquery-3.3.1.min',
+        'jquery-cookie' : 'jquery/jquery.cookie-1.4.1',
+        'jquery-scrollto' : 'jquery/jquery.scrollTo-2.1.2.min',
+        'jquery-validate' : 'jquery/jquery.validate-1.17.0.min',
+        'jquery-hotkeys' : 'jquery/jquery.hotkeys-0.2.0',
+        'slick' : 'slick/slick.min',
         'prettify' : 'code-prettify/prettify',
         'socket.io' : 'socket.io/socket.io',
         'volume-meter' : 'sound/volume-meter',
@@ -42,6 +41,7 @@ require.config({
         'progList.model' : '../app/roberta/models/progList.model',
         'program.controller' : '../app/roberta/controller/program.controller',
         'program.model' : '../app/roberta/models/program.model',
+        'progTutorial.controller' : '../app/roberta/controller/progTutorial.controller',
         'progShare.controller' : '../app/roberta/controller/progShare.controller',
         'progSim.controller' : '../app/roberta/controller/progSim.controller',
         'robot.controller' : '../app/roberta/controller/robot.controller',
@@ -120,7 +120,7 @@ require.config({
 require([ 'require', 'wrap', 'jquery', 'jquery-cookie', 'guiState.controller', 'progList.controller', 'logList.controller', 'confList.controller',
         'progDelete.controller', 'confDelete.controller', 'progShare.controller', 'cookieDisclaimer.controller', 'menu.controller', 'user.controller',
         'robot.controller', 'program.controller', 'progSim.controller', 'progCode.controller', 'progDelete.controller', 'progHelp.controller',
-        'progInfo.controller', 'progRun.controller', 'configuration.controller', 'language.controller', 'socket.controller', 'volume-meter', 'user.model' ], function(
+        'progInfo.controller', 'progRun.controller', 'configuration.controller', 'language.controller', 'socket.controller', 'progTutorial.controller', 'volume-meter', 'user.model' ], function(
         require) {
 
     $ = require('jquery', 'jquery-cookie');
@@ -148,6 +148,7 @@ require([ 'require', 'wrap', 'jquery', 'jquery-cookie', 'guiState.controller', '
     userController = require('user.controller');
     userModel = require('user.model');
     socketController = require('socket.controller');
+    tutorialController = require('progTutorial.controller');
 
     $(document).ready(WRAP.fn3(init, 'page init'));
 });
@@ -179,6 +180,8 @@ function init() {
         progSimController.init();
         progRunController.init();
         menuController.init();
+        tutorialController.init();
+        
         cookieDisclaimer.init();
         $(".cover").fadeOut(100, function() {
             if (!guiStateController.getStartWithoutPopup()) {
@@ -193,6 +196,7 @@ function init() {
                 }
             }
         });
+        
         $(".pace").fadeOut(500);
     });
 }

@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.mbed.Helper;
+import de.fhg.iais.roberta.util.test.mbed.HelperMbedForXmlTest;
 
 public class ImageInvertFunctionTest {
-    Helper h = new Helper();
+    private final HelperMbedForXmlTest h = new HelperMbedForXmlTest();
 
     @Test
     public void make_ByDefault_ReturnInstanceOfImageInvertFunctionClass() throws Exception {

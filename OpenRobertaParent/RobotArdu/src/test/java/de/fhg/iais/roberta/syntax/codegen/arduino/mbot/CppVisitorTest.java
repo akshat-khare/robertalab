@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.syntax.codegen.arduino.mbot;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.ardu.HelperMakeBlock;
+import de.fhg.iais.roberta.util.test.ardu.HelperMBotForXmlTest;
 
 public class CppVisitorTest {
-    HelperMakeBlock h = new HelperMakeBlock();
+    private final HelperMBotForXmlTest h = new HelperMBotForXmlTest();
 
     private static final String MAIN_METHOD1 =
         ""

@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.sensors;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class MotorTachoTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void setMotorTacho() throws Exception {

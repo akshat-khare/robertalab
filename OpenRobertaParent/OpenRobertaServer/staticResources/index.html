@@ -24,22 +24,22 @@ limitations under the License.
 	content="https://lab.open-roberta.org/css/svg/OpenRobertaLab_logo.svg" />
 <meta name="keywords"
 	content="Open, Roberta, Programmierumgebung, NEPO, Initiative" />
+
 <link rel="stylesheet" type="text/css"
 	href="js/libs/bootstrap/bootstrap-3.3.1-dist/dist/css/bootstrap.min.css"></link>
 <link rel="stylesheet" type="text/css"
 	href="js/libs/bootstrap/bootstrap-3.3.1-dist/dist/css/bootstrap-table.min.css"></link>
-<link rel="stylesheet" href="js/libs/slick-1.7.1/slick.css"></link>
-<link rel="stylesheet" href="js/libs/slick-1.7.1/slick-theme.css"></link>
+<link rel="stylesheet" type="text/css" href="/css/slick.css"></link>
+<link rel="stylesheet" type="text/css" href="/css/slick-theme.css"></link>
 <link rel="stylesheet" type="text/css" href="/css/languages.min.css"></link>
 <link rel="stylesheet" type="text/css" href="/css/typicons.css"></link>
 <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"></link>
 <link rel="stylesheet" type="text/css" href="/css/wysiwyg.css"></link>
 <link rel="stylesheet" type="text/css"
 	href="/css/bootstrap-tagsinput.css"></link>
-<link href="/css/enjoyhint.css" rel="stylesheet"></link>
+<link rel="stylesheet" type="text/css" href="/css/enjoyhint.css"></link>
+<link rel="stylesheet" type="text/css" href="/css/prettify.css"></link>
 <link rel="stylesheet" type="text/css" href="/css/roberta.css"></link>
-<link rel="stylesheet" type="text/css"
-	href="js/libs/code-prettify/prettify.css"></link>
 <!-- Make sure css files are loaded before js files -->
 <script data-main="js/main" src="js/require.js"></script>
 <link rel="manifest" href="manifest.webapp.json"></link>
@@ -47,11 +47,6 @@ limitations under the License.
 	type="image/vnd.microsoft.icon"></link>
 <link rel="apple-touch-icon" sizes="144x144" href="/css/img/Nepo_N.png" />
 <!-- enable linenumbers for all lines on highlighted source code -->
-<style>
-li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
-	list-style-type: decimal !important
-}
-</style>
 <!-- Feedback badge, reports user feedback to issue tracker. -->
 <!--<script type="text/javascript"
         src="http://jira.open-roberta.org/s/en_USy3ler1/786/12/1.1.2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=2f42fc3c"
@@ -69,6 +64,21 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 	<div class="pace"></div>
 	<!-- ################## HEAD NAVIGATION ################## -->
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+		id="tutorial-navigation">
+		<div class="container-fluid">
+			<div>
+				<ul class="nav navbar-nav" id="tutorial-list">
+				</ul>
+				<!-- <ul class="nav navbar-nav navbar-right">
+					<li><img class="img-nepo" src="/css/svg/NEPO_Logo_RGB.svg" />
+					</li>
+				</ul> -->
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+		<!--/.container-fluid -->
+	</nav>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
 		id="head-navigation">
 		<!--  Brand and toggle get grouped for better mobile display -->
 		<div class="container-fluid">
@@ -82,7 +92,7 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbarCollapse">
-				<ul class="nav navbar-nav">
+				<ul class="nav navbar-nav" id="mainNavigationBar">
 					<!-- Menu Program -->
 					<li class="dropdown" id="head-navigation-program-edit"><a
 						href="#" data-toggle="dropdown" class="dropdown-toggle"
@@ -134,10 +144,10 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 								class="" lkey="Blockly.Msg.MENU_PROPERTIES">Eigenschaften</a></li>
 							<li class="divider"></li>
 							<li class="disabled level beginner"><a href="#"
-								id="menuToolboxBeginner" class="typcn typcn-briefcase"
+								id="menuToolboxBeginner" class="typcn typcn-media-stop-outline"
 								lkey="Blockly.Msg.MENU_TOOLBOX_BEGINNER">Toolbox Anfänger</a></li>
 							<li class="level expert"><a href="#" id="menuToolboxExpert"
-								class="typcn typcn-briefcase"
+								class="typcn typcn-star-outline"
 								lkey="Blockly.Msg.MENU_TOOLBOX_EXPERT">Toolbox Experte</a></li>
 						</ul></li>
 					<!-- Menu Configuration -->
@@ -248,6 +258,19 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 							<li class="hidden" id="menuAddStatusTextWrap"><a href="#"
 								id="menuAddStatusText" class="typcn typcn-edit">Add a status
 									text</a></li>
+						</ul></li>
+					<li id="head-navigation-tutorial" class="hidden-xs"><a
+						href="#" data-toggle="dropdown" class="dropdown-toggle"
+						id="head-navi-tooltip-tutorials"
+						lkey="Blockly.Msg.MENU_TUTORIAL_TOOLTIP" rel="tooltip"
+						data-original-title="" title=""> <span
+							id="head-navi-icon-tutorial"
+							class="head-navi-icons typcn typcn-contacts"></span><span
+							class="head-navi-title hidden-sm hidden-md hidden-lg"
+							lkey="Blockly.Msg.MENU_TUTORIAL">tutorial</span>
+					</a>
+						<ul id="head-navigation-tutorial-dropdown" class="dropdown-menu">
+							<!-- filled dynamically -->
 						</ul></li>
 					<li id="head-navigation-gallery"><a href="#"
 						id="head-navi-tooltip-gallery"
@@ -438,6 +461,9 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 						data-original-title="" title=""></button>
 				</div>
 			</div>
+			<div id="tutorialDiv" class="fromRight">
+				<div id="tutorialContent"></div>
+			</div>
 			<div id="helpDiv" class="fromRight"></div>
 			<div id="infoDiv" class="fromRight">
 				<div id="infoToolbar" class="btn-toolbar editor"
@@ -528,6 +554,12 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 			</div>
 
 			<div id="rightMenuDiv">
+				<div href="#" id="progTutorial" class="rightMenuButton tutorial"
+					style="display: none;"
+					lkey="Blockly.Msg.MENU_RIGHT_TUTORIAL_TOOLTIP" rel="tooltip"
+					data-original-title="" title="">
+					<span id="" class="progTutorial typcn typcn-contacts"></span>
+				</div>
 				<div href="#" id="progHelp" class="rightMenuButton help"
 					lkey="Blockly.Msg.MENU_RIGHT_HELP_TOOLTIP" rel="tooltip"
 					data-original-title="" title="">
@@ -1373,6 +1405,27 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 						<button type="button" class="btn btn-primary" data-dismiss="modal"
 							autofocus>OK</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="tutorialOverview" data-backdrop="static"
+		data-keyboard="false">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h3 class="modal-title" id="tutorialOverviewTitle">Hallo</h3>
+				</div>
+				<div class="modal-body left-inner-addon" style="font-size: 18px">
+					<span id="tutorialOverviewText">Message to show</span>
+				</div>
+				<div class="modal-footer">
+					<button id="tutorialContinue" type="button" class="btn"
+						data-dismiss="modal" autofocus>OK</button>
+					<input type="button" class="btn backButton" data-dismiss="modal"
+						lkey="Blockly.Msg.POPUP_CANCEL"></input>
 				</div>
 			</div>
 		</div>

@@ -1,9 +1,9 @@
 package de.fhg.iais.roberta.ast.syntax.actors;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class DriveActionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     //
     public void drive() throws Exception {

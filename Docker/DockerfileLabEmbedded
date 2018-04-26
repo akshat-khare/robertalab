@@ -1,11 +1,12 @@
 FROM rbudde/openroberta_base:1
  
+VOLUME /opt/db
+EXPOSE 1999
+ 
 RUN mkdir --parent /opt/openRoberta/lib /opt/openRoberta/OpenRobertaParent
 WORKDIR /opt/openRoberta
 
 COPY ["lib/","./lib/"]
 COPY ["OpenRobertaParent/","./OpenRobertaParent/"]
-
-VOLUME /opt/db
  
 ENTRYPOINT ["java", "-cp", "lib/*", "de.fhg.iais.roberta.main.ServerStarter", "-d", "database.mode=embedded", "-d", "database.parentdir=/opt/db"]

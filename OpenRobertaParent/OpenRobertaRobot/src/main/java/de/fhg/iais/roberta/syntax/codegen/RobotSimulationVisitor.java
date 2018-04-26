@@ -299,6 +299,9 @@ public abstract class RobotSimulationVisitor<V> implements AstLanguageVisitor<V>
             case ARRAY_STRING:
                 this.sb.append("createConstant(CONST.ARRAY_STRING, [createConstant(CONST.STRING, '')])");
                 break;
+            case ARRAY_COLOUR:
+                this.sb.append("createConstant(CONST.ARRAY_COLOUR, [createConstant(CONST.COLOUR, '')])");
+                break;
             case ARRAY_IMAGE:
                 this.sb
                     .append("createConstant(CONST.ARRAY_IMAGE, [createConstant(CONST.IMAGE, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]])])");
@@ -523,7 +526,7 @@ public abstract class RobotSimulationVisitor<V> implements AstLanguageVisitor<V>
     public V visitTextPrintFunct(TextPrintFunct<V> textPrintFunct) {
         return null;
     }
-    
+
     @Override
     public V visitStmtTextComment(StmtTextComment<V> textComment) {
         return null;

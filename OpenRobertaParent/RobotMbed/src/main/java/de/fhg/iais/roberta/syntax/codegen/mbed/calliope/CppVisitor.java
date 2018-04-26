@@ -115,7 +115,7 @@ import de.fhg.iais.roberta.visitor.sensor.AstSensorsVisitor;
  * StringBuilder. <b>This representation is correct C++ code for Calliope systems.</b> <br>
  */
 public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>, AstSensorsVisitor<Void>, AstActorMotorVisitor<Void>,
-AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<Void> {
+    AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<Void> {
     private final UsedHardwareCollectorVisitor codePreprocess;
     ArrayList<VarDeclaration<Void>> usedVars;
 
@@ -314,7 +314,7 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
         if ( !isWaitStmt ) {
             addContinueLabelToLoop();
             nlIndent();
-            this.sb.append("uBit.sleep(1);");
+            this.sb.append("uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
         } else {
             appendBreakStmt();
         }
@@ -329,11 +329,11 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
 
     @Override
     public Void visitWaitStmt(WaitStmt<Void> waitStmt) {
-        this.sb.append("while (1) {");
+        this.sb.append("while (true) {");
         incrIndentation();
         visitStmtList(waitStmt.getStatements());
         nlIndent();
-        this.sb.append("uBit.sleep(1);");
+        this.sb.append("uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
         decrIndentation();
         nlIndent();
         this.sb.append("}");
@@ -533,7 +533,7 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
 
     @Override
     public Void visitLightSensor(LightSensor<Void> lightSensor) {
-        this.sb.append("uBit.display.readLightLevel()");
+        this.sb.append("round(uBit.display.readLightLevel() * _GET_LIGHTLEVEL_MULTIPLIER)");
         return null;
     }
 
@@ -664,11 +664,13 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
 
     @Override
     public Void visitMainTask(MainTask<Void> mainTask) {
-        //        decrIndentation();
-        this.sb.append("int initTime = uBit.systemTime(); \n");
+        // TODO check if timer is used in the user program
+        this.sb.append("int initTime = uBit.systemTime();");
         mainTask.getVariables().visit(this);
-
-        this.sb.append("\n").append("int main() \n");
+        nlIndent();
+        nlIndent();
+        this.sb.append("int main()");
+        nlIndent();
         this.sb.append("{");
         incrIndentation();
         nlIndent();
@@ -833,8 +835,11 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
                 this.sb.append(", 2) != 0");
                 break;
             case PRIME:
+                this.sb.append("isPrime(");
+                mathNumPropFunct.getParam().get(0).visit(this);
                 break;
             case WHOLE:
+                this.sb.append("isWhole(");
                 mathNumPropFunct.getParam().get(0).visit(this);
                 break;
             case POSITIVE:
@@ -1024,16 +1029,48 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
 
     @Override
     public Void visitRadioSendAction(RadioSendAction<Void> radioSendAction) {
-        this.sb.append("uBit.radio.setTransmitPower(" + radioSendAction.getPower() + ");\n");
-        this.sb.append("uBit.radio.datagram.send(");
-        radioSendAction.getMsg().visit(this);
+        this.sb.append("uBit.radio.setTransmitPower(" + radioSendAction.getPower() + ");");
+        nlIndent();
+        switch ( radioSendAction.getType() ) {
+            case NUMBER:
+                this.sb.append("uBit.radio.datagram.send(ManagedString((int)(");
+                radioSendAction.getMsg().visit(this);
+                this.sb.append("))");
+                break;
+            case BOOLEAN:
+                this.sb.append("uBit.radio.datagram.send(ManagedString((int)(");
+                radioSendAction.getMsg().visit(this);
+                this.sb.append(")?true:false)");
+                break;
+            case STRING:
+                this.sb.append("uBit.radio.datagram.send(ManagedString((");
+                radioSendAction.getMsg().visit(this);
+                this.sb.append("))");
+                break;
+            //            case STRING:
+            //                this.sb.append("uBit.radio.datagram.send(");
+            //                radioSendAction.getMsg().visit(this);
+            //                break;
+            default:
+                throw new IllegalArgumentException("unhandled type");
+        }
         this.sb.append(");");
         return null;
     }
 
     @Override
     public Void visitRadioReceiveAction(RadioReceiveAction<Void> radioReceiveAction) {
-        this.sb.append("ManagedString(uBit.radio.datagram.recv())");
+        switch ( radioReceiveAction.getType() ) {
+            case NUMBER:
+                this.sb.append("atoi((char*)uBit.radio.datagram.recv().getBytes())");
+                break;
+            case BOOLEAN:
+            case STRING:
+                this.sb.append("ManagedString(uBit.radio.datagram.recv())");
+                break;
+            default:
+                throw new IllegalArgumentException("unhandled type");
+        }
         return null;
     };
 
@@ -1041,7 +1078,7 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
     public Void visitRadioSetChannelAction(RadioSetChannelAction<Void> radioSetChannelAction) {
         this.sb.append("uBit.radio.setGroup(");
         radioSetChannelAction.getChannel().visit(this);
-        this.sb.append(");\n");
+        this.sb.append(");");
         return null;
     }
 
@@ -1081,13 +1118,13 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
     public Void visitDisplaySetBrightnessAction(DisplaySetBrightnessAction<Void> displaySetBrightnessAction) {
         this.sb.append("uBit.display.setBrightness((");
         displaySetBrightnessAction.getBrightness().visit(this);
-        this.sb.append(") * 255.0 / 9.0);");
+        this.sb.append(") * _SET_BRIGHTNESS_MULTIPLIER);");
         return null;
     }
 
     @Override
     public Void visitDisplayGetBrightnessAction(DisplayGetBrightnessAction<Void> displayGetBrightnessAction) {
-        this.sb.append("round(uBit.display.getBrightness() * 9.0 / 255.0)");
+        this.sb.append("round(uBit.display.getBrightness() * _GET_BRIGHTNESS_MULTIPLIER)");
         return null;
     }
 
@@ -1099,7 +1136,7 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
         displaySetPixelAction.getY().visit(this);
         this.sb.append(", ");
         displaySetPixelAction.getBrightness().visit(this);
-        this.sb.append(" * 255.0 / 9.0);");
+        this.sb.append(" * _SET_BRIGHTNESS_MULTIPLIER);");
         return null;
     }
 
@@ -1109,7 +1146,7 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
         displayGetPixelAction.getX().visit(this);
         this.sb.append(", ");
         displayGetPixelAction.getY().visit(this);
-        this.sb.append(") * 9.0 / 255.0)");
+        this.sb.append(") * _GET_BRIGHTNESS_MULTIPLIER)");
         return null;
     }
 
@@ -1216,6 +1253,10 @@ AstActorDisplayVisitor<Void>, AstActorLightVisitor<Void>, AstActorSoundVisitor<V
         this.sb.append("#include \"MicroBit.h\" \n");
         this.sb.append("#include <array>\n");
         this.sb.append("#include <stdlib.h>\n");
+        this.sb.append("#define _SET_BRIGHTNESS_MULTIPLIER 28.34\n");
+        this.sb.append("#define _GET_BRIGHTNESS_MULTIPLIER 0.0353\n");
+        this.sb.append("#define _GET_LIGHTLEVEL_MULTIPLIER 0.3922\n");
+        this.sb.append("#define _ITERATION_SLEEP_TIMEOUT 1\n\n");
         this.sb.append("MicroBit uBit;\n\n");
     }
 

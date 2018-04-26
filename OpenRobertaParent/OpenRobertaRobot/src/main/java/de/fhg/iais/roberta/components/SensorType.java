@@ -26,6 +26,7 @@ public enum SensorType implements ISensorType {
     NAOMARK( "naoSensors_naoMark" ),
     VOLTAGE( "" ),
     TIMER( "" ),
+    IRSEEKER( "robBrick_irseeker" ),
     NONE( "" );
 
     private final String[] values;
@@ -40,8 +41,8 @@ public enum SensorType implements ISensorType {
     }
 
     /**
-     * Get direction from {@link DriveDirection} from string parameter. It is possible for one direction to have multiple string mappings.
-     * Throws exception if the direction does not exists.
+     * Get direction from {@link DriveDirection} from string parameter. It is possible for one direction to have multiple string mappings. Throws exception if
+     * the direction does not exists.
      *
      * @param name of the direction
      * @return name of the direction from the enum {@link DriveDirection}

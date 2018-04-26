@@ -17,14 +17,11 @@ public class RobertaProperties {
     public static final String ROBOT_WHITE_LIST_PROPERTY_KEY = "robot.whitelist";
     public static final String ROBOT_DEFAULT_PROPERTY_KEY = "robot.default";
     public static final String PLUGIN_TEMPDIR_PROPERTY_KEY = "plugin.tempdir";
-    private static Properties robertaProperties = null;
-    private static String defaultRobot = null;
-    private static List<String> robotsOnWhiteList = null;
-    private static String tempDir = null;
 
-    private RobertaProperties() {
-        // no objects
-    }
+    private final Properties robertaProperties;
+    private final String defaultRobot;
+    private final List<String> robotsOnWhiteList;
+    private final String tempDir;
 
     /**
      * store the final set of properties, that control the OpenRoberta system.<br>
@@ -35,8 +32,9 @@ public class RobertaProperties {
      *
      * @param properties
      */
-    public static void setRobertaProperties(Properties properties) {
-        robertaProperties = properties;
+    public RobertaProperties(Properties properties) {
+        Assert.notNull(properties);
+        this.robertaProperties = properties;
 
         // process the white list and get the default robot
         String whiteList = getStringProperty(ROBOT_WHITE_LIST_PROPERTY_KEY);
@@ -47,52 +45,64 @@ public class RobertaProperties {
             Assert.isTrue(
                 whiteListItems.length >= 2,
                 "Property \"" + ROBOT_WHITE_LIST_PROPERTY_KEY + "\" must contain at least one robot different from \"" + NAME_OF_SIM + "\"");
-            defaultRobot = whiteListItems[1];
+            this.defaultRobot = whiteListItems[1];
         } else {
-            defaultRobot = whiteListItems[0];
+            this.defaultRobot = whiteListItems[0];
         }
-        robotsOnWhiteList = Collections.unmodifiableList(Arrays.asList(whiteListItems));
-        robertaProperties.put(ROBOT_DEFAULT_PROPERTY_KEY, defaultRobot);
+        this.robotsOnWhiteList = Collections.unmodifiableList(Arrays.asList(whiteListItems));
+        this.robertaProperties.put(ROBOT_DEFAULT_PROPERTY_KEY, this.defaultRobot);
 
         // made a robust choice about the temporary directory
-        tempDir = getStringProperty(PLUGIN_TEMPDIR_PROPERTY_KEY);
-        if ( tempDir == null ) {
-            tempDir = System.getProperty("java.io.tmpdir");
-            Assert.notNull(tempDir, "could not allocate a temporary directory");
+        String tempTempDir = getStringProperty(PLUGIN_TEMPDIR_PROPERTY_KEY);
+        if ( tempTempDir == null ) {
+            tempTempDir = System.getProperty("java.io.tmpdir");
+            Assert.notNull(tempTempDir, "could not allocate a temporary directory");
         }
-        if ( !(tempDir.endsWith("/") || tempDir.endsWith("\\")) ) {
-            tempDir = tempDir + "/";
+        if ( !(tempTempDir.endsWith("/") || tempTempDir.endsWith("\\")) ) {
+            this.tempDir = tempTempDir + "/";
+        } else {
+            this.tempDir = tempTempDir;
         }
-        robertaProperties.put(PLUGIN_TEMPDIR_PROPERTY_KEY, tempDir);
-        LOG.info("As temporary directory " + tempDir + " will be used");
+        this.robertaProperties.put(PLUGIN_TEMPDIR_PROPERTY_KEY, this.tempDir);
+        LOG.info("As temporary directory " + this.tempDir + " will be used");
     }
 
-    public static Properties getRobertaProperties() {
-        Assert.notNull(robertaProperties);
-        return robertaProperties;
+    public Properties getRobertaProperties() {
+        Assert.notNull(this.robertaProperties);
+        return this.robertaProperties;
     }
 
-    public static String getStringProperty(String propertyName) {
-        Assert.notNull(robertaProperties);
-        return robertaProperties.getProperty(propertyName);
+    public String getStringProperty(String propertyName) {
+        Assert.notNull(this.robertaProperties);
+        return this.robertaProperties.getProperty(propertyName);
     }
 
-    public static int getIntProperty(String propertyName) {
-        Assert.notNull(robertaProperties);
-        String property = robertaProperties.getProperty(propertyName);
+    public int getIntProperty(String propertyName) {
+        Assert.notNull(this.robertaProperties);
+        String property = this.robertaProperties.getProperty(propertyName);
         return Integer.parseInt(property);
     }
 
-    public static boolean getBooleanProperty(String propertyName) {
-        Assert.notNull(robertaProperties);
-        String property = robertaProperties.getProperty(propertyName);
+    public int getIntProperty(String propertyName, int defaultValue) {
+        Assert.notNull(this.robertaProperties);
+        String property = this.robertaProperties.getProperty(propertyName);
+        if ( property == null ) {
+            return defaultValue;
+        } else {
+            return Integer.parseInt(property);
+        }
+    }
+
+    public boolean getBooleanProperty(String propertyName) {
+        Assert.notNull(this.robertaProperties);
+        String property = this.robertaProperties.getProperty(propertyName);
         return Boolean.parseBoolean(property);
     }
 
-    public static int getRobotNumberFromProperty(String robotName) {
-        Assert.notNull(robertaProperties);
+    public int getRobotNumberFromProperty(String robotName) {
+        Assert.notNull(this.robertaProperties);
         for ( int i = 1; i < 1000; i++ ) {
-            String value = robertaProperties.getProperty("robot.plugin." + i + ".name");
+            String value = this.robertaProperties.getProperty("robot.plugin." + i + ".name");
             if ( value == null ) {
                 throw new DbcException("Robot with name: " + robotName + " not found!");
             }
@@ -103,23 +113,23 @@ public class RobertaProperties {
         throw new DbcException("Only 999 robots supported!");
     }
 
-    public static List<String> getRobotWhitelist() {
-        return robotsOnWhiteList;
+    public List<String> getRobotWhitelist() {
+        return this.robotsOnWhiteList;
     }
 
-    public static String getDefaultRobot() {
-        return defaultRobot;
+    public String getDefaultRobot() {
+        return this.defaultRobot;
     }
 
-    public static String getTempDir() {
-        return tempDir;
+    public String getTempDir() {
+        return this.tempDir;
     }
 
-    public static String getTempDirFor(String kindOfTempDir) {
-        return tempDir + kindOfTempDir + "/";
+    public String getTempDirFor(String kindOfTempDir) {
+        return this.tempDir + kindOfTempDir + "/";
     }
 
-    public static String getTempDirForUserProjects() {
+    public String getTempDirForUserProjects() {
         return getTempDirFor("userProjects");
     }
 

@@ -2,15 +2,17 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class MotorDriveStopActionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void stop() throws Exception {
-        final String a = "\nOff(OUT_BC);";
+        final String a =
+            "#defineWHEELDIAMETER0.0#defineTRACKWIDTH0.0#defineMAXLINES8#include\"NEPODefs.h\"//containsNEPOdeclarationsfortheNXCNXTAPIresources"
+                + "\nOff(OUT_BC);}";
 
-        this.h.assertCodeIsOk(a, "/ast/actions/action_Stop.xml");
+        this.h.assertWrappedCodeIsOk(a, "/ast/actions/action_Stop.xml");
     }
 }

@@ -2,8 +2,8 @@ package de.fhg.iais.roberta.persistence.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.fhg.iais.roberta.util.dbc.Assert;
+import de.fhg.iais.roberta.util.dbc.DbcException;
 
 /**
  * class, that wraps the session factory of hibernate. Creating the session factory of hibernate is expensive. The session factory hides almost complete the
@@ -22,7 +23,7 @@ import de.fhg.iais.roberta.util.dbc.Assert;
  *
  * @author rbudde
  */
-public final class SessionFactoryWrapper {
+public class SessionFactoryWrapper {
     private static final Logger LOG = LoggerFactory.getLogger(SessionFactoryWrapper.class);
     private SessionFactory sessionFactory;
 
@@ -36,21 +37,23 @@ public final class SessionFactoryWrapper {
                 Configuration configuration = new Configuration();
                 configuration.configure(cfgXml);
                 configuration.setProperty("hibernate.connection.url", databaseUrl);
-                ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
-                this.sessionFactory = configuration.buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
+                StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+                this.sessionFactory = configuration.buildSessionFactory(serviceRegistryBuilder.build());
                 LOG.info("session factory successfully created");
                 return;
             } catch ( Exception e ) {
                 LOG.error("session factory creation failed (" + retrycount + "). Trying again in 5 seconds", e);
                 try {
                     Thread.sleep(5000);
-                } catch ( InterruptedException e1 ) {
-                    // retry
+                } catch ( InterruptedException ie ) {
+                    LOG.error("session factory creation interrupted. Server cannot start.", ie);
+                    Thread.currentThread().interrupt();
                 }
             }
         }
-        LOG.error("session factory creation failed. Server cannot run ... .");
-        throw new ExceptionInInitializerError();
+        String msg = "session factory creation failed. Server cannot start.";
+        LOG.error(msg);
+        throw new DbcException(msg);
     }
 
     /**

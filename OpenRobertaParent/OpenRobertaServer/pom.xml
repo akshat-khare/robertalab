@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>de.fhg.iais.openroberta</groupId>
 		<artifactId>OpenRobertaParent</artifactId>
-		<version>2.5.5</version>
+		<version>2.6.2</version>
 	</parent>
 	<artifactId>OpenRobertaServer</artifactId>
 	<name>OpenRobertaServer</name>
@@ -22,18 +22,6 @@
 		<dependency>
 			<groupId>de.fhg.iais.openroberta</groupId>
 			<artifactId>OpenRobertaRobot</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fhg.iais.openroberta</groupId>
-			<artifactId>OpenRobertaRobot</artifactId>
-			<version>${project.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.fhg.iais.openroberta</groupId>
-			<artifactId>RobotEV3</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
@@ -53,11 +41,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
+			<artifactId>jersey-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
+			<artifactId>jersey-json</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
@@ -76,18 +64,6 @@
 			<artifactId>hsqldb</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>javax.mail-api</artifactId>
 		</dependency>
@@ -100,8 +76,41 @@
 			<artifactId>jopt-simple</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>RobotArdu</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>RobotEV3</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>RobotMbed</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>RobotNAO</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>RobotNXT</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>de.fhg.iais.openroberta</groupId>
+			<artifactId>OpenRobertaRobot</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -185,78 +194,11 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>common-junit48</artifactId>
-						<version>2.17</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<includes>
-						<include>**/*.class</include>
-					</includes>
-					<excludedGroups>de.fhg.iais.roberta.util.testsetup.IntegrationTest</excludedGroups>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.17</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>common-junit48</artifactId>
-						<version>2.17</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<groups>de.fhg.iais.roberta.util.testsetup.IntegrationTest</groups>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>**/*.class</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.4.1</version>
-				<executions>
-					<execution>
-						<id>enforce-debug-or-release-profile-is-active</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireActiveProfile>
-									<profiles>debug,release</profiles>
-									<all>false</all>
-								</requireActiveProfile>
-							</rules>
-							<fail>true</fail>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>2.6</version>
 				<configuration>
 					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>jks</nonFilteredFileExtension>
 						<nonFilteredFileExtension>ico</nonFilteredFileExtension>
 						<nonFilteredFileExtension>eot</nonFilteredFileExtension>
 						<nonFilteredFileExtension>otf</nonFilteredFileExtension>
@@ -276,121 +218,47 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-			<resource>
-				<directory>staticResources</directory>
-				<targetPath>staticResources</targetPath>
-				<excludes>
-					<exclude>**/*.json</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>staticResources</directory>
-				<targetPath>staticResources</targetPath>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.json</include>
-				</includes>
-			</resource>
 		</resources>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-clean-plugin
-										</artifactId>
-										<versionRange>
-											[3.0.0,)
-										</versionRange>
-										<goals>
-											<goal>clean</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	<profiles>
 		<profile>
-			<id>debug</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			<id>runIT</id>
 			<build>
 				<plugins>
-					<!-- Clean out compressed files that may have been added by a release
-						build. -->
 					<plugin>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>3.0.0</version>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.17</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.surefire</groupId>
+								<artifactId>common-junit48</artifactId>
+								<version>2.17</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<groups>de.fhg.iais.roberta.util.testsetup.IntegrationTest</groups>
+						</configuration>
 						<executions>
 							<execution>
-								<id>remove-stale-generated-files</id>
-								<phase>initialize</phase>
+								<phase>integration-test</phase>
 								<goals>
-									<goal>clean</goal>
+									<goal>integration-test</goal>
 								</goals>
 								<configuration>
-									<filesets>
-										<fileset>
-											<directory>${project.build.directory}</directory>
-											<includes>
-												<include>**/*.gz</include>
-											</includes>
-											<followSymlinks>false</followSymlinks>
-										</fileset>
-									</filesets>
+									<includes>
+										<include>**/*.class</include>
+									</includes>
 								</configuration>
 							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- Compress javascript and css files with gzip. -->
-					<plugin>
-						<groupId>net.alchim31.maven</groupId>
-						<artifactId>yuicompressor-maven-plugin</artifactId>
-						<version>1.5.1</version>
-						<executions>
 							<execution>
+								<id>verify</id>
+								<phase>verify</phase>
 								<goals>
-									<goal>compress</goal>
+									<goal>verify</goal>
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
-							<suffix>-min-${project.version}</suffix>
-							<!-- Disable javascript compression - just use this plugin for gzip.
-								If we want to use javascript compression we should execute this plugin twice,
-								so we can exclude already-compressed files from the JS-compression but not
-								from gzip-compression. -->
-							<nocompress>true</nocompress>
-							<force>true</force>
-							<gzip>true</gzip>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

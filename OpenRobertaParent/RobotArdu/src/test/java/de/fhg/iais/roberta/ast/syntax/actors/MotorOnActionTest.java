@@ -3,10 +3,10 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.ardu.HelperBotNroll;
+import de.fhg.iais.roberta.util.test.ardu.HelperBotNrollForXmlTest;
 
 public class MotorOnActionTest {
-    HelperBotNroll h = new HelperBotNroll();
+    private final HelperBotNrollForXmlTest h = new HelperBotNrollForXmlTest();
 
     @Ignore // not implemented yet
     @Test

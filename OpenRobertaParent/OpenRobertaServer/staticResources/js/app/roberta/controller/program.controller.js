@@ -45,7 +45,7 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         blocklyWorkspace.robControls.refreshTooltips(GUISTATE_C.getRobotRealName());
         GUISTATE_C.checkSim();
         var toolbox = $('#blocklyDiv .blocklyToolboxDiv');
-        toolbox.prepend('<ul class="nav nav-tabs levelTabs"><li class="active"><a id="beginner" class="typcn typcn-media-stop-outline" href="#" data-toggle="tab"></a></li><li class=""><a id="expert" href="#" class="typcn typcn-star-outline" data-toggle="tab"></a></li></ul>');
+        toolbox.prepend('<ul class="nav nav-tabs levelTabs"><li class="active"><a class="typcn typcn-media-stop-outline" href="#beginner" data-toggle="tab">1</a></li><li class=""><a href="#expert" class="typcn typcn-star-outline" data-toggle="tab">2</a></li></ul>');
     }
 
     function initEvents() {
@@ -97,15 +97,17 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         });
 
         // work around for touch devices
-        $('#beginner, #expert').on('touchend', function(e) {
-            $('#' + e.target.id).trigger('click');
+        $('.levelTabs').on('touchend', function(e) {
+            var target = $(e.target).attr("href");
+            $('.levelTabs a[href="' + target + '"]').tab('show');
         });
-
-        $('.levelTabs a').on('shown.bs.tab', function(e) {
+        
+        $('.levelTabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href").substring(1); // activated tab
             e.preventDefault();
-            loadToolbox(e.target.id);
+            loadToolbox(target);
             e.stopPropagation();
-            LOG.info('toolbox clicked, switched to ' + e.target.id);
+            LOG.info('toolbox clicked, switched to ' + target);
         });
 
         bindControl();
@@ -392,13 +394,11 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
     exports.importXml = importXml;
 
     /**
-     * Experimental: Open a file select dialog to load a program (source code) from local
-     * disk and ?
+     * two Experimental functions: Open a file select dialog to load source code from local disk and send it to the cross compiler
      */
     function importSourceCodeToCompile() {
         var input = $(document.createElement('input'));
         input.attr("type", "file");
-        input.attr("accept", ".cpp, .java, .py");
         input.change(function(event) {
             var file = event.target.files[0]
             var reader = new FileReader()
@@ -406,14 +406,36 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
             reader.onload = function(event) {
                 // TODO move this to the run controller once it is clear what should happen
                 var name = UTIL.getBasename(file.name);
-                PROGRAM.runN(name, event.target.result, GUISTATE_C.getLanguage(), function(result) {
-                    alert(result.rc + ' ' + result.compiledCode);
+                PROGRAM.compileN(name, event.target.result, GUISTATE_C.getLanguage(), function(result) {
+                    alert(result.rc);
                 });
             }
         })
         input.trigger('click'); // opening dialog
     }
     exports.importSourceCodeToCompile = importSourceCodeToCompile;
+    
+    /**
+     * two Experimental functions: Open a file select dialog to load source code from local disk and send it to the cross compiler
+     */
+    function importNepoCodeToCompile() {
+    	var input = $(document.createElement('input'));
+    	input.attr("type", "file");
+    	input.change(function(event) {
+    		var file = event.target.files[0]
+    		var reader = new FileReader()
+    		reader.readAsText(file)
+    		reader.onload = function(event) {
+    			// TODO move this to the run controller once it is clear what should happen
+    			var name = UTIL.getBasename(file.name);
+    			PROGRAM.compileP(name, event.target.result, GUISTATE_C.getLanguage(), function(result) {
+    				alert(result.rc);
+    			});
+    		}
+    	})
+    	input.trigger('click'); // opening dialog
+    }
+    exports.importNepoCodeToCompile = importNepoCodeToCompile;
 
     function linkProgram() {
         var dom = Blockly.Xml.workspaceToDom(blocklyWorkspace);
@@ -555,6 +577,14 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         }
     }
     exports.loadToolbox = loadToolbox;
+    
+    function loadExternalToolbox(toolbox) {
+        Blockly.hideChaff();
+        if (toolbox) {
+            blocklyWorkspace.updateToolbox(toolbox);
+        }
+    }
+    exports.loadExternalToolbox = loadExternalToolbox;
 
     function isVisible() {
         return GUISTATE_C.getView() == 'tabProgram';

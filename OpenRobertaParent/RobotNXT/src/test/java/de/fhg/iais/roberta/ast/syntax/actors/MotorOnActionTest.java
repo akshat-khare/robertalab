@@ -2,16 +2,18 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class MotorOnActionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void motorOn() throws Exception {
-        String a = "OnFwdReg(OUT_B,SpeedTest(30),OUT_REGMODE_SPEED);OnFwdReg(OUT_C, SpeedTest(50), OUT_REGMODE_SPEED);";
+        String a =
+            "#defineWHEELDIAMETER0.0#defineTRACKWIDTH0.0#defineMAXLINES8#include\"NEPODefs.h\"//containsNEPOdeclarationsfortheNXCNXTAPIresources"
+                + "OnFwdReg(OUT_B,SpeedTest(30),OUT_REGMODE_SPEED);OnFwdReg(OUT_C, SpeedTest(50), OUT_REGMODE_SPEED);}";
 
-        this.h.assertCodeIsOk(a, "/ast/actions/action_MotorOn.xml");
+        this.h.assertWrappedCodeIsOk(a, "/ast/actions/action_MotorOn.xml");
     }
 
     @Test

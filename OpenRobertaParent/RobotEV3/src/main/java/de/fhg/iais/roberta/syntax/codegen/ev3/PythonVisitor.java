@@ -17,7 +17,9 @@ import de.fhg.iais.roberta.mode.action.Language;
 import de.fhg.iais.roberta.mode.general.IndexLocation;
 import de.fhg.iais.roberta.mode.sensor.BrickKeyPressMode;
 import de.fhg.iais.roberta.mode.sensor.ColorSensorMode;
+import de.fhg.iais.roberta.mode.sensor.CompassSensorMode;
 import de.fhg.iais.roberta.mode.sensor.GyroSensorMode;
+import de.fhg.iais.roberta.mode.sensor.IRSeekerSensorMode;
 import de.fhg.iais.roberta.mode.sensor.InfraredSensorMode;
 import de.fhg.iais.roberta.mode.sensor.MotorTachoMode;
 import de.fhg.iais.roberta.mode.sensor.TimerSensorMode;
@@ -73,8 +75,10 @@ import de.fhg.iais.roberta.syntax.lang.stmt.WaitStmt;
 import de.fhg.iais.roberta.syntax.lang.stmt.WaitTimeStmt;
 import de.fhg.iais.roberta.syntax.sensor.generic.BrickSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.ColorSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.CompassSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.EncoderSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.GyroSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.IRSeekerSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.InfraredSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.SoundSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.TimerSensor;
@@ -333,109 +337,134 @@ public class PythonVisitor extends RobotPythonVisitor implements AstSensorsVisit
         return null;
     }
 
+    private boolean isActorOnPort(IActorPort port) {
+        boolean isActorOnPort = false;
+        for ( UsedActor actor : this.usedActors ) {
+            isActorOnPort = isActorOnPort ? isActorOnPort : actor.getPort().equals(port);
+        }
+        return isActorOnPort;
+    }
+
     @Override
     public Void visitMotorOnAction(MotorOnAction<Void> motorOnAction) {
-        String methodName;
-        boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorOnAction.getPort());
-        boolean duration = motorOnAction.getParam().getDuration() != null;
-        if ( duration ) {
-            methodName = isRegulated ? "hal.rotateRegulatedMotor('" : "hal.rotateUnregulatedMotor('";
-        } else {
-            methodName = isRegulated ? "hal.turnOnRegulatedMotor('" : "hal.turnOnUnregulatedMotor('";
+        if ( isActorOnPort(motorOnAction.getPort()) ) {
+            String methodName;
+            boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorOnAction.getPort());
+            boolean duration = motorOnAction.getParam().getDuration() != null;
+            if ( duration ) {
+                methodName = isRegulated ? "hal.rotateRegulatedMotor('" : "hal.rotateUnregulatedMotor('";
+            } else {
+                methodName = isRegulated ? "hal.turnOnRegulatedMotor('" : "hal.turnOnUnregulatedMotor('";
+            }
+            this.sb.append(methodName + motorOnAction.getPort().toString() + "', ");
+            motorOnAction.getParam().getSpeed().visit(this);
+            if ( duration ) {
+                this.sb.append(", " + getEnumCode(motorOnAction.getDurationMode()));
+                this.sb.append(", ");
+                motorOnAction.getDurationValue().visit(this);
+            }
+            this.sb.append(")");
         }
-        this.sb.append(methodName + motorOnAction.getPort().toString() + "', ");
-        motorOnAction.getParam().getSpeed().visit(this);
-        if ( duration ) {
-            this.sb.append(", " + getEnumCode(motorOnAction.getDurationMode()));
-            this.sb.append(", ");
-            motorOnAction.getDurationValue().visit(this);
-        }
-        this.sb.append(")");
         return null;
     }
 
     @Override
     public Void visitMotorSetPowerAction(MotorSetPowerAction<Void> motorSetPowerAction) {
-        boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorSetPowerAction.getPort());
-        String methodName = isRegulated ? "hal.setRegulatedMotorSpeed('" : "hal.setUnregulatedMotorSpeed('";
-        this.sb.append(methodName + motorSetPowerAction.getPort().toString() + "', ");
-        motorSetPowerAction.getPower().visit(this);
-        this.sb.append(")");
+        if ( isActorOnPort(motorSetPowerAction.getPort()) ) {
+            boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorSetPowerAction.getPort());
+            String methodName = isRegulated ? "hal.setRegulatedMotorSpeed('" : "hal.setUnregulatedMotorSpeed('";
+            this.sb.append(methodName + motorSetPowerAction.getPort().toString() + "', ");
+            motorSetPowerAction.getPower().visit(this);
+            this.sb.append(")");
+        }
         return null;
     }
 
     @Override
     public Void visitMotorGetPowerAction(MotorGetPowerAction<Void> motorGetPowerAction) {
-        boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorGetPowerAction.getPort());
-        String methodName = isRegulated ? "hal.getRegulatedMotorSpeed('" : "hal.getUnregulatedMotorSpeed('";
-        this.sb.append(methodName + motorGetPowerAction.getPort().toString() + "')");
+        if ( isActorOnPort(motorGetPowerAction.getPort()) ) {
+            boolean isRegulated = this.brickConfiguration.isMotorRegulated(motorGetPowerAction.getPort());
+            String methodName = isRegulated ? "hal.getRegulatedMotorSpeed('" : "hal.getUnregulatedMotorSpeed('";
+            this.sb.append(methodName + motorGetPowerAction.getPort().toString() + "')");
+        }
         return null;
     }
 
     @Override
     public Void visitMotorStopAction(MotorStopAction<Void> motorStopAction) {
-        this.sb.append("hal.stopMotor('").append(motorStopAction.getPort().toString()).append("', ").append(getEnumCode(motorStopAction.getMode())).append(')');
+        if ( isActorOnPort(motorStopAction.getPort()) ) {
+            this.sb.append("hal.stopMotor('").append(motorStopAction.getPort().toString()).append("', ").append(getEnumCode(motorStopAction.getMode())).append(
+                ')');
+        }
         return null;
     }
 
     @Override
     public Void visitDriveAction(DriveAction<Void> driveAction) {
-        boolean isDuration = driveAction.getParam().getDuration() != null;
-        String methodName = isDuration ? "hal.driveDistance(" : "hal.regulatedDrive(";
-        this.sb.append(methodName);
-        this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
-        this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "', False, ");
-        this.sb.append(getEnumCode(driveAction.getDirection()) + ", ");
-        driveAction.getParam().getSpeed().visit(this);
-        if ( isDuration ) {
-            this.sb.append(", ");
-            driveAction.getParam().getDuration().getValue().visit(this);
+        if ( isActorOnPort(this.brickConfiguration.getLeftMotorPort()) && isActorOnPort(this.brickConfiguration.getRightMotorPort()) ) {
+            boolean isDuration = driveAction.getParam().getDuration() != null;
+            String methodName = isDuration ? "hal.driveDistance(" : "hal.regulatedDrive(";
+            this.sb.append(methodName);
+            this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
+            this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "', False, ");
+            this.sb.append(getEnumCode(driveAction.getDirection()) + ", ");
+            driveAction.getParam().getSpeed().visit(this);
+            if ( isDuration ) {
+                this.sb.append(", ");
+                driveAction.getParam().getDuration().getValue().visit(this);
+            }
+            this.sb.append(")");
         }
-        this.sb.append(")");
         return null;
     }
 
     @Override
     public Void visitTurnAction(TurnAction<Void> turnAction) {
-        boolean isDuration = turnAction.getParam().getDuration() != null;
-        boolean isRegulated = this.brickConfiguration.getActorOnPort(this.brickConfiguration.getLeftMotorPort()).isRegulated();
-        String methodName = "hal.rotateDirection" + (isDuration ? "Angle" : isRegulated ? "Regulated" : "Unregulated") + "(";
-        this.sb.append(methodName);
-        this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
-        this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "', False, ");
-        this.sb.append(getEnumCode(turnAction.getDirection()) + ", ");
-        turnAction.getParam().getSpeed().visit(this);
-        if ( isDuration ) {
-            this.sb.append(", ");
-            turnAction.getParam().getDuration().getValue().visit(this);
+        if ( isActorOnPort(this.brickConfiguration.getLeftMotorPort()) && isActorOnPort(this.brickConfiguration.getRightMotorPort()) ) {
+            boolean isDuration = turnAction.getParam().getDuration() != null;
+            boolean isRegulated = this.brickConfiguration.getActorOnPort(this.brickConfiguration.getLeftMotorPort()).isRegulated();
+            String methodName = "hal.rotateDirection" + (isDuration ? "Angle" : isRegulated ? "Regulated" : "Unregulated") + "(";
+            this.sb.append(methodName);
+            this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
+            this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "', False, ");
+            this.sb.append(getEnumCode(turnAction.getDirection()) + ", ");
+            turnAction.getParam().getSpeed().visit(this);
+            if ( isDuration ) {
+                this.sb.append(", ");
+                turnAction.getParam().getDuration().getValue().visit(this);
+            }
+            this.sb.append(")");
         }
-        this.sb.append(")");
         return null;
     }
 
     @Override
     public Void visitMotorDriveStopAction(MotorDriveStopAction<Void> stopAction) {
-        this.sb.append("hal.stopMotors(");
-        this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
-        this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "')");
+        if ( isActorOnPort(this.brickConfiguration.getLeftMotorPort()) && isActorOnPort(this.brickConfiguration.getRightMotorPort()) ) {
+            this.sb.append("hal.stopMotors(");
+            this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
+            this.sb.append("'" + this.brickConfiguration.getRightMotorPort().toString() + "')");
+        }
         return null;
     }
 
     @Override
     public Void visitCurveAction(CurveAction<Void> curveAction) {
-        MotorDuration<Void> duration = curveAction.getParamLeft().getDuration();
+        if ( isActorOnPort(this.brickConfiguration.getLeftMotorPort()) && isActorOnPort(this.brickConfiguration.getRightMotorPort()) ) {
+            MotorDuration<Void> duration = curveAction.getParamLeft().getDuration();
 
-        this.sb.append("hal.driveInCurve(");
-        this.sb.append(getEnumCode(curveAction.getDirection()) + ", ");
-        this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
-        curveAction.getParamLeft().getSpeed().visit(this);
-        this.sb.append(", '" + this.brickConfiguration.getRightMotorPort().toString() + "', ");
-        curveAction.getParamRight().getSpeed().visit(this);
-        if ( duration != null ) {
-            this.sb.append(", ");
-            duration.getValue().visit(this);
+            this.sb.append("hal.driveInCurve(");
+            this.sb.append(getEnumCode(curveAction.getDirection()) + ", ");
+            this.sb.append("'" + this.brickConfiguration.getLeftMotorPort().toString() + "', ");
+            curveAction.getParamLeft().getSpeed().visit(this);
+            this.sb.append(", '" + this.brickConfiguration.getRightMotorPort().toString() + "', ");
+            curveAction.getParamRight().getSpeed().visit(this);
+            if ( duration != null ) {
+                this.sb.append(", ");
+                duration.getValue().visit(this);
+            }
+            this.sb.append(")");
         }
-        this.sb.append(")");
         return null;
     }
 
@@ -499,6 +528,23 @@ public class PythonVisitor extends RobotPythonVisitor implements AstSensorsVisit
     }
 
     @Override
+    public Void visitCompassSensor(CompassSensor<Void> compassSensor) {
+        String compassSensorPort = compassSensor.getPort().getPortNumber();
+        switch ( (CompassSensorMode) compassSensor.getMode() ) {
+            case CALIBRATE:
+                // Calibration is not supported by ev3dev hitechnic sensor for now
+                break;
+            case ANGLE:
+            case COMPASS:
+                this.sb.append("hal.getHiTecCompassSensorValue('" + compassSensorPort + "', " + getEnumCode(compassSensor.getMode()) + ")");
+                break;
+            default:
+                throw new DbcException("Invalid Compass Mode!");
+        }
+        return null;
+    }
+
+    @Override
     public Void visitInfraredSensor(InfraredSensor<Void> infraredSensor) {
         String infraredSensorPort = infraredSensor.getPort().getPortNumber();
         switch ( (InfraredSensorMode) infraredSensor.getMode() ) {
@@ -512,6 +558,22 @@ public class PythonVisitor extends RobotPythonVisitor implements AstSensorsVisit
                 throw new DbcException("Invalid Infrared Sensor Mode!");
         }
 
+        return null;
+    }
+
+    @Override
+    public Void visitIRSeekerSensor(IRSeekerSensor<Void> irSeekerSensor) {
+        String irSeekerSensorPort = irSeekerSensor.getPort().getPortNumber();
+        switch ( (IRSeekerSensorMode) irSeekerSensor.getMode() ) {
+            case MODULATED:
+                this.sb.append("hal.getHiTecIRSeekerSensorValue('" + irSeekerSensorPort + "', 'AC')");
+                break;
+            case UNMODULATED:
+                this.sb.append("hal.getHiTecIRSeekerSensorValue('" + irSeekerSensorPort + "', 'DC')");
+                break;
+            default:
+                throw new DbcException("Invalid IRSeeker Mode!");
+        }
         return null;
     }
 
@@ -1014,6 +1076,9 @@ public class PythonVisitor extends RobotPythonVisitor implements AstSensorsVisit
             case LARGE:
                 name = "LargeMotor";
                 break;
+            case OTHER:
+                name = "OtherConsumer";
+                break;
             default:
                 throw new IllegalArgumentException("no mapping for " + actor.getName() + "to ev3dev-lang-python");
         }
@@ -1068,6 +1133,12 @@ public class PythonVisitor extends RobotPythonVisitor implements AstSensorsVisit
                 break;
             case SOUND:
                 name = "SoundSensor";
+                break;
+            case COMPASS:
+                name = "CompassSensor";
+                break;
+            case IRSEEKER:
+                name = "IRSeekerSensor";
                 break;
             default:
                 throw new IllegalArgumentException("no mapping for " + sensor.getType() + "to ev3dev-lang-python");

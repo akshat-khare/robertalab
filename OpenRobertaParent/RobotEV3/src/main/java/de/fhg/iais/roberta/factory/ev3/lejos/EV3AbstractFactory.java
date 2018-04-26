@@ -17,7 +17,7 @@ import de.fhg.iais.roberta.inter.mode.sensor.ISensorPort;
 import de.fhg.iais.roberta.mode.action.ev3.ShowPicture;
 import de.fhg.iais.roberta.mode.sensor.SensorPort;
 import de.fhg.iais.roberta.syntax.Phrase;
-import de.fhg.iais.roberta.syntax.check.program.RobotBrickCheckVisitor;
+import de.fhg.iais.roberta.syntax.check.program.RobotCommonCheckVisitor;
 import de.fhg.iais.roberta.syntax.check.program.RobotSimulationCheckVisitor;
 import de.fhg.iais.roberta.syntax.check.program.ev3.BrickCheckVisitor;
 import de.fhg.iais.roberta.syntax.check.program.ev3.SimulationCheckVisitor;
@@ -31,14 +31,15 @@ public abstract class EV3AbstractFactory extends AbstractRobotFactory {
     protected Properties ev3Properties;
     protected String name;
 
-    public EV3AbstractFactory(String propertyName) {
+    public EV3AbstractFactory(RobertaProperties robertaProperties, String propertyName) {
+        super(robertaProperties);
         this.ev3Properties = Util1.loadProperties("classpath:" + propertyName);
         this.name = this.ev3Properties.getProperty("robot.name");
-        this.robotPropertyNumber = RobertaProperties.getRobotNumberFromProperty(this.name);
+        this.robotPropertyNumber = robertaProperties.getRobotNumberFromProperty(this.name);
         this.robotCompilerWorkflow =
             new CompilerWorkflow(
-                RobertaProperties.getTempDirForUserProjects(),
-                RobertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".compiler.resources.dir"));
+                robertaProperties.getTempDirForUserProjects(),
+                robertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".compiler.resources.dir"));
 
         this.simCompilerWorkflow = new Ev3SimCompilerWorkflow();
 
@@ -70,7 +71,7 @@ public abstract class EV3AbstractFactory extends AbstractRobotFactory {
 
     @Override
     public AbstractModule getGuiceModule() {
-        return new Ev3GuiceModule(RobertaProperties.getRobertaProperties());
+        return new Ev3GuiceModule(this.robertaProperties.getRobertaProperties());
     }
 
     @Override
@@ -139,7 +140,7 @@ public abstract class EV3AbstractFactory extends AbstractRobotFactory {
     }
 
     @Override
-    public RobotBrickCheckVisitor getRobotProgramCheckVisitor(Configuration brickConfiguration) {
+    public RobotCommonCheckVisitor getRobotProgramCheckVisitor(Configuration brickConfiguration) {
         return new BrickCheckVisitor(brickConfiguration);
     }
 
@@ -150,8 +151,8 @@ public abstract class EV3AbstractFactory extends AbstractRobotFactory {
 
     @Override
     public String getGroup() {
-        return RobertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".group") != null
-            ? RobertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".group")
+        return this.robertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".group") != null
+            ? this.robertaProperties.getStringProperty(ROBOT_PLUGIN_PREFIX + this.robotPropertyNumber + ".group")
             : this.name;
     }
 

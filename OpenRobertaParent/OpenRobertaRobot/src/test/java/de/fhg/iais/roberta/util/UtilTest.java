@@ -4,11 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.fhg.iais.roberta.util.dbc.DbcException;
 
 public class UtilTest {
+    private static RobertaProperties robertaProperties;
+
+    @BeforeClass
+    public static void setup() {
+        robertaProperties = new RobertaProperties(Util1.loadProperties(null));
+    }
 
     @Test
     public void testJavaIdentifier() {
@@ -39,22 +46,20 @@ public class UtilTest {
 
     @Test
     public void testGetRobotNumberFromProperty() {
-        RobertaProperties.setRobertaProperties(Util1.loadProperties(null));
-        assertEquals(1, RobertaProperties.getRobotNumberFromProperty("ev3"));
-        assertEquals(2, RobertaProperties.getRobotNumberFromProperty("nxt"));
-        assertEquals(3, RobertaProperties.getRobotNumberFromProperty("ardu"));
+
+        assertEquals(1, robertaProperties.getRobotNumberFromProperty("ev3"));
+        assertEquals(2, robertaProperties.getRobotNumberFromProperty("nxt"));
+        assertEquals(3, robertaProperties.getRobotNumberFromProperty("ardu"));
     }
 
     @Test(expected = DbcException.class)
     public void testGetRobotNumberFromPropertyWrong() {
-        RobertaProperties.setRobertaProperties(Util1.loadProperties(null));
-        RobertaProperties.getRobotNumberFromProperty("ev31");
+        robertaProperties.getRobotNumberFromProperty("ev31");
     }
 
     @Test
     public void testMissingProperty() {
-        RobertaProperties.setRobertaProperties(Util1.loadProperties(null));
-        boolean browserVisibility = Boolean.parseBoolean(RobertaProperties.getStringProperty("does.not.exist"));
+        boolean browserVisibility = Boolean.parseBoolean(robertaProperties.getStringProperty("does.not.exist"));
         assertEquals(false, browserVisibility);
     }
 

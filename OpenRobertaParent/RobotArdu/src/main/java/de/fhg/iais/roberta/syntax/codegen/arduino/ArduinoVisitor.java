@@ -58,22 +58,21 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
                         ListCreate<Void> list = (ListCreate<Void>) var.getValue();
                         size = list.getValue().get().size();
                     }
+                    nlIndent();
                     this.sb.append("__" + var.getName() + "Len = ").append(size).append(";");
                     nlIndent();
                     this.sb.append(getLanguageVarTypeFromBlocklyType(var.getTypeVar())).append(" ");
                     this.sb.append("__" + var.getName()).append("[]").append(" = ");
                     var.getValue().visit(this);
                     this.sb.append(";");
-                    nlIndent();
                 }
+                nlIndent();
                 this.sb.append(var.getName());
                 if ( var.getTypeVar().isArray() ) {
                     this.sb.append(" = (");
                     this.sb.append(getLanguageVarTypeFromBlocklyType(var.getTypeVar())).append("*)malloc(");
                     this.sb.append("sizeof(");
                     this.sb.append(getLanguageVarTypeFromBlocklyType(var.getTypeVar())).append(")*");
-                }
-                if ( var.getTypeVar().isArray() ) {
                     this.sb.append("__" + var.getName() + "Len").append(")").append(";");
                     nlIndent();
                     this.sb.append("rob.createArray(").append(var.getName()).append(", ");
@@ -84,14 +83,11 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
                     var.getValue().visit(this);
                 }
                 this.sb.append(";");
-                nlIndent();
             } else {
                 if ( var.getTypeVar().isArray() ) {
                     this.sb.append("__" + var.getName() + "Len = ").append(0);
                     this.sb.append(";");
-                    nlIndent();
                 }
-
             }
         }
     }
@@ -241,7 +237,7 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
 
     @Override
     public Void visitRepeatStmt(RepeatStmt<Void> repeatStmt) {
-        boolean isWaitStmt = repeatStmt.getMode() == RepeatStmt.Mode.WAIT || repeatStmt.getMode() == RepeatStmt.Mode.FOREVER_ARDU;
+        boolean isWaitStmt = repeatStmt.getMode() == RepeatStmt.Mode.WAIT;// || repeatStmt.getMode() == RepeatStmt.Mode.FOREVER_ARDU;
         switch ( repeatStmt.getMode() ) {
             case UNTIL:
             case WHILE:
@@ -279,6 +275,7 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
                 }
                 break;
             case FOREVER_ARDU:
+                increaseLoopCounter();
                 repeatStmt.getList().visit(this);
                 return null;
             default:
@@ -288,6 +285,8 @@ public abstract class ArduinoVisitor extends RobotCppVisitor {
         repeatStmt.getList().visit(this);
         if ( !isWaitStmt ) {
             addContinueLabelToLoop();
+            nlIndent();
+            this.sb.append("delay(1);");
         } else {
             appendBreakStmt();
         }

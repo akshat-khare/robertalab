@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.expr;
 
 import org.junit.Ignore;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class TextAppendTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Ignore
     public void Test() throws Exception {

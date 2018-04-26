@@ -8,9 +8,8 @@ import de.fhg.iais.roberta.syntax.action.sound.VolumeAction;
 import de.fhg.iais.roberta.syntax.action.sound.VolumeAction.Mode;
 import de.fhg.iais.roberta.syntax.sensor.ExternalSensor;
 import de.fhg.iais.roberta.typecheck.NepoInfo;
-import de.fhg.iais.roberta.visitor.actor.AstActorCommunicationVisitor;
 
-public abstract class RobotBrickCheckVisitor extends RobotCommonCheckVisitor implements AstActorCommunicationVisitor<Void> {
+public abstract class RobotBrickCheckVisitor extends RobotCommonCheckVisitor {
 
     public RobotBrickCheckVisitor(Configuration brickConfiguration) {
         super(brickConfiguration);
@@ -66,7 +65,18 @@ public abstract class RobotBrickCheckVisitor extends RobotCommonCheckVisitor imp
                         this.errorCount++;
                     }
                     break;
-
+                case "COMPASS_SENSING":
+                    if ( usedSensor.getType() != SensorType.COMPASS ) {
+                        sensor.addInfo(NepoInfo.error("CONFIGURATION_ERROR_SENSOR_WRONG"));
+                        this.errorCount++;
+                    }
+                    break;
+                case "IRSEEKER_SENSING":
+                    if ( usedSensor.getType() != SensorType.IRSEEKER ) {
+                        sensor.addInfo(NepoInfo.error("CONFIGURATION_ERROR_SENSOR_WRONG"));
+                        this.errorCount++;
+                    }
+                    break;
                 default:
                     break;
             }

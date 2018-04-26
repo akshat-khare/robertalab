@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.expr;
 
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class MathSingleTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Test
     public void Test() throws Exception {
@@ -16,7 +16,7 @@ public class MathSingleTest {
 
     @Test
     public void Test1() throws Exception {
-        final String a = "volume=sqrt(0)*4/100.0+0.5;";
+        final String a = "volume=(sqrt(0))*4/100.0;";
 
         this.h.assertCodeIsOk(a, "/syntax/math/math_single1.xml");
     }

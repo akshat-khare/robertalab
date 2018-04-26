@@ -2,10 +2,10 @@ package de.fhg.iais.roberta.ast.syntax.actors;
 
 import org.junit.Ignore;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class LightSensorActionTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     @Ignore
     public void redOn() throws Exception {

@@ -1,9 +1,9 @@
 package de.fhg.iais.roberta.ast.syntax.expr;
 
-import de.fhg.iais.roberta.util.test.nxt.Helper;
+import de.fhg.iais.roberta.util.test.nxt.HelperNxtForXmlTest;
 
 public class TextJoinTextTest {
-    Helper h = new Helper();
+    private final HelperNxtForXmlTest h = new HelperNxtForXmlTest();
 
     //ignore
     public void Test() throws Exception {

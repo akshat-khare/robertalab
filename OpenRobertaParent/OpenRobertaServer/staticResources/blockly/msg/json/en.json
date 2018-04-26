@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2018-02-04 23:17:30.477198",
+		"lastupdated": "2018-04-03 12:19:42.464103",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -414,6 +414,7 @@
 	"ULTRASONIC_TOOLTIP": "Represents an ultrasonic sensor.",
 	"COLOUR_TOOLTIP": "Represents a colour sensor.",
 	"INFRARED_TOOLTIP": "Represents an infrared sensor.",
+	"IRSEEKER_TOOLTIP": "Represents a HiTechnic NXT IRSeeker V2 sensor.",
 	"TOUCH_TOOLTIP": "Is the touch sensor pressed?",
 	"GYRO_TOOLTIP": "Represents a gyro sensor.",
 	"FLAME_TOOLTIP": "Represents a flame sensor.",
@@ -509,6 +510,7 @@
 	"SENSOR_MIC": "microphone",
 	"SENSOR_COLOUR": "colour sensor",
 	"SENSOR_INFRARED": "infrared sensor",
+	"SENSOR_IRSEEKER": "HT infrared sensor",
 	"SENSOR_ENCODER": "encoder",
 	"SENSOR_GYRO": "gyroscope",
 	"SENSOR_FLAME": "flame sensor",
@@ -523,6 +525,7 @@
 	"SENSOR_KEY_ANY": "any",
 	"SENSOR_ANY": "anyplace",
 	"SENSOR_RESET": "reset",
+	"SENSOR_CALIBRATE": "calibrate",
 	"SENSOR_RESET_II": "",
 	"SENSOR_GET_SAMPLE": "get value",
 	"SENSOR_VALUE": "value",
@@ -550,6 +553,9 @@
 	"MODE_RATE": "rate",
 	"MODE_ACCELERATION": "acceleration",
 	"MODE_ORIENTATION": "orientation",
+	"MODE_COMPASS": "compass",
+	"MODE_MODULATED": "modulated",
+	"MODE_UNMODULATED": "unmodulated",
 	"LOOP": "repeat until",
 	"LOOP_FOREVER": "repeat indefinitely",
 	"CONNECTION_SEND_DATA": "send message",
@@ -781,6 +787,7 @@
 	"CONFIGURATION_ERROR_MOTOR_MISSING": "Motor is missing on the given port!",
 	"CONFIGURATION_ERROR_MOTOR_LEFT_UNREGULATED": "Left motor is not regulated!",
 	"CONFIGURATION_ERROR_MOTOR_RIGHT_UNREGULATED": "Right motor is not regulated!",
+	"CONFIGURATION_ERROR_OTHER_NOT_SUPPORTED": "Other power consumer does not support this type of block!",
 	"DATATABLE_PROGRAM_NAME": "Program name",
 	"DATATABLE_CREATED_BY": "Creator",
 	"DATATABLE_SHARED": "Shared",
@@ -858,7 +865,10 @@
 	"MOTOR_TILT": "tilt",
 	"SENSOR_SONAR": "sonar",
 	"SENSOR_COMPASS": "compass sensor",
+	"SENSOR_COMPASS_EV3": "HT compass sensor",
 	"COMPASS_TOOLTIP": "Represents a compass sensor.",
+	"COMPASS_TOOLTIP_EV3": "Represents a HiTechnic NXT compass sensor.",
+	"COMPASS_CALIBRATE_TOOLTIP": "Calibrates the compass. Turn the compass sensor VERY slowly for two times (about 40 seconds).",
 	"SOUND_TOOLTIP": "Represents a sound sensor.",
 	"MOTOR_ARDU_TOOLTIP": "Represents a Bot'n Roll chassis motor.",
 	"NXTBRICK_TOOLTIP": "Represents the NXT brick with connected actors and sensors. There are also inbuilt actors and sensors available, e.g. buttons, display ...",
@@ -1257,6 +1267,7 @@
 	"MENU_ROBOT_STOP_HINT_NXT": "Press <span class='typcn typcn-media-cancel'></span> button on the robot to abort the program!",
 	"INFO_DOCUMENTATION_HINT": "Document your program here ...",
 	"INFO_TAGS": "Tags",
+	"SENSOR_IRSEEKER_GETSAMPLE_TOOLTIP": "Gets the position of an infrared beacon.",
 	"SENSOR_RSSI": "signal strength",
 	"SENSOR_RSSI_VALUE_GETSAMPLE_TOOLTIP": "Gets the signal strength from the last received message.",
 	"SENSOR_GESTURE_UP_GETSAMPLE_TOOLTIP": "Returns »true« if the posture is upright.",
@@ -1268,5 +1279,7 @@
 	"RIGHT": "right",
 	"LEFT": "left",
 	"ORA_ROBOT_PUSH_RUN_CALLIOPE2016": "Your program »$« is downloaded to Calliope, press the reset button to start it!",
-	"ORA_ROBOT_PUSH_RUN_NXT": "Your program »$« is downloaded to the NXT, start it on the robot!"
+	"ORA_ROBOT_PUSH_RUN_NXT": "Your program »$« is downloaded to the NXT, start it on the robot!",
+	"ERROR_MISSING_PARAMETER": "An input value is missing!",
+	"ERROR_MISSING_RETURN": "The function return value is missing!"
 }

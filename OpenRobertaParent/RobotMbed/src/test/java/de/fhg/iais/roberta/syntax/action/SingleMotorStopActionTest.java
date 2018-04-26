@@ -3,10 +3,10 @@ package de.fhg.iais.roberta.syntax.action;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.mbed.Helper;
+import de.fhg.iais.roberta.util.test.mbed.HelperMbedForXmlTest;
 
 public class SingleMotorStopActionTest {
-    Helper h = new Helper();
+    private final HelperMbedForXmlTest h = new HelperMbedForXmlTest();
 
     @Test
     public void make_ByDefault_ReturnInstanceOfSingleMotorStopActionClass() throws Exception {

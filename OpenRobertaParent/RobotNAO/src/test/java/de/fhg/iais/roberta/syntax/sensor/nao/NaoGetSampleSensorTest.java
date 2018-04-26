@@ -3,10 +3,10 @@ package de.fhg.iais.roberta.syntax.sensor.nao;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.fhg.iais.roberta.util.test.nao.Helper;
+import de.fhg.iais.roberta.util.test.nao.HelperNaoForXmlTest;
 
 public class NaoGetSampleSensorTest {
-    Helper h = new Helper();
+    private final HelperNaoForXmlTest h = new HelperNaoForXmlTest();
 
     @Test
     public void make_ByDefault_ReturnInstanceOfNaoGetSampleTouchHandLeftTouchHandBumperHead() throws Exception {
