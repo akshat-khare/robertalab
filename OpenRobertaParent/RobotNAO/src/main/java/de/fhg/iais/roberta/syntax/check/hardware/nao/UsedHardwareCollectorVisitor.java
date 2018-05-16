@@ -38,19 +38,14 @@ import de.fhg.iais.roberta.syntax.action.sound.SetLanguageAction;
 import de.fhg.iais.roberta.syntax.check.hardware.RobotUsedHardwareCollectorVisitor;
 import de.fhg.iais.roberta.syntax.lang.expr.nao.ColorHexString;
 import de.fhg.iais.roberta.syntax.sensor.generic.TemperatureSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.Accelerometer;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectFace;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectedFaceInformation;
-import de.fhg.iais.roberta.syntax.sensor.nao.Dialog;
+import de.fhg.iais.roberta.syntax.sensor.nao.DetectedMark;
 import de.fhg.iais.roberta.syntax.sensor.nao.ElectricCurrent;
-import de.fhg.iais.roberta.syntax.sensor.nao.ForceSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.Gyrometer;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoGetSampleSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoMark;
+import de.fhg.iais.roberta.syntax.sensor.nao.FsrSensor;
+import de.fhg.iais.roberta.syntax.sensor.nao.GetSampleSensor;
 import de.fhg.iais.roberta.syntax.sensor.nao.NaoMarkInformation;
 import de.fhg.iais.roberta.syntax.sensor.nao.RecognizeWord;
-import de.fhg.iais.roberta.syntax.sensor.nao.Sonar;
-import de.fhg.iais.roberta.syntax.sensor.nao.Touchsensors;
 import de.fhg.iais.roberta.visitor.nao.NaoAstVisitor;
 
 /**
@@ -153,17 +148,15 @@ public class UsedHardwareCollectorVisitor extends RobotUsedHardwareCollectorVisi
 
     @Override
     public Void visitSayTextAction(SayTextAction<Void> sayTextAction) {
+        sayTextAction.getMsg().visit(this);
+        sayTextAction.getPitch().visit(this);
+        sayTextAction.getPitch().visit(this);
         return null;
     }
 
     @Override
     public Void visitPlayFile(PlayFile<Void> playFile) {
         playFile.getMsg().visit(this);
-        return null;
-    }
-
-    @Override
-    public Void visitDialog(Dialog<Void> dialog) {
         return null;
     }
 
@@ -196,34 +189,13 @@ public class UsedHardwareCollectorVisitor extends RobotUsedHardwareCollectorVisi
     }
 
     @Override
-    public Void visitTouchsensors(Touchsensors<Void> touchsensors) {
+    public Void visitFsrSensor(FsrSensor<Void> forceSensor) {
         return null;
     }
 
     @Override
-    public Void visitSonar(Sonar<Void> sonar) {
-        this.usedSensors.add(new UsedSensor(null, SensorType.ULTRASONIC, null));
-        return null;
-    }
-
-    @Override
-    public Void visitGyrometer(Gyrometer<Void> gyrometer) {
-        return null;
-    }
-
-    @Override
-    public Void visitAccelerometer(Accelerometer<Void> accelerometer) {
-        return null;
-    }
-
-    @Override
-    public Void visitForceSensor(ForceSensor<Void> forceSensor) {
-        return null;
-    }
-
-    @Override
-    public Void visitNaoMark(NaoMark<Void> naoMark) {
-        this.usedSensors.add(new UsedSensor(null, SensorType.NAOMARK, null));
+    public Void visitNaoMark(DetectedMark<Void> naoMark) {
+        this.usedSensors.add(new UsedSensor(null, SensorType.DETECT_MARK, null));
         return null;
     }
 
@@ -261,8 +233,8 @@ public class UsedHardwareCollectorVisitor extends RobotUsedHardwareCollectorVisi
     }
 
     @Override
-    public Void visitNaoGetSampleSensor(NaoGetSampleSensor<Void> naoGetSampleSensor) {
-        naoGetSampleSensor.getSensor().visit(this);
+    public Void visitGetSampleSensor(GetSampleSensor<Void> getSampleSensor) {
+        getSampleSensor.getSensor().visit(this);
         return null;
     }
 
@@ -310,7 +282,7 @@ public class UsedHardwareCollectorVisitor extends RobotUsedHardwareCollectorVisi
     @Override
     public Void visitNaoMarkInformation(NaoMarkInformation<Void> naoMarkInformation) {
         naoMarkInformation.getNaoMarkId().visit(this);
-        this.usedSensors.add(new UsedSensor(null, SensorType.NAOMARK, null));
+        this.usedSensors.add(new UsedSensor(null, SensorType.DETECT_MARK, null));
         return null;
     }
 

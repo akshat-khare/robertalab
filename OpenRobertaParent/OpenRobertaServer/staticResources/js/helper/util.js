@@ -1,4 +1,8 @@
 define([ 'exports', 'message', 'log', 'jquery', 'jquery-validate', 'bootstrap' ], function(exports, MSG, LOG, $) {
+
+    const ANIMATION_DURATION = 750;
+
+    var ratioWorkspace = 1;
     /**
      * Set cookie
      * 
@@ -264,7 +268,6 @@ define([ 'exports', 'message', 'log', 'jquery', 'jquery-validate', 'bootstrap' ]
      * 
      */
     function showMsgOnTop(msg) {
-
         $('#show-message').find('button').removeAttr("data-dismiss");
         $('#show-message').find('button').one('click', function(e) {
             $('#show-message').modal("hide");
@@ -435,17 +438,21 @@ define([ 'exports', 'message', 'log', 'jquery', 'jquery-validate', 'bootstrap' ]
                 var pageY = e.pageY || e.originalEvent.touches[0].pageY;
                 // special case movable slider between workspace and right divs
                 if (opt.axis == 'x') {
-                    var left = pageX + pos_x - drg_w - 6;
+                    var left = pageX + pos_x - drg_w;
                     var left = Math.min(left, $('#main-section').width() - 80);
                     var left = Math.max(left, 42);
                     $selected.offset({
                         top : 0,
-                        left : left
+                        left : left - 4
                     });
-                    $('#blocklyDiv').width(left + 6);
-                    $('.rightMenuButton.shifted').css({
-                        'right' : $('#main-section').width() - left - 10
+                    $('#blockly').width(left + 3);
+                    $('.rightMenuButton.rightActive').css({
+                        'right' : $(window).width() - left
                     });
+                    $('.fromRight.rightActive').css({
+                        'width' : $(window).width() - $('#blockly').width()
+                    })
+                    ratioWorkspace = $('#blockly').outerWidth() / $('#main-section').outerWidth();
                     $(window).resize();
                 } else {
                     $selected.offset({
@@ -475,4 +482,114 @@ define([ 'exports', 'message', 'log', 'jquery', 'jquery-validate', 'bootstrap' ]
         });
         return this;
     };
+
+    $.fn.closeRightView = function(opt_callBack) {
+        Blockly.hideChaff();
+        $('.fromRight.rightActive').addClass('shifting');
+        $('.blocklyToolboxDiv').css('display', 'inherit');
+        var that = this;
+        $('.fromRight.rightActive').animate({
+            width : 0
+        }, {
+            duration : ANIMATION_DURATION,
+            start : function() {
+                $(".modal").modal("hide");
+            },
+            step : function(now) {
+                that.width($(window).width() - now);
+                $('.rightMenuButton.rightActive').css('right', now);
+                $(window).resize();
+            },
+            done : function() {
+                that.width($(window).width());
+                $('.rightMenuButton.rightActive').css('right', 0);
+                $(window).resize();
+                $('.fromRight.rightActive.shifting').removeClass('shifting');
+                ratioWorkspace = 1;
+                that.removeClass('rightActive');
+                $('.fromRight.rightActive').removeClass('rightActive');
+                $('.rightMenuButton.rightActive').removeClass('rightActive');
+                $('#sliderDiv').hide();
+                if (typeof opt_callBack == 'function') {
+                    opt_callBack();
+                }
+            }
+        });
+    };
+
+    $.fn.openRightView = function(viewName, initialViewWidth, opt_callBack) {
+        Blockly.hideChaff();
+        this.addClass('rightActive');
+        $('#' + viewName + 'Div, #' + viewName + 'Button').addClass('rightActive');
+        var width;
+        var smallScreen;
+        if ($(window).width() < 768) {
+            smallScreen = true;
+            width = this.width() - 52;
+        } else {
+            smallScreen = false;
+            width = this.width() * initialViewWidth;
+        }
+        var that = this;
+        $('.fromRight.rightActive').animate({
+            width : width
+        }, {
+            duration : ANIMATION_DURATION,
+            start : function() {
+                $('#' + viewName + 'Div').addClass('shifting');
+            },
+            step : function(now) {
+                that.width($(window).width() - now);
+                $('.rightMenuButton.rightActive').css('right', now);
+                $(window).resize();
+            },
+            done : function() {
+                $('#sliderDiv').show();
+                that.width($(window).width() - $('.fromRight.rightActive').width());
+                $('.rightMenuButton.rightActive').css('right', $('.fromRight.rightActive').width());
+                $(window).resize();
+                $('#' + viewName + 'Div').removeClass('shifting');
+                ratioWorkspace = $('#blockly').outerWidth() / $('#main-section').outerWidth();
+                if (smallScreen) {
+                    $('.blocklyToolboxDiv').css('display', 'none');
+                }
+                $('#sliderDiv').css({
+                    'left' : that.width() - 7
+                });
+                if (typeof opt_callBack == 'function') {
+                    opt_callBack();
+                }
+            }
+        });
+    };
+
+    $(window).resize(function() {
+        var parentWidth = $('#main-section').outerWidth();
+        var height = Math.max($('#blockly').outerHeight(),$('#brickly').outerHeight());
+
+        var rightWidth = (1 - ratioWorkspace) * parentWidth;
+        var leftWidth = ratioWorkspace * parentWidth;
+        
+        if (!$('.fromRight.rightActive.shifting').length > 0) {
+            if ($('.fromRight.rightActive').length > 0) {
+                $('.fromRight.rightActive').width(rightWidth);
+                $('.rightMenuButton.rightActive').css('right', rightWidth);
+                $('#sliderDiv').css('left', leftWidth - 7);
+            }
+            $('#blockly').width(leftWidth);
+        } else {
+            leftWidth = $('#blockly').outerWidth();
+        }
+
+        if ($('#blocklyDiv')) {
+            $('#blocklyDiv').width(leftWidth - 4);
+            $('#blocklyDiv').height(height);
+        }
+        if ($('#bricklyDiv')) {
+            $('#bricklyDiv').width(parentWidth);
+            $('#bricklyDiv').height(height);
+        }
+        Blockly.svgResize(Blockly.getMainWorkspace());
+    });
+
 });

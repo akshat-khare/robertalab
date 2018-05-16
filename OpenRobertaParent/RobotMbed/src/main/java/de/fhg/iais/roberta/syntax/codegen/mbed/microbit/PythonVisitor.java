@@ -23,7 +23,11 @@ import de.fhg.iais.roberta.syntax.action.mbed.DisplayImageAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetBrightnessAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetPixelAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplayTextAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayClearAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayShowAction;
+import de.fhg.iais.roberta.syntax.action.mbed.LedBarSetAction;
 import de.fhg.iais.roberta.syntax.action.mbed.LedOnAction;
+import de.fhg.iais.roberta.syntax.action.mbed.PinSetPullAction;
 import de.fhg.iais.roberta.syntax.action.mbed.PinWriteValue;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioReceiveAction;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioSendAction;
@@ -49,13 +53,13 @@ import de.fhg.iais.roberta.syntax.codegen.RobotPythonVisitor;
 import de.fhg.iais.roberta.syntax.expr.mbed.Image;
 import de.fhg.iais.roberta.syntax.expr.mbed.LedColor;
 import de.fhg.iais.roberta.syntax.expr.mbed.PredefinedImage;
-import de.fhg.iais.roberta.syntax.expr.mbed.RgbColor;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageInvertFunction;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageShiftFunction;
 import de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask;
 import de.fhg.iais.roberta.syntax.lang.expr.ConnectConst;
 import de.fhg.iais.roberta.syntax.lang.expr.EmptyExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.ListCreate;
+import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.expr.StringConst;
 import de.fhg.iais.roberta.syntax.lang.functions.GetSubFunct;
 import de.fhg.iais.roberta.syntax.lang.functions.IndexOfFunct;
@@ -799,7 +803,7 @@ public class PythonVisitor extends RobotPythonVisitor implements MbedAstVisitor<
             default:
                 throw new IllegalArgumentException("unhandled type");
         }
-        return null;        
+        return null;
     }
 
     @Override
@@ -829,6 +833,26 @@ public class PythonVisitor extends RobotPythonVisitor implements MbedAstVisitor<
     }
 
     @Override
+    public Void visitPinSetPullAction(PinSetPullAction<Void> pinSetPullAction) {
+        // TODO add as soon as microbit runtime is updated
+        //        this.sb.append("microbit.pin" + pinSetPullAction.getPort().getValues()[0] + ".set_pull(");
+        //        switch ( (PinPull) pinSetPullAction.getMode() ) {
+        //            case UP:
+        //                this.sb.append("PULL_UP");
+        //                break;
+        //            case DOWN:
+        //                this.sb.append("PULL_DOWN");
+        //                break;
+        //            case NONE:
+        //            default:
+        //                this.sb.append("NO_PULL");
+        //                break;
+        //        }
+        //        this.sb.append(");");
+        return null;
+    }
+
+    @Override
     public Void visitDisplaySetPixelAction(DisplaySetPixelAction<Void> displaySetPixelAction) {
         this.sb.append("microbit.display.set_pixel(");
         displaySetPixelAction.getX().visit(this);
@@ -847,6 +871,16 @@ public class PythonVisitor extends RobotPythonVisitor implements MbedAstVisitor<
         this.sb.append(", ");
         displayGetPixelAction.getY().visit(this);
         this.sb.append(")");
+        return null;
+    }
+
+    @Override
+    public Void visitFourDigitDisplayShowAction(FourDigitDisplayShowAction<Void> fourDigitDisplayShowAction) {
+        return null;
+    }
+
+    @Override
+    public Void visitFourDigitDisplayClearAction(FourDigitDisplayClearAction<Void> fourDigitDisplayClearAction) {
         return null;
     }
 
@@ -907,6 +941,11 @@ public class PythonVisitor extends RobotPythonVisitor implements MbedAstVisitor<
     @Override
     public Void visitDisplayGetBrightnessAction(DisplayGetBrightnessAction<Void> displayGetBrightnessAction) {
         // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Void visitLedBarSetAction(LedBarSetAction<Void> ledBarSetAction) {
         return null;
     };
 }

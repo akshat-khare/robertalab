@@ -1,6 +1,7 @@
 # Import
 import math
 from optparse import OptionParser
+
 import time
 
 from naoqi import *
@@ -45,18 +46,13 @@ class Hal(object):
 
     # MOVEMENT
 
-    def mode(self, modus):
-        if modus == 1:
-            self.posture.goToPosture("Stand", 0.8)
-        elif modus == 2:
-            self.motion.rest()
-        elif modus == 3:
-            self.posture.goToPosture("Sit", 0.8)
-
     def applyPosture(self, pose):
         # posture.goToPosture is used instead of applyPosture as this is a
         # "intelligent" move calculating the path on its own
-        self.posture.goToPosture(pose, 0.8)
+        if pose == 'Rest':
+            self.motion.rest()
+        else:
+            self.posture.goToPosture(pose, 0.8)
 
     def stiffness(self, bodypart, status):
         if status == 1:
@@ -423,12 +419,8 @@ class Hal(object):
         self.led.fadeRGB("FaceLeds", 0xffffff, 1)
 
     def pointLookAt(self, mode, frame, x, y, z, speed):
-        if speed < 0:
-            speed = 1
-        elif speed > 100:
-            speed = 100
-        else:
-            speed /= 100.
+        speed = min(max(speed, 1.), 100.)
+        speed /= 100.
         if mode == "POINT":
             self.tracker.pointAt("Arms", [x, y, z], frame, speed)
         elif mode == "LOOK":
@@ -560,57 +552,30 @@ class Hal(object):
     # SENSORS
 
     def accelerometer(self, coordinate):
-        if coordinate == "x":
-            return self.memory.getData("Device/SubDeviceList/InertialSensor/AccelerometerX/Sensor/Value")
-        elif coordinate == "y":
-            return self.memory.getData("Device/SubDeviceList/InertialSensor/AccelerometerY/Sensor/Value")
-        elif coordinate == "z":
-            return self.memory.getData("Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value")
-
+        return self.memory.getData("Device/SubDeviceList/InertialSensor/Accelerometer{}/Sensor/Value".format(coordinate.upper()))
+        
     def gyrometer(self, coordinate):
-        if coordinate == "x":
-            return self.memory.getData("Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value")
-        elif coordinate == "y":
-            return self.memory.getData("Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value")
+        return self.memory.getData("Device/SubDeviceList/InertialSensor/Gyroscope{}/Sensor/Value".format(coordinate.upper()))
 
     def ultrasonic(self):
         # Retrieve sonar data from ALMemory (distance in centimeters)
         return self.memory.getData("Device/SubDeviceList/US/Right/Sensor/Value") * 100
 
     def fsr(self, side):
-        if side == "left":
-            return self.memory.getData("leftFootTotalWeight")
-        else:
-            return self.memory.getData("rightFootTotalWeight")
+        return self.memory.getData("{}FootTotalWeight".format(side))
+
 
     def touchsensors(self, position, side):
+        side = side.title()
         if position == "hand":
-            if side == "left":
-                if self.memory.getData("HandLeftBackTouched") == 1:
-                    return True
-            elif side == "right":
-                if self.memory.getData("HandRightBackTouched") == 1:
-                    return True
+            return self.memory.getData("Hand{}BackTouched".format(side)) == 1
         elif position == "bumper":
-            if side == "left":
-                if self.memory.getData("LeftBumperPressed") == 1:
-                    return True
-            elif side == "right":
-                if self.memory.getData("RightBumperPressed") == 1:
-                    return True
+                return self.memory.getData("{}BumperPressed".format(side)) == 1
         elif position == "head":
-            if side == "front":
-                if self.memory.getData("FrontTactilTouched") == 1:
-                    return True
-            elif side == "middle":
-                if self.memory.getData("MiddleTactilTouched") == 1:
-                    return True
-            elif side == "rear":
-                if self.memory.getData("RearTactilTouched") == 1:
-                    return True
+            return self.memory.getData("{}TactilTouched".format(side)) == 1
         return False
 
-    def naoMark(self):
+    def getDetectedMarks(self):
         data = self.memory.getData("LandmarkDetected")
         if (not data is None and len(data) != 0):
             marks = data[1]
@@ -622,17 +587,18 @@ class Hal(object):
             self.naoMarkInformation[mark[1][0]] = mark[0][1:] #alpha, beta, xangle, yangle, heading
         return list(result)
 
+    def getDetectedMark(self):
+        data = self.memory.getData("LandmarkDetected")
+        if (not data is None and len(data) != 0):
+            marks = data[1]
+        else:
+            return -1
+        result = marks[0][1][0]
+        self.naoMarkInformation[marks[0][1][0]] = marks[0][0][1:] #alpha, beta, xangle, yangle, heading
+        return result
+
     def getElectricCurrent(self, jointName):
         return self.memory.getData("Device/SubDeviceList/" + jointName + "/ElectricCurrent/Sensor/Value")
-
-    def learnFace(self, name):
-        self.fd.learnFace(name)
-
-    def forgetFace(self, name):
-        self.fd.forgetPerson(name)
-
-    def detectFace(self):
-        self.fd.setRecognitionEnabled(True)
 
     def wait(self, timeMilliSeconds):
         timeSeconds = timeMilliSeconds / 1000

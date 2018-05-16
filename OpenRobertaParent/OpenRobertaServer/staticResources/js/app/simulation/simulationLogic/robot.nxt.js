@@ -146,14 +146,16 @@ define([ 'simulation.simulation', 'robertaLogic.constants', 'simulation.robot', 
 
         oscillator.connect(gainNode);
         gainNode.connect(context.destination);
-        gainNode.gain.value = 0;
+        gainNode.gain.setValueAtTime(0, 0);
 
         try {
-            // monkeypatch getUserMedia 
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
+            if (navigator.mediaDevices === undefined) {
+                navigator.mediaDevices = {};
+            }
+            navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            
             // ask for an audio input
-            navigator.getUserMedia({
+            navigator.mediaDevices.getUserMedia({
                 "audio" : {
                     "mandatory" : {
                         "googEchoCancellation" : "false",
@@ -163,7 +165,7 @@ define([ 'simulation.simulation', 'robertaLogic.constants', 'simulation.robot', 
                     },
                     "optional" : []
                 },
-            }, function(stream) {
+            }).then(function(stream) {
                 mediaStreamSource = context.createMediaStreamSource(stream);
                 Nxt.prototype.sound = Volume.createAudioMeter(context);
                 mediaStreamSource.connect(Nxt.prototype.sound);

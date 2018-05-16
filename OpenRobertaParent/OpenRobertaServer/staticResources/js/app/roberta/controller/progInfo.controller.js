@@ -1,6 +1,7 @@
 define([ 'exports', 'message', 'log', 'util', 'guiState.controller', 'blocks', 'jquery', 'jquery-validate', 'jquery-hotkeys', 'bootstrap-tagsinput',
         'bootstrap.wysiwyg', 'blocks-msg' ], function(exports, MSG, LOG, UTIL, GUISTATE_C, Blockly, $) {
 
+    const INITIAL_WIDTH = 0.3;
     var blocklyWorkspace;
     /**
      * 
@@ -21,8 +22,8 @@ define([ 'exports', 'message', 'log', 'util', 'guiState.controller', 'blocks', '
     }
 
     function initEvents() {
-        $('#progInfo').off('click touchend');
-        $('#progInfo').on('click touchend', function(event) {
+        $('#infoButton').off('click touchend');
+        $('#infoButton').on('click touchend', function(event) {
             toggleInfo();
             return false;
         });
@@ -34,8 +35,20 @@ define([ 'exports', 'message', 'log', 'util', 'guiState.controller', 'blocks', '
                 });
             }
         });
+        $('#infoContent, #infoTags').on('change', function() {
+            blocklyWorkspace.description = $('#infoContent').html();
+            blocklyWorkspace.tags = $('#infoTags').val();
+            if (GUISTATE_C.isProgramSaved()) {
+                GUISTATE_C.setProgramSaved(false);
+            }
+            if (typeof $('#infoContent').html() === 'string' && $('#infoContent').html().length) {
+                $('#infoButton').addClass('notEmpty');
+            } else {
+                $('#infoButton').removeClass('notEmpty');
+            }
+        });
         // prevent to copy eg ms word formatting!
-        $('[contenteditable]').on('paste', function(e) {
+        $('[contenteditable]#infoContent').on('paste', function(e) {
             e.preventDefault();
             var text = '';
             if (e.clipboardData || e.originalEvent.clipboardData) {
@@ -48,88 +61,19 @@ define([ 'exports', 'message', 'log', 'util', 'guiState.controller', 'blocks', '
             } else {
                 document.execCommand('paste', false, text);
             }
+            $('#infoContent').trigger('change');
         });
     }
 
     function toggleInfo() {
         Blockly.hideChaff();
-        if ($('#infoDiv').hasClass('rightActive')) {
-            $('#infoContent, #infoTags').off('change');
-            $('.blocklyToolboxDiv').css('display', 'inherit');
-            Blockly.svgResize(blocklyWorkspace);
-            $('#progInfo').animate({
-                right : '0px',
-            }, {
-                duration : 750
-            });
-            $('#blocklyDiv').animate({
-                width : '100%'
-            }, {
-                duration : 750,
-                step : function() {
-                    $(window).resize();
-                    Blockly.svgResize(blocklyWorkspace);
-                },
-                done : function() {
-                    $('#blocklyDiv').removeClass('rightActive');
-                    $('#infoDiv').removeClass('rightActive');
-                    $(window).resize();
-                    Blockly.svgResize(blocklyWorkspace);
-                    $('#infoContent').css({
-                        "width" : '100 %',
-                        "height" : '100 %',
-                    });
-                    $('#infoContent').off('change');
-                    $('#sliderDiv').hide();
-                    $('#progInfo').removeClass('shifted');
-                }
-            });
+        if ($('#blockly').hasClass('rightActive')) {
+            $('#blockly').closeRightView();
         } else {
             $('#infoContent').html(blocklyWorkspace.description);
             $('.bootstrap-tagsinput input').attr('placeholder', Blockly.Msg.INFO_TAGS || 'Tags');
             $('#infoTags').tagsinput('add', blocklyWorkspace.tags);
-            $('#blocklyDiv').addClass('rightActive');
-            $('#infoDiv').addClass('rightActive');
-            var width;
-            var smallScreen = $('#device-size').find('div:visible').first().attr('id') == 'xs';
-            if (smallScreen) {
-                width = 52;
-            } else {
-                width = $('#blocklyDiv').width() * 0.7;
-            }
-            $('#progInfo').animate({
-                right : $('#blocklyDiv').width() - width + 4,
-            }, {
-                duration : 750
-            });
-            $('#blocklyDiv').animate({
-                width : width
-            }, {
-                duration : 750,
-                step : function() {
-                    $(window).resize();
-                    Blockly.svgResize(blocklyWorkspace);
-                },
-                done : function() {
-                    if (smallScreen) {
-                        $('.blocklyToolboxDiv').css('display', 'none');
-                    }
-                    $('#sliderDiv').css({
-                        'left' : width - 10
-                    });
-                    $('#sliderDiv').show();
-                    $('#progInfo').addClass('shifted');
-                    $(window).resize();
-                    Blockly.svgResize(blocklyWorkspace);
-                    $('#infoContent, #infoTags').on('change', function() {
-                        blocklyWorkspace.description = $('#infoContent').html();
-                        blocklyWorkspace.tags = $('#infoTags').val();
-                        if (GUISTATE_C.isProgramSaved()) {
-                            GUISTATE_C.setProgramSaved(false);
-                        }
-                    });
-                }
-            });
+            $('#blockly').openRightView('info', INITIAL_WIDTH);
         }
     }
 });

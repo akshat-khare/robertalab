@@ -66,7 +66,7 @@ public class EncoderSensor<V> extends ExternalSensor<V> {
             List<Field> fields = helper.extractFields(block, (short) 1);
             String portName = helper.extractField(fields, BlocklyConstants.SENSORPORT);
             sensorData =
-                new SensorMetaDataBean(factory.getActorPort(portName), factory.getMotorTachoMode("RESET"), factory.getSlot(BlocklyConstants.EMPTY_SLOT));
+                new SensorMetaDataBean(factory.getActorPort(portName), factory.getMotorTachoMode("RESET"), factory.getSlot(BlocklyConstants.NO_SLOT), false);
             return EncoderSensor.make(sensorData, helper.extractBlockProperties(block), helper.extractComment(block));
         }
         sensorData = extractActorPortAndMode(block, helper, helper.getModeFactory()::getMotorTachoMode);

@@ -195,10 +195,12 @@ define([ 'exports', 'log', 'util', 'message', 'comm', 'robot.controller', 'socke
      */
     function initMenuEvents() {
         $('[rel="tooltip"]').not('.rightMenuButton').tooltip({
+            container: 'body',
             placement : "right"
         });
         $('[rel="tooltip"].rightMenuButton').tooltip({
-            placement : "auto"
+            container: 'body',
+            placement : "left"
         });
         // prevent Safari 10. from zooming
         document.addEventListener('gesturestart', function(e) {
@@ -238,7 +240,7 @@ define([ 'exports', 'log', 'util', 'message', 'comm', 'robot.controller', 'socke
                 RUN_C.runOnBrick();
                 break;
             case 'menuRunSim':
-                $('#progSim').trigger('click');
+                $('#simButton').trigger('click');
                 break;
             case 'menuCheckProg':
                 PROGRAM_C.checkProgram();
@@ -261,7 +263,7 @@ define([ 'exports', 'log', 'util', 'message', 'comm', 'robot.controller', 'socke
                 PROGRAM_C.showSaveAsModal();
                 break;
             case 'menuShowCode':
-                $('#progCode').trigger("click");
+                $('codeButton').trigger("click");
                 break;
             case 'menuImportProg':
                 PROGRAM_C.importXml();
@@ -606,19 +608,13 @@ define([ 'exports', 'log', 'util', 'message', 'comm', 'robot.controller', 'socke
 //                }
 //            }
         });
-
-        var blocklyWidth = 0;
-        $(window).on('resize', function(e) {
-            Blockly.svgResize(GUISTATE_C.getBlocklyWorkspace());
-            Blockly.svgResize(GUISTATE_C.getBricklyWorkspace());
-            if ($('.rightMenuButton.shifted') && $('#blockly').width() != blocklyWidth) {
-                var right = $('#blockly').width() - $('#blocklyDiv').width();
-                blocklyWidth = $('#blockly').width();
-                $('.rightMenuButton.shifted').css({
-                    right : right - 4,
-                });
-            }
+        
+        // help Bootstrap to calculate the correct size for the collapse element when the sceen height is smaller than the elements height.
+        $('#navbarCollapse').on('shown.bs.collapse', function() {
+            var newHeight = Math.min($(this).height(), Math.max($('#blockly').height(), $('#brickly').height()));
+            $(this).css('height', newHeight);
         });
+
         // experimental
         $(document).on('keydown', function(e) {
         	if ((e.metaKey || e.ctrlKey) && (String.fromCharCode(e.which) === '1')) {

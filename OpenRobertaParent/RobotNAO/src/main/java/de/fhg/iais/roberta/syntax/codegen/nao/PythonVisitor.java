@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.fhg.iais.roberta.components.UsedSensor;
 import de.fhg.iais.roberta.components.nao.NAOConfiguration;
-import de.fhg.iais.roberta.components.nao.SensorType;
 import de.fhg.iais.roberta.inter.mode.action.ILanguage;
-import de.fhg.iais.roberta.inter.mode.general.IMode;
 import de.fhg.iais.roberta.mode.action.DriveDirection;
 import de.fhg.iais.roberta.mode.action.Language;
 import de.fhg.iais.roberta.mode.action.TurnDirection;
 import de.fhg.iais.roberta.mode.action.nao.Camera;
 import de.fhg.iais.roberta.mode.general.IndexLocation;
+import de.fhg.iais.roberta.mode.sensor.nao.DetectedFaceMode;
+import de.fhg.iais.roberta.mode.sensor.nao.DetectedMarkMode;
+import de.fhg.iais.roberta.mode.sensor.nao.SensorPorts;
 import de.fhg.iais.roberta.syntax.BlockTypeContainer;
 import de.fhg.iais.roberta.syntax.BlockTypeContainer.BlockType;
+import de.fhg.iais.roberta.syntax.BlocklyConstants;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.action.nao.Animation;
 import de.fhg.iais.roberta.syntax.action.nao.ApplyPosture;
@@ -57,6 +61,7 @@ import de.fhg.iais.roberta.syntax.lang.expr.ConnectConst;
 import de.fhg.iais.roberta.syntax.lang.expr.EmptyExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.EmptyList;
 import de.fhg.iais.roberta.syntax.lang.expr.ListCreate;
+import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.expr.VarDeclaration;
 import de.fhg.iais.roberta.syntax.lang.expr.nao.ColorHexString;
 import de.fhg.iais.roberta.syntax.lang.functions.GetSubFunct;
@@ -77,19 +82,18 @@ import de.fhg.iais.roberta.syntax.lang.stmt.Stmt;
 import de.fhg.iais.roberta.syntax.lang.stmt.StmtList;
 import de.fhg.iais.roberta.syntax.lang.stmt.WaitStmt;
 import de.fhg.iais.roberta.syntax.lang.stmt.WaitTimeStmt;
-import de.fhg.iais.roberta.syntax.sensor.nao.Accelerometer;
+import de.fhg.iais.roberta.syntax.sensor.generic.AccelerometerSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.GyroSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.TouchSensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.UltrasonicSensor;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectFace;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectedFaceInformation;
-import de.fhg.iais.roberta.syntax.sensor.nao.Dialog;
+import de.fhg.iais.roberta.syntax.sensor.nao.DetectedMark;
 import de.fhg.iais.roberta.syntax.sensor.nao.ElectricCurrent;
-import de.fhg.iais.roberta.syntax.sensor.nao.ForceSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.Gyrometer;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoGetSampleSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoMark;
+import de.fhg.iais.roberta.syntax.sensor.nao.FsrSensor;
+import de.fhg.iais.roberta.syntax.sensor.nao.GetSampleSensor;
 import de.fhg.iais.roberta.syntax.sensor.nao.NaoMarkInformation;
 import de.fhg.iais.roberta.syntax.sensor.nao.RecognizeWord;
-import de.fhg.iais.roberta.syntax.sensor.nao.Sonar;
-import de.fhg.iais.roberta.syntax.sensor.nao.Touchsensors;
 import de.fhg.iais.roberta.util.dbc.Assert;
 import de.fhg.iais.roberta.util.dbc.DbcException;
 import de.fhg.iais.roberta.visitor.AstVisitor;
@@ -145,8 +149,15 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
     }
 
     @Override
-    public String getEnumCode(IMode value) {
-        return "'" + value.toString().toUpperCase() + "'";
+    public Void visitRgbColor(RgbColor<Void> rgbColor) {
+        this.sb.append("BlocklyMethods.rgb2hex(");
+        rgbColor.getR().visit(this);
+        this.sb.append(", ");
+        rgbColor.getG().visit(this);
+        this.sb.append(", ");
+        rgbColor.getB().visit(this);
+        this.sb.append(")");
+        return null;
     }
 
     @Override
@@ -203,6 +214,13 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
         generateUserDefinedMethods();
         this.sb.append("\n\ndef run():");
         incrIndentation();
+        if ( mainTask.getDebug().equals("TRUE") ) {
+            nlIndent();
+            this.sb.append("h.setAutonomousLife('ON')");
+        } else {
+            nlIndent();
+            this.sb.append("h.setAutonomousLife('OFF')");
+        }
         List<Stmt<Void>> variableList = variables.get();
         if ( !variableList.isEmpty() ) {
             nlIndent();
@@ -534,6 +552,9 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
             case CROUCH:
                 this.sb.append("\"Crouch\")");
                 break;
+            case REST:
+                this.sb.append("\"Rest\")");
+                break;
         }
         return null;
     }
@@ -581,7 +602,7 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
 
     @Override
     public Void visitAutonomous(Autonomous<Void> autonomous) {
-        this.sb.append("h.setAutonomousLife(" + getEnumCode(autonomous.getOnOff()) + ")");
+        this.sb.append("h.setAutonomousLife(" + getEnumCode(autonomous.getOnOff()).toUpperCase() + ")");
         return null;
     }
 
@@ -719,13 +740,13 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
             this.sb.append("-");
         }
         walkDistance.getDistanceToWalk().visit(this);
-        this.sb.append(",0,0)");
+        this.sb.append(", 0, 0)");
         return null;
     }
 
     @Override
     public Void visitTurnDegrees(TurnDegrees<Void> turnDegrees) {
-        this.sb.append("h.walk(0,0,");
+        this.sb.append("h.walk(0, 0,");
         if ( turnDegrees.getTurnDirection() == TurnDirection.RIGHT ) {
             this.sb.append("-");
         }
@@ -1108,56 +1129,52 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
     }
 
     @Override
-    public Void visitTouchsensors(Touchsensors<Void> touchsensors) {
+    public Void visitTouchSensor(TouchSensor<Void> touchSensor) {
         this.sb.append("h.touchsensors(");
-        this.sb.append("\"" + touchsensors.getSensor().getPythonCode() + "\"");
+        this.sb.append(getEnumCode(touchSensor.getPort()));
         this.sb.append(", ");
-        this.sb.append("\"" + touchsensors.getSide().getPythonCode() + "\"");
+        this.sb.append(getEnumCode(touchSensor.getSlot()));
         this.sb.append(")");
         return null;
     }
 
     @Override
-    public Void visitSonar(Sonar<Void> sonar) {
+    public Void visitUltrasonicSensor(UltrasonicSensor<Void> sonar) {
         this.sb.append("h.ultrasonic()");
         return null;
     }
 
     @Override
-    public Void visitGyrometer(Gyrometer<Void> gyrometer) {
+    public Void visitGyroSensor(GyroSensor<Void> gyrometer) {
         this.sb.append("h.gyrometer(");
-        this.sb.append(gyrometer.getCoordinate().getPythonCode());
+        this.sb.append(getEnumCode((gyrometer.getPort())));
         this.sb.append(")");
         return null;
     }
 
     @Override
-    public Void visitDialog(Dialog<Void> dialog) {
-        this.sb.append("h.dialog(");
-        this.sb.append(dialog.getPhrase().getPythonCode());
-        this.sb.append(")");
-        return null;
-    }
-
-    @Override
-    public Void visitAccelerometer(Accelerometer<Void> accelerometer) {
+    public Void visitAccelerometer(AccelerometerSensor<Void> accelerometer) {
         this.sb.append("h.accelerometer(");
-        this.sb.append(accelerometer.getCoordinate().getPythonCode());
+        this.sb.append(getEnumCode(accelerometer.getPort()));
         this.sb.append(")");
         return null;
     }
 
     @Override
-    public Void visitForceSensor(ForceSensor<Void> forceSensor) {
+    public Void visitFsrSensor(FsrSensor<Void> fsr) {
         this.sb.append("h.fsr(");
-        this.sb.append(forceSensor.getSide().getPythonCode());
+        this.sb.append(getEnumCode(fsr.getPort()));
         this.sb.append(")");
         return null;
     }
 
     @Override
-    public Void visitNaoMark(NaoMark<Void> naoMark) {
-        this.sb.append("h.naoMark()");
+    public Void visitNaoMark(DetectedMark<Void> detectedMark) {
+        this.sb.append("h.getDetectedMark");
+        if ( detectedMark.getMode() == DetectedMarkMode.IDALL ) {
+            this.sb.append("s");
+        }
+        this.sb.append("()");
         return null;
     }
 
@@ -1221,102 +1238,68 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
 
     @Override
     public Void visitDetectFace(DetectFace<Void> detectFace) {
-        this.sb.append("faceRecognitionModule.detectFace()");
+        this.sb.append("faceRecognitionModule.detectFace");
+        if ( detectFace.getMode() == DetectedFaceMode.NAMEALL ) {
+            this.sb.append("s");
+        }
+        this.sb.append("()");
         return null;
     }
 
     @Override
-    public Void visitNaoGetSampleSensor(NaoGetSampleSensor<Void> sensorGetSample) {
+    public Void visitGetSampleSensor(GetSampleSensor<Void> sensorGetSample) {
         return sensorGetSample.getSensor().visit(this);
     }
 
     @Override
     public Void visitElectricCurrent(ElectricCurrent<Void> electricCurrent) {
-        this.sb.append("h.getElectricCurrent(");
-        switch ( electricCurrent.getJoint() ) {
-            case HEADYAW:
-                this.sb.append("\"HeadYaw\"");
-                break;
-            case HEADPITCH:
-                this.sb.append("\"HeadPitch\"");
-                break;
-            case LSHOULDERPITCH:
-                this.sb.append("\"LShoulderPitch\"");
-                break;
-            case LSHOULDERROLL:
-                this.sb.append("\"LShoulderRoll\"");
-                break;
-            case LELBOWYAW:
-                this.sb.append("\"LElbowYaw\"");
-                break;
-            case LELBOWROLL:
-                this.sb.append("\"LElbowRoll\"");
-                break;
-            case LWRISTYAW:
-                this.sb.append("\"LWristYaw\"");
-                break;
-            case LHAND:
-                this.sb.append("\"LHand\"");
-                break;
-            case LHIPYAWPITCH:
-                this.sb.append("\"LHipYawPitch\"");
-                break;
-            case LHIPROLL:
-                this.sb.append("\"LHipRoll\"");
-                break;
-            case LHIPPITCH:
-                this.sb.append("\"LHipPitch\"");
-                break;
-            case LKNEEPITCH:
-                this.sb.append("\"LKneePitch\"");
-                break;
-            case LANKLEPITCH:
-                this.sb.append("\"LAnklePitch\"");
-                break;
-            case RANKLEROLL:
-                this.sb.append("\"RAnkleRoll\"");
-                break;
-            case RHIPYAWPITCH:
-                this.sb.append("\"RHipYawPitch\"");
-                break;
-            case RHIPROLL:
-                this.sb.append("\"RHipRoll\"");
-                break;
-            case RHIPITCH:
-                this.sb.append("\"RHipPitch\"");
-                break;
-            case RKNEEPITCH:
-                this.sb.append("\"RKneePitch\"");
-                break;
-            case RANKLEPITCH:
-                this.sb.append("\"RAnklePitch\"");
-                break;
-            case RSHOULDERPITCH:
-                this.sb.append("\"RShoulderPitch\"");
-                break;
-            case RSHOULDERROLL:
-                this.sb.append("\"RShoulderRoll\"");
-                break;
-            case RELBOWYAW:
-                this.sb.append("\"RElbowYaw\"");
-                break;
-            case RELBOWROLL:
-                this.sb.append("\"RElbowRoll\"");
-                break;
-            case RWRISTYAW:
-                this.sb.append("\"RWristYaw\"");
-                break;
-            case RHAND:
-                this.sb.append("\"RHand\"");
-                break;
-            case LANKLEROLL:
-                this.sb.append("\"LAnkleRoll\"");
-                break;
-            default:
-                throw new DbcException("Invalide Joint!");
-        }
-        this.sb.append(")");
+        String side_axis = electricCurrent.getSlot().toString().toLowerCase();
+        String[] slots = side_axis.split("_");
+
+        SensorPorts portType = (SensorPorts) electricCurrent.getPort();
+        String port = portType.toString().toLowerCase();
+        port = StringUtils.capitalize(port);
+
+        String side = extractSideFromSlot(slots, portType);
+        String axis1 = extractAxis1FromSlot(slots);
+        String axis2 = extractAxis2FromSlot(slots);
+        String jointActuator = constructJointActuator(portType, port, side, axis1, axis2);
+
+        this.sb.append("h.getElectricCurrent('");
+        this.sb.append(jointActuator);
+        this.sb.append("')");
         return null;
+    }
+
+    private String constructJointActuator(SensorPorts portType, String port, String side, String axis1, String axis2) {
+        if ( portType == SensorPorts.HEAD ) {
+            return port + side;
+        } else {
+            return side + port + axis1 + axis2;
+        }
+    }
+
+    private String extractSideFromSlot(String[] slots, SensorPorts portType) {
+        String side;
+        side = Character.toString(slots[0].toUpperCase().charAt(0));
+        if ( portType == SensorPorts.HEAD ) {
+            side = StringUtils.capitalize(slots[0].toLowerCase());
+        }
+        return side;
+    }
+
+    private String extractAxis1FromSlot(String[] slots) {
+        if ( slots.length > 1 ) {
+            return StringUtils.capitalize(slots[1].toLowerCase());
+        }
+        return "";
+    }
+
+    private String extractAxis2FromSlot(String[] slots) {
+        if ( slots.length == 3 ) {
+            return StringUtils.capitalize(slots[2].toLowerCase());
+        }
+        return "";
     }
 
     @Override
@@ -1379,59 +1362,64 @@ public class PythonVisitor extends RobotPythonVisitor implements NaoAstVisitor<V
 
     private void generateSensors() {
         for ( UsedSensor usedSensor : this.usedSensors ) {
-            switch ( (SensorType) usedSensor.getType() ) {
-                case COLOR:
+            switch ( usedSensor.getType().toString() ) {
+                case BlocklyConstants.COLOR:
                     break;
-                case INFRARED:
+                case BlocklyConstants.INFRARED:
                     break;
-                case ULTRASONIC:
+                case BlocklyConstants.ULTRASONIC:
                     this.sb.append("h.sonar.subscribe(\"OpenRobertaApp\")\n");
                     break;
-                case NAOMARK:
+                case BlocklyConstants.DETECT_MARK:
                     this.sb.append("h.mark.subscribe(\"RobertaLab\", 500, 0.0)\n");
                     break;
-                case NAOFACE:
+                case BlocklyConstants.NAO_FACE:
                     this.sb.append("\nfrom roberta import FaceRecognitionModule\n");
                     this.sb.append("faceRecognitionModule = FaceRecognitionModule(\"faceRecognitionModule\")\n");
                     break;
-                case NAOSPEECH:
+                case BlocklyConstants.NAO_SPEECH:
                     this.sb.append("\nfrom roberta import SpeechRecognitionModule\n");
                     this.sb.append("speechRecognitionModule = SpeechRecognitionModule(\"speechRecognitionModule\")\n");
                     this.sb.append("speechRecognitionModule.pauseASR()\n");
                     break;
-                case LIGHT:
-                case COMPASS:
-                case SOUND:
-                case TOUCH:
+                case BlocklyConstants.LIGHT:
+                case BlocklyConstants.COMPASS:
+                case BlocklyConstants.SOUND:
+                case BlocklyConstants.TOUCH:
+                case BlocklyConstants.GYRO:
+                case BlocklyConstants.ACCELEROMETER:
                     break;
                 default:
-                    throw new DbcException("Sensor is not supported!");
+
+                    throw new DbcException("Sensor is not supported!" + usedSensor.getType().toString());
             }
         }
     }
 
     private void removeSensors() {
         for ( UsedSensor usedSensor : this.usedSensors ) {
-            switch ( (SensorType) usedSensor.getType() ) {
-                case COLOR:
+            switch ( usedSensor.getType().toString() ) {
+                case BlocklyConstants.COLOR:
                     break;
-                case INFRARED:
+                case BlocklyConstants.INFRARED:
                     break;
-                case ULTRASONIC:
+                case BlocklyConstants.ULTRASONIC:
                     this.sb.append(INDENT).append(INDENT).append("h.sonar.unsubscribe(\"OpenRobertaApp\")\n");
                     break;
-                case NAOMARK:
+                case BlocklyConstants.DETECT_MARK:
                     this.sb.append(INDENT).append(INDENT).append("h.mark.unsubscribe(\"RobertaLab\")\n");
                     break;
-                case NAOFACE:
+                case BlocklyConstants.NAO_FACE:
                     this.sb.append(INDENT).append(INDENT).append("faceRecognitionModule.unsubscribe()\n");
                     break;
-                case NAOSPEECH:
+                case BlocklyConstants.NAO_SPEECH:
                     this.sb.append(INDENT).append(INDENT).append("speechRecognitionModule.unsubscribe()\n");
-                case LIGHT:
-                case COMPASS:
-                case SOUND:
-                case TOUCH:
+                case BlocklyConstants.LIGHT:
+                case BlocklyConstants.COMPASS:
+                case BlocklyConstants.SOUND:
+                case BlocklyConstants.TOUCH:
+                case BlocklyConstants.GYRO:
+                case BlocklyConstants.ACCELEROMETER:
                     break;
                 default:
                     throw new DbcException("Sensor is not supported!");

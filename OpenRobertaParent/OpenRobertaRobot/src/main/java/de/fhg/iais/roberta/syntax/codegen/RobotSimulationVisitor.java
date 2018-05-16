@@ -38,6 +38,7 @@ import de.fhg.iais.roberta.syntax.lang.expr.MathConst;
 import de.fhg.iais.roberta.syntax.lang.expr.MethodExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.NullConst;
 import de.fhg.iais.roberta.syntax.lang.expr.NumConst;
+import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.expr.SensorExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.ShadowExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.StmtExpr;
@@ -144,6 +145,18 @@ public abstract class RobotSimulationVisitor<V> implements AstLanguageVisitor<V>
     @Override
     public V visitColorConst(ColorConst<V> colorConst) {
         this.sb.append("createConstant(CONST." + colorConst.getKind().getName() + ", CONST.COLOR_ENUM." + colorConst.getValue() + ")");
+        return null;
+    }
+
+    @Override
+    public V visitRgbColor(RgbColor<V> rgbColor) {
+        this.sb.append("createRgbColor([");
+        rgbColor.getR().visit(this);
+        this.sb.append(", ");
+        rgbColor.getG().visit(this);
+        this.sb.append(", ");
+        rgbColor.getB().visit(this);
+        this.sb.append("])");
         return null;
     }
 
@@ -432,7 +445,7 @@ public abstract class RobotSimulationVisitor<V> implements AstLanguageVisitor<V>
     @Override
     public V visitStmtFlowCon(StmtFlowCon<V> stmtFlowCon) {
         String end = createClosingBracket();
-        this.sb.append("createStmtFlowControl('loop_" + this.loopsCounter + "', CONST." + stmtFlowCon.getFlow());
+        this.sb.append("createStmtFlowControl('loop_" + this.currentLoop + "', CONST." + stmtFlowCon.getFlow());
         this.sb.append(end);
         return null;
     }
@@ -529,6 +542,9 @@ public abstract class RobotSimulationVisitor<V> implements AstLanguageVisitor<V>
 
     @Override
     public V visitStmtTextComment(StmtTextComment<V> textComment) {
+        String end = createClosingBracket();
+        this.sb.append("createNoopStmt(");
+        this.sb.append(end);
         return null;
     }
 

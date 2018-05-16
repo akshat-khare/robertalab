@@ -9,6 +9,7 @@ import de.fhg.iais.roberta.mode.action.mbed.ActorPort;
 import de.fhg.iais.roberta.mode.action.mbed.DisplayTextMode;
 import de.fhg.iais.roberta.mode.general.IndexLocation;
 import de.fhg.iais.roberta.mode.sensor.GestureSensorMode;
+import de.fhg.iais.roberta.mode.sensor.PinPull;
 import de.fhg.iais.roberta.mode.sensor.PinValue;
 import de.fhg.iais.roberta.mode.sensor.SensorPort;
 import de.fhg.iais.roberta.mode.sensor.TimerSensorMode;
@@ -24,7 +25,11 @@ import de.fhg.iais.roberta.syntax.action.mbed.DisplayImageAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetBrightnessAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetPixelAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplayTextAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayClearAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayShowAction;
+import de.fhg.iais.roberta.syntax.action.mbed.LedBarSetAction;
 import de.fhg.iais.roberta.syntax.action.mbed.LedOnAction;
+import de.fhg.iais.roberta.syntax.action.mbed.PinSetPullAction;
 import de.fhg.iais.roberta.syntax.action.mbed.PinWriteValue;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioReceiveAction;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioSendAction;
@@ -50,7 +55,6 @@ import de.fhg.iais.roberta.syntax.codegen.RobotCppVisitor;
 import de.fhg.iais.roberta.syntax.expr.mbed.Image;
 import de.fhg.iais.roberta.syntax.expr.mbed.LedColor;
 import de.fhg.iais.roberta.syntax.expr.mbed.PredefinedImage;
-import de.fhg.iais.roberta.syntax.expr.mbed.RgbColor;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageInvertFunction;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageShiftFunction;
 import de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask;
@@ -60,6 +64,7 @@ import de.fhg.iais.roberta.syntax.lang.expr.EmptyExpr;
 import de.fhg.iais.roberta.syntax.lang.expr.Expr;
 import de.fhg.iais.roberta.syntax.lang.expr.ListCreate;
 import de.fhg.iais.roberta.syntax.lang.expr.MathConst;
+import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.expr.StringConst;
 import de.fhg.iais.roberta.syntax.lang.expr.Var;
 import de.fhg.iais.roberta.syntax.lang.expr.VarDeclaration;
@@ -314,7 +319,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         if ( !isWaitStmt ) {
             addContinueLabelToLoop();
             nlIndent();
-            this.sb.append("uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
+            this.sb.append("_uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
         } else {
             appendBreakStmt();
         }
@@ -333,7 +338,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         incrIndentation();
         visitStmtList(waitStmt.getStatements());
         nlIndent();
-        this.sb.append("uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
+        this.sb.append("_uBit.sleep(_ITERATION_SLEEP_TIMEOUT);");
         decrIndentation();
         nlIndent();
         this.sb.append("}");
@@ -342,7 +347,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitWaitTimeStmt(WaitTimeStmt<Void> waitTimeStmt) {
-        this.sb.append("uBit.sleep(");
+        this.sb.append("_uBit.sleep(");
         waitTimeStmt.getTime().visit(this);
         this.sb.append(");");
         return null;
@@ -362,7 +367,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     public Void visitDisplayTextAction(DisplayTextAction<Void> displayTextAction) {
         String ending = ")";
         final String varType = displayTextAction.getMsg().getVarType().toString();
-        this.sb.append("uBit.display.");
+        this.sb.append("_uBit.display.");
         appendTextDisplayType(displayTextAction);
         if ( !varType.equals("STRING") ) {
             ending = wrapInManageStringToDisplay(displayTextAction, ending);
@@ -376,7 +381,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitClearDisplayAction(ClearDisplayAction<Void> clearDisplayAction) {
-        this.sb.append("uBit.display.clear();");
+        this.sb.append("_uBit.display.clear();");
         return null;
     }
 
@@ -403,7 +408,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitLightStatusAction(LightStatusAction<Void> lightStatusAction) {
-        this.sb.append("uBit.rgb.off();");
+        this.sb.append("_uBit.rgb.off();");
         return null;
     }
 
@@ -414,31 +419,31 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitToneAction(ToneAction<Void> toneAction) {
-        this.sb.append("uBit.soundmotor.soundOn(");
+        this.sb.append("_uBit.soundmotor.soundOn(");
         toneAction.getFrequency().visit(this);
         this.sb.append("); ");
-        this.sb.append("uBit.sleep(");
+        this.sb.append("_uBit.sleep(");
         toneAction.getDuration().visit(this);
         this.sb.append("); ");
-        this.sb.append("uBit.soundmotor.soundOff();");
+        this.sb.append("_uBit.soundmotor.soundOff();");
         return null;
     }
 
     @Override
     public Void visitPlayNoteAction(PlayNoteAction<Void> playNoteAction) {
-        this.sb.append("uBit.soundmotor.soundOn(");
+        this.sb.append("_uBit.soundmotor.soundOn(");
         this.sb.append(playNoteAction.getFrequency());
         this.sb.append("); ");
-        this.sb.append("uBit.sleep(");
+        this.sb.append("_uBit.sleep(");
         this.sb.append(playNoteAction.getDuration());
         this.sb.append("); ");
-        this.sb.append("uBit.soundmotor.soundOff();");
+        this.sb.append("_uBit.soundmotor.soundOff();");
         return null;
     }
 
     @Override
     public Void visitMotorOnAction(MotorOnAction<Void> motorOnAction) {
-        this.sb.append("uBit.soundmotor.motor");
+        this.sb.append("_uBit.soundmotor.motor");
         if ( motorOnAction.getPort() != ActorPort.AB ) {
             this.sb.append(motorOnAction.getPort());
         }
@@ -448,7 +453,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
             motorOnAction.getParam().getSpeed().visit(this);
             this.sb.append(");");
             nlIndent();
-            this.sb.append("uBit.soundmotor.motorB");
+            this.sb.append("_uBit.soundmotor.motorB");
         }
         // fix for IT Gipfel
         this.sb.append("On(");
@@ -459,7 +464,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitSingleMotorOnAction(SingleMotorOnAction<Void> singleMotorOnAction) {
-        this.sb.append("uBit.soundmotor.motorOn(");
+        this.sb.append("_uBit.soundmotor.motorOn(");
         singleMotorOnAction.getSpeed().visit(this);
         this.sb.append(");");
         return null;
@@ -477,11 +482,11 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitMotorStopAction(MotorStopAction<Void> motorStopAction) {
-        this.sb.append("uBit.soundmotor.motor");
+        this.sb.append("_uBit.soundmotor.motor");
         if ( motorStopAction.getPort() == ActorPort.AB ) {
             this.sb.append("AOff();");
             nlIndent();
-            this.sb.append("uBit.soundmotor.motorB");
+            this.sb.append("_uBit.soundmotor.motorB");
         } else {
             this.sb.append(motorStopAction.getPort());
         }
@@ -491,7 +496,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitSingleMotorStopAction(SingleMotorStopAction<Void> singleMotorStopAction) {
-        this.sb.append("uBit.soundmotor.motor");
+        this.sb.append("_uBit.soundmotor.motor");
         switch ( (MotorStopMode) singleMotorStopAction.getMode() ) {
             case FLOAT:
                 this.sb.append("Coast();");
@@ -533,7 +538,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitLightSensor(LightSensor<Void> lightSensor) {
-        this.sb.append("round(uBit.display.readLightLevel() * _GET_LIGHTLEVEL_MULTIPLIER)");
+        this.sb.append("round(_uBit.display.readLightLevel() * _GET_LIGHTLEVEL_MULTIPLIER)");
         return null;
     }
 
@@ -541,17 +546,17 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     public Void visitBrickSensor(BrickSensor<Void> brickSensor) {
         String key = brickSensor.getPort().toString();
         key = key.substring(key.length() - 1).toUpperCase();
-        this.sb.append("uBit.button" + key + ".isPressed()");
+        this.sb.append("_uBit.button" + key + ".isPressed()");
         return null;
     }
 
     @Override
     public Void visitGestureSensor(GestureSensor<Void> gestureSensor) {
-        this.sb.append("(uBit.accelerometer.getGesture() == MICROBIT_ACCELEROMETER_EVT_");
-        if ( (gestureSensor.getMode() == GestureSensorMode.UP)
-            || (gestureSensor.getMode() == GestureSensorMode.DOWN)
-            || (gestureSensor.getMode() == GestureSensorMode.LEFT)
-            || (gestureSensor.getMode() == GestureSensorMode.RIGHT) ) {
+        this.sb.append("(_uBit.accelerometer.getGesture() == MICROBIT_ACCELEROMETER_EVT_");
+        if ( gestureSensor.getMode() == GestureSensorMode.UP
+            || gestureSensor.getMode() == GestureSensorMode.DOWN
+            || gestureSensor.getMode() == GestureSensorMode.LEFT
+            || gestureSensor.getMode() == GestureSensorMode.RIGHT ) {
             this.sb.append("TILT_");
         }
         this.sb.append(gestureSensor.getMode() + ")");
@@ -560,19 +565,19 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitTemperatureSensor(TemperatureSensor<Void> temperatureSensor) {
-        this.sb.append("uBit.thermometer.getTemperature()");
+        this.sb.append("_uBit.thermometer.getTemperature()");
         return null;
     }
 
     @Override
     public Void visitCompassSensor(CompassSensor<Void> compassSensor) {
-        this.sb.append("uBit.compass.heading()");
+        this.sb.append("_uBit.compass.heading()");
         return null;
     }
 
     @Override
     public Void visitSoundSensor(SoundSensor<Void> microphoneSensor) {
-        this.sb.append("uBit.io.P21.getMicrophoneValue()");
+        this.sb.append("_uBit.io.P21.getMicrophoneValue()");
         return null;
     }
 
@@ -588,7 +593,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitGyroSensor(GyroSensor<Void> gyroSensor) {
-        this.sb.append("uBit.accelerometer.get");
+        this.sb.append("_uBit.accelerometer.get");
         this.sb.append(gyroSensor.getPort().getValues()[1]);
         this.sb.append("()");
         return null;
@@ -604,10 +609,10 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         switch ( (TimerSensorMode) timerSensor.getMode() ) {
             case DEFAULT:
             case VALUE:
-                this.sb.append("( uBit.systemTime() - initTime )");
+                this.sb.append("( _uBit.systemTime() - _initTime )");
                 break;
             case RESET:
-                this.sb.append("initTime = uBit.systemTime();");
+                this.sb.append("_initTime = _uBit.systemTime();");
                 break;
             default:
                 throw new DbcException("Invalid Time Mode!");
@@ -617,13 +622,13 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitPinTouchSensor(PinTouchSensor<Void> pinTouchSensor) {
-        this.sb.append("uBit.io." + pinTouchSensor.getPort().getValues()[1] + ".isTouched()");
+        this.sb.append("_uBit.io." + pinTouchSensor.getPort().getValues()[1] + ".isTouched()");
         return null;
     }
 
     @Override
     public Void visitPinGetValueSensor(PinGetValueSensor<Void> pinValueSensor) {
-        this.sb.append("uBit.io." + pinValueSensor.getPort().getValues()[1]);
+        this.sb.append("_uBit.io." + pinValueSensor.getPort().getValues()[1]);
         switch ( (PinValue) pinValueSensor.getMode() ) {
             case DIGITAL:
             case ANALOG:
@@ -646,8 +651,27 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         if ( pinWriteValueSensor.getMode() == PinValue.DIGITAL ) {
             valueType = "DigitalValue(";
         }
-        this.sb.append("uBit.io." + pinWriteValueSensor.getPort().getValues()[1] + ".set" + valueType);
+        this.sb.append("_uBit.io." + pinWriteValueSensor.getPort().getValues()[1] + ".set" + valueType);
         pinWriteValueSensor.getValue().visit(this);
+        this.sb.append(");");
+        return null;
+    }
+
+    @Override
+    public Void visitPinSetPullAction(PinSetPullAction<Void> pinSetPullAction) {
+        this.sb.append("_uBit.io." + pinSetPullAction.getPort().getValues()[1] + ".setPull(");
+        switch ( (PinPull) pinSetPullAction.getMode() ) {
+            case UP:
+                this.sb.append("PullUp");
+                break;
+            case DOWN:
+                this.sb.append("PullDown");
+                break;
+            case NONE:
+            default:
+                this.sb.append("PullNone");
+                break;
+        }
         this.sb.append(");");
         return null;
     }
@@ -665,7 +689,9 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     @Override
     public Void visitMainTask(MainTask<Void> mainTask) {
         // TODO check if timer is used in the user program
-        this.sb.append("int initTime = uBit.systemTime();");
+        if ( this.codePreprocess.isTimerSensorUsed() ) {
+            this.sb.append("int _initTime = _uBit.systemTime();");
+        }
         mainTask.getVariables().visit(this);
         nlIndent();
         nlIndent();
@@ -675,19 +701,19 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         incrIndentation();
         nlIndent();
         // Initialise the micro:bit runtime.
-        this.sb.append("uBit.init();");
+        this.sb.append("_uBit.init();");
         generateUsedVars();
         nlIndent();
         if ( this.codePreprocess.isGreyScale() ) {
-            this.sb.append("uBit.display.setDisplayMode(DISPLAY_MODE_GREYSCALE);");
+            this.sb.append("_uBit.display.setDisplayMode(DISPLAY_MODE_GREYSCALE);");
         }
         if ( this.codePreprocess.isRadioUsed() ) {
             nlIndent();
-            this.sb.append("uBit.radio.enable();");
+            this.sb.append("_uBit.radio.enable();");
         }
         if ( this.codePreprocess.isAccelerometerUsed() ) {
             nlIndent();
-            this.sb.append("uBit.accelerometer.updateSample();");
+            this.sb.append("_uBit.accelerometer.updateSample();");
         }
 
         return null;
@@ -764,7 +790,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
                 this.sb.append(" - 1");
                 break;
             case RANDOM:
-                this.sb.append("uBit.random(");
+                this.sb.append("_uBit.random(");
                 arrayLen((Var<Void>) listGetIndex.getParam().get(0));
                 this.sb.append(")");
                 break;
@@ -797,7 +823,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
                 this.sb.append(" - 1");
                 break;
             case RANDOM:
-                this.sb.append("uBit.random(");
+                this.sb.append("_uBit.random(");
                 arrayLen((Var<Void>) listSetIndex.getParam().get(0));
                 this.sb.append(")");
                 break;
@@ -874,7 +900,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
         } else if ( functName == FunctionNames.RANDOM ) {
             this.sb.append("randomElement(");
         } else {
-            this.sb.append(functName.toString().toLowerCase());
+            this.sb.append(functName.toString().toLowerCase() + "(");
         }
         mathOnListFunct.getParam().get(0).visit(this);
         this.sb.append(")");
@@ -889,7 +915,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
-        this.sb.append("(uBit.random(");
+        this.sb.append("(_uBit.random(");
         mathRandomIntFunct.getParam().get(1).visit(this);
         this.sb.append(" - ");
         mathRandomIntFunct.getParam().get(0).visit(this);
@@ -915,7 +941,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
             this.sb.append("ManagedString(");
             parameters.get(i).visit(this);
             this.sb.append(")");
-            if ( i < (numberOfParameters - 1) ) {
+            if ( i < numberOfParameters - 1 ) {
                 this.sb.append(" + ");
             }
         }
@@ -954,7 +980,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     @Override
     public Void visitDisplayImageAction(DisplayImageAction<Void> displayImageAction) {
         String end = ");";
-        this.sb.append("uBit.display.");
+        this.sb.append("_uBit.display.");
         if ( displayImageAction.getDisplayImageMode().name().equals("ANIMATION") ) {
             this.sb.append("animateImages(");
             end = ", 200);";
@@ -1021,7 +1047,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitLedOnAction(LedOnAction<Void> ledOnAction) {
-        this.sb.append("uBit.rgb.setColour(");
+        this.sb.append("_uBit.rgb.setColour(");
         ledOnAction.getLedColor().visit(this);
         this.sb.append(");");
         return null;
@@ -1029,26 +1055,26 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitRadioSendAction(RadioSendAction<Void> radioSendAction) {
-        this.sb.append("uBit.radio.setTransmitPower(" + radioSendAction.getPower() + ");");
+        this.sb.append("_uBit.radio.setTransmitPower(" + radioSendAction.getPower() + ");");
         nlIndent();
         switch ( radioSendAction.getType() ) {
             case NUMBER:
-                this.sb.append("uBit.radio.datagram.send(ManagedString((int)(");
+                this.sb.append("_uBit.radio.datagram.send(ManagedString((int)(");
                 radioSendAction.getMsg().visit(this);
                 this.sb.append("))");
                 break;
             case BOOLEAN:
-                this.sb.append("uBit.radio.datagram.send(ManagedString((int)(");
+                this.sb.append("_uBit.radio.datagram.send(ManagedString((int)(");
                 radioSendAction.getMsg().visit(this);
                 this.sb.append(")?true:false)");
                 break;
             case STRING:
-                this.sb.append("uBit.radio.datagram.send(ManagedString((");
+                this.sb.append("_uBit.radio.datagram.send(ManagedString((");
                 radioSendAction.getMsg().visit(this);
                 this.sb.append("))");
                 break;
             //            case STRING:
-            //                this.sb.append("uBit.radio.datagram.send(");
+            //                this.sb.append("_uBit.radio.datagram.send(");
             //                radioSendAction.getMsg().visit(this);
             //                break;
             default:
@@ -1062,11 +1088,11 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     public Void visitRadioReceiveAction(RadioReceiveAction<Void> radioReceiveAction) {
         switch ( radioReceiveAction.getType() ) {
             case NUMBER:
-                this.sb.append("atoi((char*)uBit.radio.datagram.recv().getBytes())");
+                this.sb.append("atoi((char*)_uBit.radio.datagram.recv().getBytes())");
                 break;
             case BOOLEAN:
             case STRING:
-                this.sb.append("ManagedString(uBit.radio.datagram.recv())");
+                this.sb.append("ManagedString(_uBit.radio.datagram.recv())");
                 break;
             default:
                 throw new IllegalArgumentException("unhandled type");
@@ -1076,7 +1102,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitRadioSetChannelAction(RadioSetChannelAction<Void> radioSetChannelAction) {
-        this.sb.append("uBit.radio.setGroup(");
+        this.sb.append("_uBit.radio.setGroup(");
         radioSetChannelAction.getChannel().visit(this);
         this.sb.append(");");
         return null;
@@ -1084,13 +1110,13 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitRadioRssiSensor(RadioRssiSensor<Void> radioRssiSensor) {
-        this.sb.append("uBit.radio.getRSSI()");
+        this.sb.append("_uBit.radio.getRSSI()");
         return null;
     }
 
     @Override
     public Void visitAccelerometer(AccelerometerSensor<Void> accelerometerSensor) {
-        this.sb.append("uBit.accelerometer.get");
+        this.sb.append("_uBit.accelerometer.get");
         if ( accelerometerSensor.getPort() == SensorPort.STRENGTH ) {
             this.sb.append("Strength");
         } else {
@@ -1116,7 +1142,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitDisplaySetBrightnessAction(DisplaySetBrightnessAction<Void> displaySetBrightnessAction) {
-        this.sb.append("uBit.display.setBrightness((");
+        this.sb.append("_uBit.display.setBrightness((");
         displaySetBrightnessAction.getBrightness().visit(this);
         this.sb.append(") * _SET_BRIGHTNESS_MULTIPLIER);");
         return null;
@@ -1124,13 +1150,13 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitDisplayGetBrightnessAction(DisplayGetBrightnessAction<Void> displayGetBrightnessAction) {
-        this.sb.append("round(uBit.display.getBrightness() * _GET_BRIGHTNESS_MULTIPLIER)");
+        this.sb.append("round(_uBit.display.getBrightness() * _GET_BRIGHTNESS_MULTIPLIER)");
         return null;
     }
 
     @Override
     public Void visitDisplaySetPixelAction(DisplaySetPixelAction<Void> displaySetPixelAction) {
-        this.sb.append("uBit.display.image.setPixelValue(");
+        this.sb.append("_uBit.display.image.setPixelValue(");
         displaySetPixelAction.getX().visit(this);
         this.sb.append(", ");
         displaySetPixelAction.getY().visit(this);
@@ -1142,11 +1168,39 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
 
     @Override
     public Void visitDisplayGetPixelAction(DisplayGetPixelAction<Void> displayGetPixelAction) {
-        this.sb.append("round(uBit.display.image.getPixelValue(");
+        this.sb.append("round(_uBit.display.image.getPixelValue(");
         displayGetPixelAction.getX().visit(this);
         this.sb.append(", ");
         displayGetPixelAction.getY().visit(this);
         this.sb.append(") * _GET_BRIGHTNESS_MULTIPLIER)");
+        return null;
+    }
+
+    @Override
+    public Void visitFourDigitDisplayShowAction(FourDigitDisplayShowAction<Void> fourDigitDisplayShowAction) {
+        this.sb.append("fdd.show(");
+        fourDigitDisplayShowAction.getValue().visit(this);
+        this.sb.append(", ");
+        fourDigitDisplayShowAction.getPosition().visit(this);
+        this.sb.append(", ");
+        fourDigitDisplayShowAction.getColon().visit(this);
+        this.sb.append(");");
+        return null;
+    }
+
+    @Override
+    public Void visitFourDigitDisplayClearAction(FourDigitDisplayClearAction<Void> fourDigitDisplayClearAction) {
+        this.sb.append("fdd.clear();");
+        return null;
+    }
+
+    @Override
+    public Void visitLedBarSetAction(LedBarSetAction<Void> ledBarSetAction) {
+        this.sb.append("ledBar.setLed(");
+        ledBarSetAction.getX().visit(this);
+        this.sb.append(", ");
+        ledBarSetAction.getBrightness().visit(this);
+        this.sb.append(");");
         return null;
     }
 
@@ -1219,7 +1273,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     }
 
     private int map(int x, int in_min, int in_max, int out_min, int out_max) {
-        return (((x - in_min) * (out_max - out_min)) / (in_max - in_min)) + out_min;
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
     private void arrayLen(Var<Void> arr) {
@@ -1242,7 +1296,7 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     }
 
     private String capitalizeFirstLetter(String original) {
-        if ( (original == null) || (original.length() == 0) ) {
+        if ( original == null || original.length() == 0 ) {
             return original;
         }
         return original.substring(0, 1).toUpperCase() + original.substring(1).toLowerCase();
@@ -1251,13 +1305,22 @@ public class CppVisitor extends RobotCppVisitor implements MbedAstVisitor<Void>,
     private void addIncludes() {
         this.sb.append("#define _GNU_SOURCE\n\n");
         this.sb.append("#include \"MicroBit.h\" \n");
+        this.sb.append("#include \"NEPODefs.h\"\n");
+        if ( this.codePreprocess.isFourDigitDisplayUsed() ) {
+            this.sb.append("#include \"FourDigitDisplay.h\"\n");
+        }
+        if ( this.codePreprocess.isLedBarUsed() ) {
+            this.sb.append("#include \"Grove_LED_Bar.h\"\n");
+        }
         this.sb.append("#include <array>\n");
         this.sb.append("#include <stdlib.h>\n");
-        this.sb.append("#define _SET_BRIGHTNESS_MULTIPLIER 28.34\n");
-        this.sb.append("#define _GET_BRIGHTNESS_MULTIPLIER 0.0353\n");
-        this.sb.append("#define _GET_LIGHTLEVEL_MULTIPLIER 0.3922\n");
-        this.sb.append("#define _ITERATION_SLEEP_TIMEOUT 1\n\n");
-        this.sb.append("MicroBit uBit;\n\n");
+        this.sb.append("MicroBit _uBit;\n\n");
+        if ( this.codePreprocess.isFourDigitDisplayUsed() ) {
+            this.sb.append("FourDigitDisplay fdd(MICROBIT_PIN_P2, MICROBIT_PIN_P8);\n"); // Only works on the right UART Grove connector
+        }
+        if ( this.codePreprocess.isLedBarUsed() ) {
+            this.sb.append("Grove_LED_Bar ledBar(MICROBIT_PIN_P8, MICROBIT_PIN_P2);\n"); // Only works on the right UART Grove connector; Clock/Data pins are swapped compared to 4DigitDisplay
+        }
     }
 
     @Override

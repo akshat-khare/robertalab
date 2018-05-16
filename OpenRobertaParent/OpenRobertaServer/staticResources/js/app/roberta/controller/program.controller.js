@@ -37,6 +37,7 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
             variableDeclaration : true,
             robControls : true
         });
+        $(window).resize();
         blocklyWorkspace.setDevice(GUISTATE_C.getRobotGroup());
         //TODO: add the version information in the Parent POM!.
         blocklyWorkspace.setVersion('2.0');
@@ -44,7 +45,7 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         blocklyWorkspace.robControls.disable('saveProgram');
         blocklyWorkspace.robControls.refreshTooltips(GUISTATE_C.getRobotRealName());
         GUISTATE_C.checkSim();
-        var toolbox = $('#blocklyDiv .blocklyToolboxDiv');
+        var toolbox = $('#blockly .blocklyToolboxDiv');
         toolbox.prepend('<ul class="nav nav-tabs levelTabs"><li class="active"><a class="typcn typcn-media-stop-outline" href="#beginner" data-toggle="tab">1</a></li><li class=""><a href="#expert" class="typcn typcn-star-outline" data-toggle="tab">2</a></li></ul>');
     }
 
@@ -84,16 +85,8 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
             blocklyWorkspace.markFocused();
         });
 
-        $('#tabProgram').onWrap('shown.bs.tab', function(e) {
-            blocklyWorkspace.setVisible(true);
-            reloadProgram();
-            e.stopPropagation();
-        }, 'tabProgram clicked');
-
-        $('#tabProgram').on('hide.bs.tab', function(e) {
-            var dom = Blockly.Xml.workspaceToDom(blocklyWorkspace);
-            var xml = Blockly.Xml.domToText(dom);
-            GUISTATE_C.setProgramXML(xml);
+        $('#tabProgram').on('shown.bs.tab', function(e) {
+            $(window).resize();
         });
 
         // work around for touch devices
@@ -101,8 +94,8 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
             var target = $(e.target).attr("href");
             $('.levelTabs a[href="' + target + '"]').tab('show');
         });
-        
-        $('.levelTabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+        $('.levelTabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
             var target = $(e.target).attr("href").substring(1); // activated tab
             e.preventDefault();
             loadToolbox(target);
@@ -121,7 +114,7 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
                 }
             }
             $('.selectedHelp').removeClass('selectedHelp');
-            if (Blockly.selected && $('#blocklyDiv').hasClass('rightActive')) {
+            if (Blockly.selected && $('#blockly').hasClass('rightActive')) {
                 var block = Blockly.selected.type;
                 $('#' + block).addClass('selectedHelp');
                 $('#helpContent').scrollTo('#' + block, 1000, {
@@ -216,7 +209,11 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
                     GUISTATE_C.setConfigurationName(result.configName);
                     GUISTATE_C.setConfigurationXML(result.configText);
                 }
+                $('#tabProgram').one('shown.bs.tab', function(e) {
+                    reloadProgram();
+                });
                 $('#tabProgram').trigger('click');
+
             }
             MSG.displayInformation(result, "", result.message);
         });
@@ -258,6 +255,9 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
                         GUISTATE_C.setConfigurationName(result.configName);
                         GUISTATE_C.setConfigurationXML(result.configText);
                     }
+                    $('#tabProgram').one('shown.bs.tab', function(e) {
+                        reloadProgram();
+                    });
                     $('#tabProgram').trigger('click');
                 }
                 MSG.displayInformation(result, "", result.message);
@@ -394,7 +394,8 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
     exports.importXml = importXml;
 
     /**
-     * two Experimental functions: Open a file select dialog to load source code from local disk and send it to the cross compiler
+     * two Experimental functions: Open a file select dialog to load source code
+     * from local disk and send it to the cross compiler
      */
     function importSourceCodeToCompile() {
         var input = $(document.createElement('input'));
@@ -414,26 +415,27 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         input.trigger('click'); // opening dialog
     }
     exports.importSourceCodeToCompile = importSourceCodeToCompile;
-    
+
     /**
-     * two Experimental functions: Open a file select dialog to load source code from local disk and send it to the cross compiler
+     * two Experimental functions: Open a file select dialog to load source code
+     * from local disk and send it to the cross compiler
      */
     function importNepoCodeToCompile() {
-    	var input = $(document.createElement('input'));
-    	input.attr("type", "file");
-    	input.change(function(event) {
-    		var file = event.target.files[0]
-    		var reader = new FileReader()
-    		reader.readAsText(file)
-    		reader.onload = function(event) {
-    			// TODO move this to the run controller once it is clear what should happen
-    			var name = UTIL.getBasename(file.name);
-    			PROGRAM.compileP(name, event.target.result, GUISTATE_C.getLanguage(), function(result) {
-    				alert(result.rc);
-    			});
-    		}
-    	})
-    	input.trigger('click'); // opening dialog
+        var input = $(document.createElement('input'));
+        input.attr("type", "file");
+        input.change(function(event) {
+            var file = event.target.files[0]
+            var reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = function(event) {
+                // TODO move this to the run controller once it is clear what should happen
+                var name = UTIL.getBasename(file.name);
+                PROGRAM.compileP(name, event.target.result, GUISTATE_C.getLanguage(), function(result) {
+                    alert(result.rc);
+                });
+            }
+        })
+        input.trigger('click'); // opening dialog
     }
     exports.importNepoCodeToCompile = importNepoCodeToCompile;
 
@@ -570,14 +572,14 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         if (xml) {
             blocklyWorkspace.updateToolbox(xml);
         }
-        if (toolbox === 'beginner') {
+        if (level === 'beginner') {
             $('.help.expert').hide();
         } else {
             $('.help.expert').show();
         }
     }
     exports.loadToolbox = loadToolbox;
-    
+
     function loadExternalToolbox(toolbox) {
         Blockly.hideChaff();
         if (toolbox) {
@@ -596,23 +598,26 @@ define([ 'exports', 'comm', 'message', 'log', 'util', 'guiState.controller', 'pr
         blocklyWorkspace.clear();
         var dom = Blockly.Xml.textToDom(xml, blocklyWorkspace);
         Blockly.Xml.domToWorkspace(dom, blocklyWorkspace);
-        // update right panel if it is already open
-        if ($('.fromRight').hasClass('rightActive')) {
-            $('#infoContent').html(blocklyWorkspace.description);
-            var tmpTags = blocklyWorkspace.tags;
-            $('#infoTags').tagsinput('removeAll');
-            $('.bootstrap-tagsinput input').attr('placeholder', 'Tags');
-            $('#infoTags').tagsinput('add', tmpTags);
-            var xmlConfiguration = GUISTATE_C.getConfigurationXML();
-            var dom = Blockly.Xml.workspaceToDom(blocklyWorkspace);
-            var xmlProgram = Blockly.Xml.domToText(dom);
+        $('#infoContent').html(blocklyWorkspace.description);
+        if (typeof blocklyWorkspace.description === 'string' && blocklyWorkspace.description.length) {
+            $('#infoButton').addClass('notEmpty');
+        } else {
+            $('#infoButton').removeClass('notEmpty');
+        }
+        var tmpTags = blocklyWorkspace.tags;
+        $('#infoTags').tagsinput('removeAll');
+        $('.bootstrap-tagsinput input').attr('placeholder', 'Tags');
+        $('#infoTags').tagsinput('add', tmpTags);
+        var xmlConfiguration = GUISTATE_C.getConfigurationXML();
+        var dom = Blockly.Xml.workspaceToDom(blocklyWorkspace);
+        var xmlProgram = Blockly.Xml.domToText(dom);
 
-            var isNamedConfig = !GUISTATE_C.isConfigurationStandard() && !GUISTATE_C.isConfigurationAnonymous();
-            var configName = isNamedConfig ? GUISTATE_C.getConfigurationName() : undefined;
-            var xmlConfigText = GUISTATE_C.isConfigurationAnonymous() ? GUISTATE_C.getConfigurationXML() : undefined;
+        var isNamedConfig = !GUISTATE_C.isConfigurationStandard() && !GUISTATE_C.isConfigurationAnonymous();
+        var configName = isNamedConfig ? GUISTATE_C.getConfigurationName() : undefined;
+        var xmlConfigText = GUISTATE_C.isConfigurationAnonymous() ? GUISTATE_C.getConfigurationXML() : undefined;
 
-            var language = GUISTATE_C.getLanguage();
-
+        var language = GUISTATE_C.getLanguage();
+        if ($('#codeDiv').hasClass('rightActive')) {
             PROGRAM.showSourceProgram(GUISTATE_C.getProgramName(), configName, xmlProgram, xmlConfigText, language, function(result) {
                 $('#codeContent').html('<pre class="prettyprint linenums">' + prettyPrintOne(result.sourceCode.escapeHTML(), null, true) + '</pre>');
             });

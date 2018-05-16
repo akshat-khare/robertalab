@@ -313,10 +313,12 @@ public final class BlocklyConstants {
     public static final String MOVE = "MOVE";
     public static final String FILENAME = "FILENAME";
     public static final String NAO_TOUCHSENSOR = "TOUCHSENSOR";
-    public static final String NAO_DETECTFACE = "DETECTFACE";
-    public static final String NAO_NAOMARK = "NAOMARK";
+    public static final String DETECT_FACE = "DETECT_FACE";
+    public static final String DETECT_MARK = "DETECT_MARK";
     public static final String NAO_SONAR = "SONAR";
     public static final String NAO_GYROMETER = "GYROMETER";
+    public static final String NAO_FACE = "NAOFACE";
+    public static final String NAO_SPEECH = "NAOSPEECH";
     public static final String ACCELEROMETER = "ACCELEROMETER";
     public static final String NAO_FSR = "FSR";
     public static final String NAO_PHRASE = "PHRASE";
@@ -330,10 +332,16 @@ public final class BlocklyConstants {
     public static final String PIN_DIGITAL = "PIN_DIGITAL";
     public static final String PIN_PULSEHIGH = "PIN_PULSEHIGH";
     public static final String PIN_PULSELOW = "PIN_PULSELOW";
+    public static final String PIN_PORT = "PIN_PORT";
+    public static final String PIN_PULL = "PIN_PULL";
     public static final String DEFAULT = "DEFAULT";
     public static final String NO_PORT = "NO_PORT";
+    public static final String NO_SLOT = "NO_SLOT";
     public static final String SLOT = "SLOT";
     public static final String EMPTY_SLOT = "EMPTY_SLOT";
     public static final String PIN_PULSE_HIGH = "PIN_PULSE_HIGH";
     public static final String PIN_PULSE_LOW = "PIN_PULSE_LOW";
+    public static final String ELECTRIC_CURRENT = "ELECTRIC_CURRENT";
+    public static final String FSR = "FSR";
+    public static final String COLON = "COLON";
 }

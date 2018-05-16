@@ -47,7 +47,7 @@ define([ 'exports', 'log', 'util', 'comm', 'message', 'guiState.controller', 'bl
         bricklyWorkspace.setVersion('2.0');
         // Configurations can't be executed
         bricklyWorkspace.robControls.runOnBrick.setAttribute("style", "display : none");
-        $('#progSim').hide();
+        $('#simButton').hide();
         GUISTATE_C.setBricklyWorkspace(bricklyWorkspace);
         bricklyWorkspace.robControls.disable('saveProgram');
     }
@@ -224,7 +224,7 @@ define([ 'exports', 'log', 'util', 'comm', 'message', 'guiState.controller', 'bl
             messages : {
                 singleModalInput : {
                     required : jQuery.validator.format(Blockly.Msg["VALIDATION_FIELD_REQUIRED"]),
-                    regex : jQuery.validator.format(Blockly.Msg["MESSAGE_INVALID_NAME"])
+                    regex : jQuery.validator.format(Blockly.Msg["MESSAGE_INVALID_CONF_NAME"])
                 }
             }
         });

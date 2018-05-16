@@ -28,27 +28,22 @@ import de.fhg.iais.roberta.syntax.action.nao.WalkAsync;
 import de.fhg.iais.roberta.syntax.action.nao.WalkDistance;
 import de.fhg.iais.roberta.syntax.action.nao.WalkTo;
 import de.fhg.iais.roberta.syntax.lang.expr.nao.ColorHexString;
-//import de.fhg.iais.roberta.syntax.expr.nao.LedColor;
-import de.fhg.iais.roberta.syntax.sensor.nao.Accelerometer;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectFace;
 import de.fhg.iais.roberta.syntax.sensor.nao.DetectedFaceInformation;
-import de.fhg.iais.roberta.syntax.sensor.nao.Dialog;
+import de.fhg.iais.roberta.syntax.sensor.nao.DetectedMark;
 import de.fhg.iais.roberta.syntax.sensor.nao.ElectricCurrent;
-import de.fhg.iais.roberta.syntax.sensor.nao.ForceSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.Gyrometer;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoGetSampleSensor;
-import de.fhg.iais.roberta.syntax.sensor.nao.NaoMark;
+import de.fhg.iais.roberta.syntax.sensor.nao.FsrSensor;
+import de.fhg.iais.roberta.syntax.sensor.nao.GetSampleSensor;
 import de.fhg.iais.roberta.syntax.sensor.nao.NaoMarkInformation;
 import de.fhg.iais.roberta.syntax.sensor.nao.RecognizeWord;
-import de.fhg.iais.roberta.syntax.sensor.nao.Sonar;
-import de.fhg.iais.roberta.syntax.sensor.nao.Touchsensors;
 import de.fhg.iais.roberta.visitor.AstVisitor;
 import de.fhg.iais.roberta.visitor.actor.AstActorSoundVisitor;
+import de.fhg.iais.roberta.visitor.sensor.AstSensorsVisitor;
 
 /**
  * Interface to be used with the visitor pattern to traverse an AST (and generate code, e.g.).
  */
-public interface NaoAstVisitor<V> extends AstVisitor<V>, AstActorSoundVisitor<V> {
+public interface NaoAstVisitor<V> extends AstVisitor<V>, AstActorSoundVisitor<V>, AstSensorsVisitor<V> {
     /**
      * visit a {@link SetMode}.
      *
@@ -162,13 +157,6 @@ public interface NaoAstVisitor<V> extends AstVisitor<V>, AstActorSoundVisitor<V>
     V visitPlayFile(PlayFile<V> playFile);
 
     /**
-     * visit a {@link Dialog}.
-     *
-     * @param dialog phrase to be visited
-     */
-    V visitDialog(Dialog<V> dialog);
-
-    /**
      * visit a {@link SetLeds}.
      *
      * @param set leds phrase to be visited
@@ -204,58 +192,30 @@ public interface NaoAstVisitor<V> extends AstVisitor<V>, AstActorSoundVisitor<V>
     V visitRastaDuration(RastaDuration<V> rastaDuration);
 
     /**
-     * visit a {@link Touchsensors}.
-     *
-     * @param rast duration phrase to be visited
-     */
-    V visitTouchsensors(Touchsensors<V> touchsensors);
-
-    /**
-     * visit a {@link Sonar}.
-     *
-     * @param sonar phrase to be visited
-     */
-    V visitSonar(Sonar<V> sonar);
-
-    /**
-     * visit a {@link Gyrometer}.
-     *
-     * @param gyrometer phrase to be visited
-     */
-    V visitGyrometer(Gyrometer<V> gyrometer);
-
-    /**
-     * visit a {@link Accelerometer}.
-     *
-     * @param accelerometer phrase to be visited
-     */
-    V visitAccelerometer(Accelerometer<V> accelerometer);
-
-    /**
-     * visit a {@link ForceSensor}.
+     * visit a {@link FsrSensor}.
      *
      * @param force sensor phrase to be visited
      */
-    V visitForceSensor(ForceSensor<V> forceSensor);
+    V visitFsrSensor(FsrSensor<V> forceSensor);
 
     /**
-     * visit a {@link NaoMark}.
+     * visit a {@link DetectedMark}.
      *
-     * @param NaoMark on phrase to be visited
+     * @param DetectMarkMode on phrase to be visited
      */
-    V visitNaoMark(NaoMark<V> naoMark);
+    V visitNaoMark(DetectedMark<V> naoMark);
 
     /**
-     * visit a {@link NaoMark}.
+     * visit a {@link DetectedMark}.
      *
-     * @param NaoMark on phrase to be visited
+     * @param DetectMarkMode on phrase to be visited
      */
     V visitTakePicture(TakePicture<V> takePicture);
 
     /**
-     * visit a {@link NaoMark}.
+     * visit a {@link DetectedMark}.
      *
-     * @param NaoMark on phrase to be visited
+     * @param DetectMarkMode on phrase to be visited
      */
     V visitRecordVideo(RecordVideo<V> recordVideo);
 
@@ -280,7 +240,7 @@ public interface NaoAstVisitor<V> extends AstVisitor<V>, AstActorSoundVisitor<V>
      */
     V visitDetectFace(DetectFace<V> detectFace);
 
-    V visitNaoGetSampleSensor(NaoGetSampleSensor<V> naoGetSampleSensor);
+    V visitGetSampleSensor(GetSampleSensor<V> getSampleSensor);
 
     V visitElectricCurrent(ElectricCurrent<V> electricCurrent);
 

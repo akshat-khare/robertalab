@@ -6,7 +6,11 @@ import de.fhg.iais.roberta.syntax.action.mbed.DisplayImageAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetBrightnessAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplaySetPixelAction;
 import de.fhg.iais.roberta.syntax.action.mbed.DisplayTextAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayClearAction;
+import de.fhg.iais.roberta.syntax.action.mbed.FourDigitDisplayShowAction;
+import de.fhg.iais.roberta.syntax.action.mbed.LedBarSetAction;
 import de.fhg.iais.roberta.syntax.action.mbed.LedOnAction;
+import de.fhg.iais.roberta.syntax.action.mbed.PinSetPullAction;
 import de.fhg.iais.roberta.syntax.action.mbed.PinWriteValue;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioReceiveAction;
 import de.fhg.iais.roberta.syntax.action.mbed.RadioSendAction;
@@ -16,9 +20,9 @@ import de.fhg.iais.roberta.syntax.action.mbed.SingleMotorStopAction;
 import de.fhg.iais.roberta.syntax.expr.mbed.Image;
 import de.fhg.iais.roberta.syntax.expr.mbed.LedColor;
 import de.fhg.iais.roberta.syntax.expr.mbed.PredefinedImage;
-import de.fhg.iais.roberta.syntax.expr.mbed.RgbColor;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageInvertFunction;
 import de.fhg.iais.roberta.syntax.functions.mbed.ImageShiftFunction;
+import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.sensor.generic.AccelerometerSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.GestureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.GyroSensor;
@@ -138,6 +142,13 @@ public interface MbedAstVisitor<V> extends AstVisitor<V> {
     V visitPinWriteValueSensor(PinWriteValue<V> pinWriteValueSensor);
 
     /**
+     * visit a {@link PinSetPullAction}.
+     *
+     * @param pinSetPull phrase to be visited
+     */
+    V visitPinSetPullAction(PinSetPullAction<V> pinSetPullAction);
+
+    /**
      * visit a {@link DisplaySetBrightnessAction}.
      *
      * @param displaySetBrightnessAction phrase to be visited
@@ -207,4 +218,24 @@ public interface MbedAstVisitor<V> extends AstVisitor<V> {
      */
     V visitGyroSensor(GyroSensor<V> gyroSensor);
 
+    /**
+     * visit a {@link visitFourDigitDisplayShowAction}.
+     *
+     * @param FourDigitDisplayShowAction phrase to be visited
+     */
+    V visitFourDigitDisplayShowAction(FourDigitDisplayShowAction<V> fourDigitDisplayShowAction);
+
+    /**
+     * visit a {@link FourDigitDisplayClearAction}.
+     *
+     * @param FourDigitDisplayClearAction phrase to be visited
+     */
+    V visitFourDigitDisplayClearAction(FourDigitDisplayClearAction<V> fourDigitDisplayClearAction);
+
+    /**
+     * visit a {@link LedBarSetAction}.
+     *
+     * @param LedBarSetAction phrase to be visited
+     */
+    V visitLedBarSetAction(LedBarSetAction<V> ledBarSetAction);
 }
